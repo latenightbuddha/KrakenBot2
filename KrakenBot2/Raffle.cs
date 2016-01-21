@@ -39,7 +39,7 @@ namespace KrakenBot2
             {
                 //We want to download the exgames count if it is an exgames raffle BEFORE writing to chat so that way there isn't a delay between the initial messages below and the giveaway data
                 int exGamesCount = 0;
-                if (raffleProperties.Raffle_Type == RaffleProperties.GiveawayTypes.EXGAMES)
+                if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
                     exGamesCount = downloadExGamesCount().Result;
                 //Sends disclaimer bullshit to channel chat
                 Common.ChatClient.sendMessage("DISCLAIMER: This is a promotion from BurkeBlack. Twitch does not sponsor or endorse broadcaster promotions and is not responsible for them.", Common.DryRun);
@@ -48,36 +48,36 @@ namespace KrakenBot2
                 //Now we need to send a different message based on the type of giveaway it is and include giveaway length
                 switch(raffleProperties.Raffle_Type)
                 {
-                    case RaffleProperties.GiveawayTypes.EXGAMES:
+                    case Common.GiveawayTypes.EXGAMES:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: !GAMES; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
                         break;
-                    case RaffleProperties.GiveawayTypes.HUMBLEBUNDLE:
+                    case Common.GiveawayTypes.HUMBLEBUNDLE:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: HUMBLEBUNDLE; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
                         break;
-                    case RaffleProperties.GiveawayTypes.LOGITECH:
+                    case Common.GiveawayTypes.LOGITECH:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: LOGITECH; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
                         break;
-                    case RaffleProperties.GiveawayTypes.ORIGINCODE:
+                    case Common.GiveawayTypes.ORIGINCODE:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: ORIGIN CODE; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
                         break;
-                    case RaffleProperties.GiveawayTypes.OTHER:
+                    case Common.GiveawayTypes.OTHER:
                         //If the giveaway is 'other', we should have a specifier sent from the panel, we will send that to chat
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: OTHER [{0}]; Giveaway Length: {1} minutes", raffleProperties.Raffle_Type_Other, raffleProperties.Raffle_Length), Common.DryRun);
                         break;
-                    case RaffleProperties.GiveawayTypes.SERIALCODE:
+                    case Common.GiveawayTypes.SERIALCODE:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: SERIAL/CODE; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
                         break;
-                    case RaffleProperties.GiveawayTypes.SOUND_BYTES:
+                    case Common.GiveawayTypes.SOUND_BYTES:
                         //If the giveaway is 'sound_bytes', we should let viewers know how many
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: SOUND BYTES [{0}]; Giveaway Length: {1} minutes", raffleProperties.Soundbyte_Count, raffleProperties.Raffle_Length), Common.DryRun);
                         break;
-                    case RaffleProperties.GiveawayTypes.STEAMCODE:
+                    case Common.GiveawayTypes.STEAMCODE:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: STEAM CODE; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
                         break;
-                    case RaffleProperties.GiveawayTypes.STEAMGIFT:
+                    case Common.GiveawayTypes.STEAMGIFT:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: STEAM GIFT; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
                         break;
-                    case RaffleProperties.GiveawayTypes.STEAMTRADE:
+                    case Common.GiveawayTypes.STEAMTRADE:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: STEAM TRADE; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
                         break;
                     default:
@@ -132,9 +132,16 @@ namespace KrakenBot2
                     return false;
             }
             //Check to see if viewer has already hit max wins for giveaway type
-            foreach(string viewer in raffleProperties.Previous_Winners)
+            foreach(Objects.PreviousRaffleWinner viewer in raffleProperties.Previous_Winners)
             {
-                if (viewer == newViewer)
+                if(viewer.Username.ToLower() == newViewer && viewer.AffectWinLimit)
+                {
+                    if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES && viewer.GiveawayType == Common.GiveawayTypes.EXGAMES)
+                        return false;
+                    else if (raffleProperties.Raffle_Type != Common.GiveawayTypes.EXGAMES && viewer.GiveawayType != Common.GiveawayTypes.EXGAMES)
+                        return false;
+                }
+                if (viewer.Username.ToLower() == newViewer)
                     return false;
             }
             //Check to see if viewer is blocked from entering
@@ -172,14 +179,14 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format("Congrats on your win {0}! You've won {1} raffles, and entered {2} (that's a win percentage of {3}%). Your claim time was {4} seconds," +
                         " however your average claim time is {5} seconds.", raffleWin.Winner, raffleWin.WinCount, raffleWin.EnterCount, raffleWin.WinPercentage, raffleWin.ClaimTime, raffleWin.ClaimTimeAvg), Common.DryRun);
                     sendWinnerWhisper();
-                    if (raffleProperties.Raffle_Type == RaffleProperties.GiveawayTypes.SOUND_BYTES)
+                    if (raffleProperties.Raffle_Type == Common.GiveawayTypes.SOUND_BYTES)
                     {
                         WebCalls.addSoundbyteCredits(raffleWin.Winner, raffleProperties.Soundbyte_Count);
                         Common.ChatClient.sendMessage(string.Format("[Auto] Added {0} soundbyte credits to {1}'s total.", raffleProperties.Soundbyte_Count, raffleWin.Winner), Common.DryRun);
                     }
                     int latestID = WebCalls.downloadRaffleID().Result;
                     Common.ChatClient.sendMessage(string.Format("Giveaway details can be viewed here: http://burkeblack.tv/giveaways/listing.php?gid={0}", latestID.ToString()), Common.DryRun);
-                    if (raffleProperties.Raffle_Type == RaffleProperties.GiveawayTypes.EXGAMES)
+                    if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
                         Common.ChatClient.sendMessage("Video on how automatic !games giveaways work: http://www.twitch.tv/burkeblack/c/5663793");
                     Common.notify("NEW GIVEAWAY CLAIM", raffleWin.Winner + " claimed " + raffleProperties.Raffle_Name);
                     Common.DiscordClient.SendMessageToChannel(string.Format("NEW CLAIM: Winner: {0}, Name: {1}, Donator: {2}, Author: {3}", raffleWin.Winner, raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator, raffleProperties.Raffle_Author), Common.DiscordClient.GetChannelByName("kraken-relay"));
@@ -224,7 +231,7 @@ namespace KrakenBot2
             {
                 switch(raffleProperties.Raffle_Type)
                 {
-                    case RaffleProperties.GiveawayTypes.EXGAMES:
+                    case Common.GiveawayTypes.EXGAMES:
                         Common.WhisperClient.sendWhisper(activeWinner, "Congrats on your win! Visit http://burkeblack.tv and login with your Twitch account.  A message box will detail instructions on how to claim your !games game!", Common.DryRun);
                         break;
                     default:
@@ -401,19 +408,7 @@ namespace KrakenBot2
         //Contains all raffle properties downloaded from transition bot server
         private class RaffleProperties
         {
-            public enum GiveawayTypes
-            {
-                EXGAMES,
-                STEAMTRADE,
-                STEAMCODE,
-                STEAMGIFT,
-                ORIGINCODE,
-                HUMBLEBUNDLE,
-                SERIALCODE,
-                LOGITECH,
-                SOUND_BYTES,
-                OTHER
-            }
+            
 
             public enum Filters
             {
@@ -424,11 +419,11 @@ namespace KrakenBot2
 
             private int raffleLength, raffleClaimLength, raffleMinimumEntries, raffleFilterAmount, raffleSteamID, raffleSoundbyteCount;
             private string raffleDonator, raffleName, raffleAuthor, raffleLinker, raffleTypeOther;
-            private GiveawayTypes raffleType;
+            private Common.GiveawayTypes raffleType;
             private bool subOnly = false;
             private bool followerOnly = false;
             private Filters raffleFilter;
-            private List<string> previousWinners;
+            private List<Objects.PreviousRaffleWinner> previousWinners;
             private List<string> blockedViewers;
 
             public int Raffle_Length { get { return raffleLength; } }
@@ -438,7 +433,7 @@ namespace KrakenBot2
             public int Raffle_Filter_Amount { get { return raffleFilterAmount; } }
             public int Raffle_Steam_ID { get { return raffleSteamID; } }
             public int Soundbyte_Count { get { return raffleSoundbyteCount; } }
-            public GiveawayTypes Raffle_Type { get { return raffleType; } }
+            public Common.GiveawayTypes Raffle_Type { get { return raffleType; } }
             public string Raffle_Donator { get { return raffleDonator; } }
             public string Raffle_Name { get { return raffleName; } }
             public string Raffle_Linker { get { return raffleLinker; } }
@@ -446,7 +441,7 @@ namespace KrakenBot2
             public Filters Raffle_Filter { get { return raffleFilter; } }
             public bool Sub_Only { get { return subOnly; } }
             public bool Follower_Only { get { return followerOnly; } }
-            public List<string> Previous_Winners { get { return previousWinners; } }
+            public List<Objects.PreviousRaffleWinner> Previous_Winners { get { return previousWinners; } }
             public List<string> Blocked_Viewers { get { return blockedViewers; } }
 
             public RaffleProperties(JToken giveawayProperties)
@@ -474,44 +469,44 @@ namespace KrakenBot2
                 switch(giveawayProperties.SelectToken("raffle_type").ToString())
                 {
                     case "exgames":
-                        raffleType = GiveawayTypes.EXGAMES;
-                        previousWinners = downloadPreviousWinners("!games").Result;
+                        raffleType = Common.GiveawayTypes.EXGAMES;
+                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "steam_trade":
-                        raffleType = GiveawayTypes.STEAMTRADE;
-                        previousWinners = downloadPreviousWinners("steam_trade").Result;
+                        raffleType = Common.GiveawayTypes.STEAMTRADE;
+                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "steam_gift":
-                        raffleType = GiveawayTypes.STEAMGIFT;
-                        previousWinners = downloadPreviousWinners("steam_gift").Result;
+                        raffleType = Common.GiveawayTypes.STEAMGIFT;
+                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "steam_code":
-                        raffleType = GiveawayTypes.STEAMCODE;
-                        previousWinners = downloadPreviousWinners("steam_code").Result;
+                        raffleType = Common.GiveawayTypes.STEAMCODE;
+                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "origin_code":
-                        raffleType = GiveawayTypes.ORIGINCODE;
-                        previousWinners = downloadPreviousWinners("origin_code").Result;
+                        raffleType = Common.GiveawayTypes.ORIGINCODE;
+                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "humblebundle":
-                        raffleType = GiveawayTypes.HUMBLEBUNDLE;
-                        previousWinners = downloadPreviousWinners("humblebundle").Result;
+                        raffleType = Common.GiveawayTypes.HUMBLEBUNDLE;
+                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "code":
-                        raffleType = GiveawayTypes.SERIALCODE;
-                        previousWinners = downloadPreviousWinners("code").Result;
+                        raffleType = Common.GiveawayTypes.SERIALCODE;
+                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "logitech":
-                        raffleType = GiveawayTypes.LOGITECH;
-                        previousWinners = downloadPreviousWinners("logitech").Result;
+                        raffleType = Common.GiveawayTypes.LOGITECH;
+                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "soundbyte":
-                        raffleType = GiveawayTypes.SOUND_BYTES;
-                        previousWinners = downloadPreviousWinners("soundbyte").Result;
+                        raffleType = Common.GiveawayTypes.SOUND_BYTES;
+                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "other":
-                        raffleType = GiveawayTypes.OTHER;
-                        previousWinners = downloadPreviousWinners("other").Result;
+                        raffleType = Common.GiveawayTypes.OTHER;
+                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         raffleTypeOther = giveawayProperties.SelectToken("raffle_type_other").ToString();
                         break;
                     default:
@@ -532,11 +527,6 @@ namespace KrakenBot2
                         raffleFilter = Filters.NONE;
                         break;
                 }
-            }
-            //Downloads the previous winners given the raffle type (!games, non-!games)
-            private async Task<List<string>> downloadPreviousWinners(string type)
-            {
-                return await WebCalls.downloadPreviousWinners(type);
             }
             //Downloads previous blocked viewers (for whatever reason)
             private async Task<List<string>> downloadBlockedViewers()

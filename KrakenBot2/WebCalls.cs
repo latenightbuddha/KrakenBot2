@@ -66,13 +66,13 @@ namespace KrakenBot2
             return await download(Properties.Settings.Default.webMessagesURL);
         }
 
-        public async static Task<List<string>> downloadPreviousWinners(string type)
+        public async static Task<List<Objects.PreviousRaffleWinner>> downloadPreviousWinners()
         {
-            List<string> previousWinners = new List<string>();
-            string jsonStr = await download(string.Format("{0}?type={1}", Properties.Settings.Default.webPreviousWinners, type));
+            List<Objects.PreviousRaffleWinner> previousWinners = new List<Objects.PreviousRaffleWinner>();
+            string jsonStr = await download(Properties.Settings.Default.webPreviousWinners);
             foreach(JToken prevWinner in JObject.Parse(jsonStr).SelectToken("previous_winners"))
             {
-                previousWinners.Add(prevWinner.ToString());
+                previousWinners.Add(new Objects.PreviousRaffleWinner(prevWinner));
             }
             return previousWinners;
         }

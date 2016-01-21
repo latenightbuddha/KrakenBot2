@@ -88,6 +88,20 @@ namespace KrakenBot2
         public static List<Objects.Permit> Permits { get { return permits; } set { permits = value; } }
         public static List<string> Moderators { get { return moderators; } set { moderators = value; } }
 
+        public enum GiveawayTypes
+        {
+            EXGAMES,
+            STEAMTRADE,
+            STEAMCODE,
+            STEAMGIFT,
+            ORIGINCODE,
+            HUMBLEBUNDLE,
+            SERIALCODE,
+            LOGITECH,
+            SOUND_BYTES,
+            OTHER
+        }
+
         public static void command(string command, bool success)
         {
             baseMessage(ConsoleColor.Cyan, "Command: " + command + ", success: " + success);
