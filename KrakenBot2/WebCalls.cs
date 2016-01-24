@@ -315,10 +315,18 @@ namespace KrakenBot2
                 await download(string.Format("{0}?name={1}&amount={2}", Properties.Settings.Default.webAddSoundbyteCredits, username, amount));
         }
 
-        public async static void distibuteDoubloons(int amount)
+        public async static Task<bool> distibuteDoubloons(int amount)
         {
             if (!Common.DryRun)
+                return true;
+            try
+            {
                 await download(string.Format("{0}?amount={1}", Properties.Settings.Default.webDistributeDoubloons, amount));
+                return true;
+            }catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async static void uploadChatMessageCounts(string userMessageCounts)

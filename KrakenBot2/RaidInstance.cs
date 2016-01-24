@@ -65,8 +65,10 @@ namespace KrakenBot2
             {
                 Common.RaidClient.disconnect();
                 Common.ChatClient.sendMessage(string.Format("The raid has ended! In total, there were {0} participants in the raid, with {1} leading the charge! Your doubloon counts will be updated shortly to reflect your raid participation!", participants.Count, participants[0]), Common.DryRun);
-                WebCalls.distibuteDoubloons(participants.Count);
-                Common.ChatClient.sendMessage("[Auto] Doubloon counts updated successfully!");
+                if (WebCalls.distibuteDoubloons(participants.Count).Result)
+                    Common.ChatClient.sendMessage("[Auto] Doubloon counts updated successfully!");
+                else
+                    Common.ChatClient.sendMessage("[Auto] Doubloon counts FAILED TO UPDATE");
             }  else {
                 Common.ChatClient.sendMessage("No one participated in the raid! :(", Common.DryRun);
             }
