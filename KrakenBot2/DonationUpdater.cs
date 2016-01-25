@@ -9,7 +9,7 @@ namespace KrakenBot2
 {
     public class DonationUpdater
     {
-        private bool enabled = false;
+        private bool enabled = true;
 
         private Timer donationTimer = new Timer(60000);
 		public DonationUpdater()
