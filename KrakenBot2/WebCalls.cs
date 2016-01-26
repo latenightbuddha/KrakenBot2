@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Reflection;
 using DiscordSharp;
+using System.Net.Http;
 
 namespace KrakenBot2
 {
@@ -15,7 +16,7 @@ namespace KrakenBot2
         public async static Task<List<Objects.TimeoutWord>> downloadTimeoutWords()
         {
             List<Objects.TimeoutWord> words = new List<Objects.TimeoutWord>();
-            string jsonStr = await download(Properties.Settings.Default.webTimeoutWordsURL);
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webTimeoutWordsURL);
             foreach(JToken word in JObject.Parse(jsonStr).SelectToken("words"))
             {
                 words.Add(new Objects.TimeoutWord(word));
@@ -26,7 +27,7 @@ namespace KrakenBot2
         public async static Task<List<Objects.SpoilerWord>> downloadSpoilerWords()
         {
             List<Objects.SpoilerWord> words = new List<Objects.SpoilerWord>();
-            string jsonStr = await download(Properties.Settings.Default.webSpoilerWordsURL);
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webSpoilerWordsURL);
             foreach(JToken word in JObject.Parse(jsonStr).SelectToken("words"))
             {
                 words.Add(new Objects.SpoilerWord(word));
@@ -37,7 +38,7 @@ namespace KrakenBot2
         public async static Task<List<Objects.ChatCommand>> downloadChatCommands()
         {
             List<Objects.ChatCommand> commands = new List<Objects.ChatCommand>();
-            string jsonStr = await download(Properties.Settings.Default.webCommandsURL);
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webCommandsURL);
             foreach(JToken command in JObject.Parse(jsonStr).SelectToken("commands"))
             {
                 commands.Add(new Objects.ChatCommand(command));
@@ -48,7 +49,7 @@ namespace KrakenBot2
         public async static Task<List<Objects.Quote>> downloadQuotes()
         {
             List<Objects.Quote> quotes = new List<Objects.Quote>();
-            string jsonStr = await download(Properties.Settings.Default.webQuotes);
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webQuotes);
             foreach(JToken quote in JObject.Parse(jsonStr).SelectToken("quotes"))
             {
                 quotes.Add(new Objects.Quote(quote));
@@ -58,18 +59,18 @@ namespace KrakenBot2
 
         public async static Task<ServerSettings> downloadServerSettings()
         {
-            return new ServerSettings(JObject.Parse(await download(Properties.Settings.Default.webSettingsURL)).SelectToken("settings"));
+            return new ServerSettings(JObject.Parse(await request(requestType.GET, Properties.Settings.Default.webSettingsURL)).SelectToken("settings"));
         }
 
         public async static Task<string> downloadTimedMessages()
         {
-            return await download(Properties.Settings.Default.webMessagesURL);
+            return await request(requestType.GET, Properties.Settings.Default.webMessagesURL);
         }
 
         public async static Task<List<Objects.PreviousRaffleWinner>> downloadPreviousWinners()
         {
             List<Objects.PreviousRaffleWinner> previousWinners = new List<Objects.PreviousRaffleWinner>();
-            string jsonStr = await download(Properties.Settings.Default.webPreviousWinners);
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webPreviousWinners);
             foreach(JToken prevWinner in JObject.Parse(jsonStr).SelectToken("previous_winners"))
             {
                 previousWinners.Add(new Objects.PreviousRaffleWinner(prevWinner));
@@ -80,7 +81,7 @@ namespace KrakenBot2
         public async static Task<List<string>> downloadBlockedViewers()
         {
             List<string> blockedViewers = new List<string>();
-            string jsonStr = await download(Properties.Settings.Default.webBlockedViewers);
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webBlockedViewers);
             foreach(JToken blockedViewer in JObject.Parse(jsonStr).SelectToken("blocked_viewers"))
             {
                 blockedViewers.Add(blockedViewer.ToString());
@@ -90,7 +91,7 @@ namespace KrakenBot2
 
         public async static Task<int> downloadExGamesCount()
         {
-            string jsonStr = await download(Properties.Settings.Default.webExGamesCount);
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webExGamesCount);
             return int.Parse(JObject.Parse(jsonStr).SelectToken("exgames_count").ToString());
         }
 
@@ -105,7 +106,12 @@ namespace KrakenBot2
                     entryStr = entryStr + "," + entry;
             }
             List<string> validEntries = new List<string>();
-            string jsonStr = await download(string.Format("{0}?minutes={1}&entries={2}", Properties.Settings.Default.webMinuteEntries, minutes, entryStr));
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("minutes", minutes.ToString()),
+                new KeyValuePair<string, string>("entries",entryStr)
+            };
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webMinuteEntries, args);
             foreach(JToken validEntry in JObject.Parse(jsonStr).SelectToken("valid_entries"))
             {
                 validEntries.Add(validEntries.ToString());
@@ -124,7 +130,12 @@ namespace KrakenBot2
                     entryStr = entryStr + "," + entry;
             }
             List<string> validEntries = new List<string>();
-            string jsonStr = await download(string.Format("{0}?doubloons={1}&entries={2}", Properties.Settings.Default.webDoubloonEntries, doubloons, entryStr));
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("doubloons", doubloons.ToString()),
+                new KeyValuePair<string, string>("entries", entryStr)
+            };
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webDoubloonEntries, args);
             foreach(JToken validEntry in JObject.Parse(jsonStr).SelectToken("valid_entries"))
             {
                 validEntries.Add(validEntry.ToString());
@@ -134,13 +145,21 @@ namespace KrakenBot2
 
         public async static Task<int> downloadRaffleID()
         {
-            return int.Parse(JObject.Parse(await download(Properties.Settings.Default.webRecentRaffleID)).SelectToken("raffle_id").ToString());
+            return int.Parse(JObject.Parse(await request(requestType.GET, Properties.Settings.Default.webRecentRaffleID)).SelectToken("raffle_id").ToString());
         }
 
         public async static Task<Objects.RaffleWin> addRaffleWinner(string winner, string raffleName, string donator, string entries, string linker, int claimSeconds)
         {
-            JToken raffleServerDetails = JObject.Parse(await download(string.Format("{0}?winner={1}&game={2}&donator={3}&linker={4}&claimtime={5}&entries={6}",
-                Properties.Settings.Default.webAddRaffleWinner, winner, raffleName, donator, linker, claimSeconds, entries))).SelectToken("raffle_win");
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("winner", winner),
+                new KeyValuePair<string, string>("game", raffleName),
+                new KeyValuePair<string, string>("donator", donator),
+                new KeyValuePair<string, string>("linker", linker),
+                new KeyValuePair<string, string>("claimtime",claimSeconds.ToString()),
+                new KeyValuePair<string, string>("entries", entries)
+            };
+            JToken raffleServerDetails = JObject.Parse(await request(requestType.GET, Properties.Settings.Default.webAddRaffleWinner, args)).SelectToken("raffle_win");
             Objects.RaffleWin raffleWin = new Objects.RaffleWin(raffleServerDetails);
             return raffleWin;
         }
@@ -148,11 +167,11 @@ namespace KrakenBot2
         public async static Task<List<string>> downloadGlobalEmotes()
         {
             if(!File.Exists("subscriber_emotes.json") || DateTime.UtcNow - File.GetLastWriteTimeUtc("subscriber_emotes.json") > TimeSpan.FromDays(3))
-                File.WriteAllText("subscriber_emotes.json", await download("https://twitchemotes.com/api_cache/v2/subscriber.json"));
+                File.WriteAllText("subscriber_emotes.json", await request(requestType.GET, "https://twitchemotes.com/api_cache/v2/subscriber.json"));
             if (!File.Exists("global_emotes.json") || DateTime.UtcNow - File.GetLastWriteTimeUtc("global_emotes.json") > TimeSpan.FromDays(3))
-                File.WriteAllText("global_emotes.json", await download("https://twitchemotes.com/api_cache/v2/global.json"));
+                File.WriteAllText("global_emotes.json", await request(requestType.GET, "https://twitchemotes.com/api_cache/v2/global.json"));
             if (!File.Exists("bttv_emotes.json") || DateTime.UtcNow - File.GetLastWriteTimeUtc("bttv_emotes.json") > TimeSpan.FromDays(3))
-                File.WriteAllText("bttv_emotes.json", await download("https://api.betterttv.net/2/emotes"));
+                File.WriteAllText("bttv_emotes.json", await request(requestType.GET, "https://api.betterttv.net/2/emotes"));
             string sub_emotes = File.ReadAllText("subscriber_emotes.json");
             string global_emotes = File.ReadAllText("global_emotes.json");
             string bttv_emotes = File.ReadAllText("bttv_emotes.json");
@@ -207,8 +226,15 @@ namespace KrakenBot2
                     timeIn = string.Format("{0} minutes, {1} seconds", uptime.Minutes, uptime.Seconds);
                 else
                     timeIn = string.Format("{0} seconds", uptime.Seconds);
+                List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("name", username),
+                    new KeyValuePair<string, string>("title", title),
+                    new KeyValuePair<string, string>("stream_created_at", Common.StreamRefresher.Stream.CreatedAt),
+                    new KeyValuePair<string, string>("time_in", timeIn)
+                };
                 if (!Common.DryRun)
-                    await download(string.Format("{0}?name={1}&title={2}&stream_created_at={3}&time_in={4}", Properties.Settings.Default.webCreateHighlight, username, title, Common.StreamRefresher.Stream.CreatedAt, timeIn));
+                    await request(requestType.GET, Properties.Settings.Default.webCreateHighlight, args);
                 return true;
             }
             return false;
@@ -224,14 +250,25 @@ namespace KrakenBot2
                     if (command.Username.ToLower() == username.ToLower())
                         return command.Data;
                 }
-                string personalCommandData = await download(string.Format("{0}?name={1}&type={2}", Properties.Settings.Default.webPersonalCommand, username, "fetch"));
+                List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("name", username),
+                    new KeyValuePair<string, string>("type", "fetch")
+                };
+                string personalCommandData = await request(requestType.GET, Properties.Settings.Default.webPersonalCommand, args);
                 Common.PersonalCommands.Add(new Objects.PersonalCommand(username, personalCommandData));
                 return personalCommandData;
             } else
             {
                 //Set new data
+                List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("name", username),
+                    new KeyValuePair<string, string>("type", "update"),
+                    new KeyValuePair<string, string>("newData", newData)
+                };
                 if (!Common.DryRun)
-                    await download(string.Format("{0}?name={1}&type={2}&newData={3}", Properties.Settings.Default.webPersonalCommand, username, "update", newData));
+                    await request(requestType.GET, Properties.Settings.Default.webPersonalCommand, args);
                 bool found = false;
                 foreach(Objects.PersonalCommand command in Common.PersonalCommands)
                 {
@@ -251,14 +288,18 @@ namespace KrakenBot2
 
         public async static Task<string> talk(string username, string message)
         {
-            string resp = await download(string.Format("{0}?message={1}", Properties.Settings.Default.webTalk, message));
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("message", message)
+            };
+            string resp = await request(requestType.GET, Properties.Settings.Default.webTalk, args);
             return string.Format("[{0}] {1}", username, resp);
         }
 
         public async static Task<List<Host>> downloadMultihostStreamers()
         {
             List<Host> streamers = new List<Host>();
-            string jsonStr = await download(Properties.Settings.Default.webMultihostStreamers);
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webMultihostStreamers);
             foreach (JToken streamer in JObject.Parse(jsonStr).SelectToken("streamers"))
             {
                 streamers.Add(new Host(streamer.SelectToken("streamer").ToString(), streamer.SelectToken("information").ToString()));
@@ -283,7 +324,7 @@ namespace KrakenBot2
         public async static Task<List<string>> downloadUsersToNotify()
         {
             List<string> usersToNotify = new List<string>();
-            string jsonStr = await download(Properties.Settings.Default.webNotifyMeUsers);
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webNotifyMeUsers);
             foreach(JToken user in JObject.Parse(jsonStr).SelectToken("users"))
             {
                 usersToNotify.Add(user.SelectToken("username").ToString());
@@ -294,25 +335,51 @@ namespace KrakenBot2
         public async static void addNotifyUser(string username)
         {
             if (!Common.DryRun)
-                await download(string.Format("{0}?name={1}", Properties.Settings.Default.webAddNotifyMeUser, username));
+            {
+                List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("name", username)
+                };
+                await request(requestType.GET, Properties.Settings.Default.webAddNotifyMeUser, args);
+            }
         }
 
         public async static void removeNotifyUser(string username)
         {
             if (!Common.DryRun)
-                await download(string.Format("{0}?name={1}", Properties.Settings.Default.webRemoveNotifyMeUser, username));
+            {
+                List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("name", username)
+                };
+                await request(requestType.GET, Properties.Settings.Default.webRemoveNotifyMeUser, args);
+            }
         }
 
         public async static void addDoubloons(string username, int amount)
         {
             if (!Common.DryRun)
-                await download(string.Format("{0}?name={1}&amount={2}", Properties.Settings.Default.webAddDoubloons, username, amount));
+            {
+                List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("name", username),
+                    new KeyValuePair<string, string>("amount", amount.ToString())
+                };
+                await request(requestType.GET, Properties.Settings.Default.webAddDoubloons, args);
+            }
         }
 
         public async static void addSoundbyteCredits(string username, int amount)
         {
             if (!Common.DryRun)
-                await download(string.Format("{0}?name={1}&amount={2}", Properties.Settings.Default.webAddSoundbyteCredits, username, amount));
+            {
+                List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("name", username),
+                    new KeyValuePair<string, string>("amount", amount.ToString())
+                };
+                await request(requestType.GET, Properties.Settings.Default.webAddSoundbyteCredits, args);
+            }
         }
 
         public async static Task<bool> distibuteDoubloons(int amount)
@@ -321,7 +388,11 @@ namespace KrakenBot2
                 return true;
             try
             {
-                await download(string.Format("{0}?amount={1}", Properties.Settings.Default.webDistributeDoubloons, amount));
+                List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("amount", amount.ToString())
+                };
+                await request(requestType.GET, Properties.Settings.Default.webDistributeDoubloons, args);
                 return true;
             }catch (Exception)
             {
@@ -332,13 +403,19 @@ namespace KrakenBot2
         public async static void uploadChatMessageCounts(string userMessageCounts)
         {
             if (!Common.DryRun)
-                await download(string.Format("{0}?data={1}", Properties.Settings.Default.webAddChatMessages, userMessageCounts));
+            {
+                List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("data", userMessageCounts)
+                };
+                await request(requestType.GET, Properties.Settings.Default.webAddChatMessages, args);
+            }
         }
 
         public async static Task<List<string>> downloadTopLevelDomains()
         {
             List<string> tlds = new List<string>();
-            string cnts = await download("https://data.iana.org/TLD/tlds-alpha-by-domain.txt");
+            string cnts = await request(requestType.GET, "https://data.iana.org/TLD/tlds-alpha-by-domain.txt");
             int i = 0;
             using (StringReader reader = new StringReader(cnts))
             {
@@ -355,13 +432,20 @@ namespace KrakenBot2
 
         public async static Task<string> getUserDoubloons(string username)
         {
-            string cnts = await download(string.Format("{0}?user={1}", Properties.Settings.Default.webDoubloonCount, username));
-            return cnts;
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("user", username)
+            };
+            return await request(requestType.GET, Properties.Settings.Default.webDoubloonCount, args);
         }
 
         public async static Task<UpdateDetails> downloadUpdateDetails()
         {
-            string cnts = await download(string.Format("{0}?current_version={1}", Properties.Settings.Default.webUpdateRequest, Assembly.GetExecutingAssembly().GetName().Version));
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("current_version", Assembly.GetExecutingAssembly().GetName().Version.ToString())
+            };
+            string cnts =  await request(requestType.GET, Properties.Settings.Default.webUpdateRequest, args);
             return new UpdateDetails(JObject.Parse(cnts).SelectToken("update_data"));
         }
 
@@ -373,7 +457,7 @@ namespace KrakenBot2
         public async static Task<List<Objects.RecentDonation>> downloadRecentDonations()
         {
             List<Objects.RecentDonation> recentDonations = new List<Objects.RecentDonation>();
-            string jsonStr = await download(Properties.Settings.Default.webUpdateDonations);
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webUpdateDonations);
             foreach(JToken donation in JObject.Parse(jsonStr).SelectToken("donations"))
             {
                 recentDonations.Add(new Objects.RecentDonation(donation));
@@ -383,11 +467,25 @@ namespace KrakenBot2
 
         public async static Task<Objects.YoutubeVideo> getBurkesLatestYTVideo()
         {
-            string jsonStr = await download(string.Format("https://www.googleapis.com/youtube/v3/search?key={0}&channelId={1}&part=snippet,id&order=date&maxResults=1", Properties.Settings.Default.YoutubeAPIKey, "UCmW5CTVpCWDM55hZwxtpjyw"));
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("key", Properties.Settings.Default.YoutubeAPIKey),
+                new KeyValuePair<string, string>("channelId", "UCmW5CTVpCWDM55hZwxtpjyw"),
+                new KeyValuePair<string, string>("part", "snippet,id"),
+                new KeyValuePair<string, string>("order", "date"),
+                new KeyValuePair<string, string>("maxResults", "1")
+            };
+            string jsonStr = await request(requestType.GET, "https://www.googleapis.com/youtube/v3/search", args);
             string videoID = JObject.Parse(jsonStr).SelectToken("items")[0].SelectToken("id").SelectToken("videoId").ToString();
             string videoDescription = JObject.Parse(jsonStr).SelectToken("items")[0].SelectToken("snippet").SelectToken("description").ToString();
             string videoTitle = JObject.Parse(jsonStr).SelectToken("items")[0].SelectToken("snippet").SelectToken("title").ToString();
-            jsonStr = await download(string.Format("https://www.googleapis.com/youtube/v3/videos?id={0}&part=statistics&key={1}", videoID, Properties.Settings.Default.YoutubeAPIKey));
+            args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("key", Properties.Settings.Default.YoutubeAPIKey),
+                new KeyValuePair<string, string>("id", videoID),
+                new KeyValuePair<string, string>("part", "statistics")
+            };
+            jsonStr = await request(requestType.GET, "https://www.googleapis.com/youtube/v3/videos", args);
             JToken stats = JObject.Parse(jsonStr).SelectToken("items")[0].SelectToken("statistics");
             return new Objects.YoutubeVideo(videoTitle, videoDescription, videoID, int.Parse(stats.SelectToken("viewCount").ToString()), int.Parse(stats.SelectToken("likeCount").ToString()), int.Parse(stats.SelectToken("dislikeCount").ToString()),
                 int.Parse(stats.SelectToken("favoriteCount").ToString()), int.Parse(stats.SelectToken("commentCount").ToString()));
@@ -395,13 +493,24 @@ namespace KrakenBot2
 
         public async static Task<Objects.YoutubeStats> getYoutubeChannelStats(string channel)
         {
-            string jsonStr = await download(string.Format("https://www.googleapis.com/youtube/v3/channels?part=statistics&id={0}&key={1}", "UCmW5CTVpCWDM55hZwxtpjyw", Properties.Settings.Default.YoutubeAPIKey));
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("key", Properties.Settings.Default.YoutubeAPIKey),
+                new KeyValuePair<string, string>("id", "UCmW5CTVpCWDM55hZwxtpjyw"),
+                new KeyValuePair<string, string>("part", "statistics")
+            };
+            string jsonStr = await request(requestType.GET, "https://www.googleapis.com/youtube/v3/channels", args);
             return new Objects.YoutubeStats(JObject.Parse(jsonStr).SelectToken("items")[0].SelectToken("statistics"));
         }
 
         public async static void notifySwifty(string title, string descriptor)
         {
-            await download(string.Format("{0}?title={1}&descriptor={2}", Properties.Settings.Default.webNotify, title, descriptor));
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("title", title),
+                new KeyValuePair<string, string>("descriptor", descriptor)
+            };
+            await request(requestType.GET, Properties.Settings.Default.webNotify, args);
         }
 
         public async static Task<Objects.FollowData> getFollowData(string channel)
@@ -426,12 +535,21 @@ namespace KrakenBot2
 
         public async static void addInviteCode(string username, string code)
         {
-            await download(string.Format("{0}?user={1}&code={2}", Properties.Settings.Default.webAddInvite, username, code));
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("user", username),
+                new KeyValuePair<string, string>("code", code)
+            };
+            await request(requestType.GET, Properties.Settings.Default.webAddInvite, args);
         }
 
         public async static Task<string> getExistingDiscordInvite(string username)
         {
-            string jsonStr = await download(string.Format("{0}?user={1}",Properties.Settings.Default.webDiscordOldInvite, username));
+            List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("user", username)
+            };
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webDiscordOldInvite, args);
             JToken json = JObject.Parse(jsonStr).SelectToken("discord_invite");
             if (json.SelectToken("found").ToString() == "True")
                 return json.SelectToken("invite").ToString();
@@ -439,13 +557,51 @@ namespace KrakenBot2
                 return null;
         }
 
-        private async static Task<string> download(string url, bool utf8 = false)
+        public async static Task<string> request(requestType type, string host, List<KeyValuePair<string, string>> args = null, bool utf8 = true)
         {
-            Console.WriteLine("QUERYING: " + url);
+            switch(type)
+            {
+                case requestType.GET:
+                    string url = "";
+                    if (args != null)
+                        foreach (KeyValuePair<string, string> arg in args)
+                            if (url == "")
+                                url = string.Format("?{0}={1}", arg.Key, arg.Value);
+                            else
+                                url = string.Format("{0}&{1}={2}", url, arg.Key, arg.Value);
+                    url = host + url;
+                    return await get(url, utf8);
+                    //return null;
+                case requestType.POST:
+                    return await post(host, args, utf8);
+                default:
+                    return null;
+            }
+        }
+
+        private async static Task<string> get(string url, bool utf8 = false)
+        {
             System.Net.WebClient wc = new System.Net.WebClient();
             if (utf8)
                 wc.Encoding = Encoding.UTF8;
             return await wc.DownloadStringTaskAsync(url);
+        }
+
+        private async static Task<string> post(string host, List<KeyValuePair<string, string>> args, bool utf8)
+        {
+            if(args == null) { args = new List<KeyValuePair<string, string>>(); }
+            HttpClient client = new HttpClient();
+            FormUrlEncodedContent body = new FormUrlEncodedContent(args);
+            HttpResponseMessage response = await client.PostAsync(host, body);
+            if (response.IsSuccessStatusCode)
+                return await new StreamReader(await response.Content.ReadAsStreamAsync()).ReadToEndAsync();
+            return null;
+        }
+
+        public enum requestType
+        {
+            GET,
+            POST
         }
     }
 }
