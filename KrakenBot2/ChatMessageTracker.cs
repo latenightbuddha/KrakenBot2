@@ -15,6 +15,7 @@ namespace KrakenBot2
         public ChatMessageTracker()
         {
             messageCountUploader.Elapsed += messageCountUploaderTick;
+            messageCountUploader.Start();
         }
 
         public void addMessage(TwitchLib.ChatMessage e)

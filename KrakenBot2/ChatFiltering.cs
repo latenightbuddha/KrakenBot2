@@ -74,7 +74,7 @@ namespace KrakenBot2
         }
 
         //Returns true if message length is larger than limit passed in
-        private static int lengthLimit = 350;
+        private static int lengthLimit = 400;
         private static bool violateLengthProtection(string message)
         {
             return (message.Length > lengthLimit);
