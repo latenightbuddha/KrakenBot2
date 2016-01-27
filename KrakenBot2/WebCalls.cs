@@ -384,7 +384,7 @@ namespace KrakenBot2
 
         public async static Task<bool> distibuteDoubloons(int amount)
         {
-            if (!Common.DryRun)
+            if (Common.DryRun)
                 return true;
             try
             {
@@ -581,6 +581,7 @@ namespace KrakenBot2
 
         private async static Task<string> get(string url, bool utf8 = false)
         {
+            Common.rep("QUERY: " + url);
             System.Net.WebClient wc = new System.Net.WebClient();
             if (utf8)
                 wc.Encoding = Encoding.UTF8;
@@ -589,6 +590,7 @@ namespace KrakenBot2
 
         private async static Task<string> post(string host, List<KeyValuePair<string, string>> args, bool utf8)
         {
+            Common.rep("QUERY (POST): " + host);
             if(args == null) { args = new List<KeyValuePair<string, string>>(); }
             HttpClient client = new HttpClient();
             FormUrlEncodedContent body = new FormUrlEncodedContent(args);
