@@ -47,6 +47,8 @@ namespace KrakenBot2
         private static int longestWord = 26;
         private static bool violateSpamProtection(string message)
         {
+            if (violateLinkProtection(message))
+                return false;
             foreach(string word in message.Split(' '))
             {
                 if (word.Length > longestWord)
