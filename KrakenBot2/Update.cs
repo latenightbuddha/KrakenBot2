@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Reflection;
 
 namespace KrakenBot2
 {
@@ -47,6 +48,14 @@ namespace KrakenBot2
                 File.Delete("updater.exe");
                 Common.UpdateDatas = new Common.UpdateData(WebCalls.downloadUpdateDetails().Result);
                 Common.notify("Update successful!", "Changes: " + Common.UpdateDatas.Details.Changes);
+                Console.WriteLine("Waiting for connected state...");
+                while(!Events.connected) { }
+                Console.WriteLine("Connected to chat confirmed!");
+                if (Common.UpdateDatas.Details.Announce)
+                {
+                    Common.ChatClient.sendMessage(string.Format("/me [V2] connected[v{0}]!", Assembly.GetExecutingAssembly().GetName().Version), Common.DryRun);
+                    Common.ChatClient.sendMessage(string.Format("Updated! Changes: {0}", Common.UpdateDatas.Details.Changes), Common.DryRun);
+                }
             }
         }
     }
