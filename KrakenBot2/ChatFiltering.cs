@@ -59,15 +59,15 @@ namespace KrakenBot2
 
         //returns true if emote count in message is larger than that of the limit passed in
         private static int emoteLimit = 16;
-        private static bool violateEmoteProtection(List<string> emotes, string message)
+        private static bool violateEmoteProtection(List<Objects.Emote> emotes, string message)
         {
             message = message.ToLower();
             int emoteCount = 0;
             foreach(string word in message.Split(' '))
             {
                 if(emotes != null)
-                    foreach(string emote in emotes)
-                        if(word.ToLower() == emote.ToLower())
+                    foreach(Objects.Emote emote in emotes)
+                        if(word.ToLower() == emote.EmoteString.ToLower())
                             emoteCount++;
             }
             if (emoteCount > emoteLimit)

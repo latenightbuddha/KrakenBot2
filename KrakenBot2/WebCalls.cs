@@ -164,7 +164,7 @@ namespace KrakenBot2
             return raffleWin;
         }
 
-        public async static Task<List<string>> downloadGlobalEmotes()
+        public async static Task<List<Objects.Emote>> downloadGlobalEmotes()
         {
             if(!File.Exists("subscriber_emotes.json") || DateTime.UtcNow - File.GetLastWriteTimeUtc("subscriber_emotes.json") > TimeSpan.FromDays(3))
                 File.WriteAllText("subscriber_emotes.json", await request(requestType.GET, "https://twitchemotes.com/api_cache/v2/subscriber.json"));
@@ -175,7 +175,7 @@ namespace KrakenBot2
             string sub_emotes = File.ReadAllText("subscriber_emotes.json");
             string global_emotes = File.ReadAllText("global_emotes.json");
             string bttv_emotes = File.ReadAllText("bttv_emotes.json");
-            List<string> emotes = new List<string>();
+            List<Objects.Emote> emotes = new List<Objects.Emote>();
             //Parse sub emotes
             foreach(JToken sub in JObject.Parse(sub_emotes).SelectToken("channels"))
             {
@@ -183,7 +183,7 @@ namespace KrakenBot2
                 {
                     foreach(JToken emote in details.SelectToken("emotes"))
                     {
-                        emotes.Add(emote.SelectToken("code").ToString());
+                        emotes.Add(new Objects.Emote(emote.SelectToken("code").ToString(), sub.SelectToken("id").ToString(), true));
                     }
                 }
             }
@@ -193,14 +193,14 @@ namespace KrakenBot2
             {
                 foreach(JToken part in emote)
                 {
-                    emotes.Add(((JProperty)part.Parent).Name);
+                    emotes.Add(new Objects.Emote(((JProperty)part.Parent).Name, "global_emote", false));
                 }
             }
             //Parse bettertwitchtv emotes
             JToken bttvEmotes = JObject.Parse(bttv_emotes).SelectToken("emotes");
             foreach(JToken emote in bttvEmotes)
             {
-                emotes.Add(emote.SelectToken("code").ToString());
+                emotes.Add(new Objects.Emote(emote.SelectToken("code").ToString(), "bttv_emote", false));
             }
             Common.rep("Emotes loaded into memory: " + emotes.Count);
             return emotes;

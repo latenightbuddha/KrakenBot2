@@ -24,7 +24,7 @@ namespace KrakenBot2
         private static TwitchLib.TwitchChatClient raidClient;
         private static TwitchLib.TwitchChatClient chatClient;
         private static TwitchLib.TwitchWhisperClient whisperClient;
-        private static List<string> cachedEmotes;
+        private static List<Objects.Emote> cachedEmotes;
         private static List<Objects.TimeoutWord> toWords;
         private static List<Objects.SpoilerWord> spoilerWords;
         private static List<Objects.ChatCommand> chatCommands;
@@ -66,7 +66,7 @@ namespace KrakenBot2
         public static TwitchLib.TwitchChatClient RaidClient { get { return raidClient; } set { raidClient = value; } }
         public static TwitchLib.TwitchChatClient ChatClient { get { return chatClient; } set { chatClient = value; } }
         public static TwitchLib.TwitchWhisperClient WhisperClient { get { return whisperClient; } set { whisperClient = value; } }
-        public static List<string> CachedEmotes { get { return cachedEmotes; } set { cachedEmotes = value; } }
+        public static List<Objects.Emote> CachedEmotes { get { return cachedEmotes; } set { cachedEmotes = value; } }
         public static List<Objects.TimeoutWord> TimeoutWords { get { return toWords; } set { toWords = value; } }
         public static List<Objects.SpoilerWord> SpoilerWords { get { return spoilerWords; } set { spoilerWords = value; } }
         public static List<Objects.ChatCommand> ChatCommands { get { return chatCommands; } set { chatCommands = value; } }
