@@ -183,7 +183,7 @@ namespace KrakenBot2
                 {
                     foreach(JToken emote in details.SelectToken("emotes"))
                     {
-                        emotes.Add(new Objects.Emote(emote.SelectToken("code").ToString(), sub.SelectToken("id").ToString(), true));
+                        emotes.Add(new Objects.Emote(emote.SelectToken("code").ToString(), details.SelectToken("id").ToString(), true));
                     }
                 }
             }
