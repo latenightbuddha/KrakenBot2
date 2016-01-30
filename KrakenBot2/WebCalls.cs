@@ -457,7 +457,12 @@ namespace KrakenBot2
         public async static Task<List<Objects.RecentDonation>> downloadRecentDonations()
         {
             List<Objects.RecentDonation> recentDonations = new List<Objects.RecentDonation>();
-            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webUpdateDonations);
+            string jsonStr = "";
+            try
+            {
+                jsonStr = await request(requestType.GET, Properties.Settings.Default.webUpdateDonations);
+            }
+            catch (Exception) { return null; }
             foreach(JToken donation in JObject.Parse(jsonStr).SelectToken("donations"))
             {
                 recentDonations.Add(new Objects.RecentDonation(donation));

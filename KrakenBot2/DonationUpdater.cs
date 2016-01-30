@@ -24,6 +24,9 @@ namespace KrakenBot2
 			if(Common.StreamRefresher.isOnline())
             {
                 List<Objects.RecentDonation> recentDonations = WebCalls.downloadRecentDonations().Result;
+                //Check to see if query failed
+                if (recentDonations == null)
+                    return;
                 if (recentDonations.Count > 0)
                 {
                     foreach (Objects.RecentDonation donation in recentDonations)
