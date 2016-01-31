@@ -55,6 +55,7 @@ namespace KrakenBot2.Objects
                     giveawayType = Common.GiveawayTypes.OTHER;
                     break;
                 default:
+                    giveawayType = Common.GiveawayTypes.OTHER;
                     break;
             }
         }

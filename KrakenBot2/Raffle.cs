@@ -466,47 +466,38 @@ namespace KrakenBot2
                     subOnly = true;
                 if (giveawayProperties.SelectToken("raffle_follower_only").ToString() == "true")
                     followerOnly = true;
-                switch(giveawayProperties.SelectToken("raffle_type").ToString())
+                previousWinners = WebCalls.downloadPreviousWinners().Result;
+                switch (giveawayProperties.SelectToken("raffle_type").ToString())
                 {
                     case "exgames":
                         raffleType = Common.GiveawayTypes.EXGAMES;
-                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "steam_trade":
                         raffleType = Common.GiveawayTypes.STEAMTRADE;
-                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "steam_gift":
                         raffleType = Common.GiveawayTypes.STEAMGIFT;
-                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "steam_code":
                         raffleType = Common.GiveawayTypes.STEAMCODE;
-                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "origin_code":
                         raffleType = Common.GiveawayTypes.ORIGINCODE;
-                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "humblebundle":
                         raffleType = Common.GiveawayTypes.HUMBLEBUNDLE;
-                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "code":
                         raffleType = Common.GiveawayTypes.SERIALCODE;
-                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "logitech":
                         raffleType = Common.GiveawayTypes.LOGITECH;
-                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "soundbyte":
                         raffleType = Common.GiveawayTypes.SOUND_BYTES;
-                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         break;
                     case "other":
                         raffleType = Common.GiveawayTypes.OTHER;
-                        previousWinners = WebCalls.downloadPreviousWinners().Result;
                         raffleTypeOther = giveawayProperties.SelectToken("raffle_type_other").ToString();
                         break;
                     default:
