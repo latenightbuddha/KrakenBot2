@@ -248,7 +248,7 @@ namespace KrakenBot2
                 UserExtend newExtend = new UserExtend(username, extendsAllowed, extendDuration);
                 extends.Add(newExtend);
                 Common.ChatClient.sendMessage(string.Format("{0} has extended {1}'s host by {2} minutes! They have {3} remaining host extension(s).",
-                                    newExtend.Username, currentHost.Streamer, extendDuration, newExtend.ExtendBy), Common.DryRun);
+                                    newExtend.Username, currentHost.Streamer, extendDuration, newExtend.RemainingExtends), Common.DryRun);
                 return true;
             } else
             {

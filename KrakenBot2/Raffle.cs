@@ -37,10 +37,6 @@ namespace KrakenBot2
             //Ensures this instance of 'Raffle' is not active
             if(!raffleIsActive())
             {
-                //We want to download the exgames count if it is an exgames raffle BEFORE writing to chat so that way there isn't a delay between the initial messages below and the giveaway data
-                int exGamesCount = 0;
-                if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
-                    exGamesCount = downloadExGamesCount().Result;
                 //Sends disclaimer bullshit to channel chat
                 Common.ChatClient.sendMessage("DISCLAIMER: This is a promotion from BurkeBlack. Twitch does not sponsor or endorse broadcaster promotions and is not responsible for them.", Common.DryRun);
                 //Sends name of giveaway, who donated it, and which mod that sent it
@@ -50,6 +46,7 @@ namespace KrakenBot2
                 {
                     case Common.GiveawayTypes.EXGAMES:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: !GAMES; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
+                        Common.ChatClient.sendMessage(string.Format("There are currently {0} !games available on BurkeBlack.TV!", raffleProperties.ExGamesCount), Common.DryRun);
                         break;
                     case Common.GiveawayTypes.HUMBLEBUNDLE:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: HUMBLEBUNDLE; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
@@ -353,10 +350,14 @@ namespace KrakenBot2
             {
                 Common.ChatClient.sendMessage(string.Format("/me Giveaway is for: {0}, donated by: {1}", raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator), Common.DryRun);
                 Common.ChatClient.sendMessage(string.Format("Entries so far: {0}; Time Remaining: {1} minute", enteredViewers.Count, 1), Common.DryRun);
+                if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
+                    Common.ChatClient.sendMessage(string.Format("There are currently {0} !games available on BurkeBlack.TV!", raffleProperties.ExGamesCount), Common.DryRun);
             } else if(raffleCurrentMinute == (raffleProperties.Raffle_Length - 4))
             {
                 Common.ChatClient.sendMessage(string.Format("/me Giveaway is for: {0}, donated by: {1}", raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator), Common.DryRun);
                 Common.ChatClient.sendMessage(string.Format("Entries so far: {0}; Time Remaining: {1} minutes", enteredViewers.Count, 3), Common.DryRun);
+                if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
+                    Common.ChatClient.sendMessage(string.Format("There are currently {0} !games available on BurkeBlack.TV!", raffleProperties.ExGamesCount), Common.DryRun);
             }
             raffleCurrentMinute++;
             Common.rep("Minutes passed: " + raffleCurrentMinute);
@@ -425,7 +426,9 @@ namespace KrakenBot2
             private Filters raffleFilter;
             private List<Objects.PreviousRaffleWinner> previousWinners;
             private List<string> blockedViewers;
+            private int exGamesCount = 0;
 
+            public int ExGamesCount { get { return exGamesCount; } }
             public int Raffle_Length { get { return raffleLength; } }
             public int Raffle_Claim_Length { get { return raffleClaimLength; } }
             public int Raffle_Minimum_Entries { get { return raffleMinimumEntries; } }
@@ -471,6 +474,7 @@ namespace KrakenBot2
                 {
                     case "exgames":
                         raffleType = Common.GiveawayTypes.EXGAMES;
+                        exGamesCount = WebCalls.downloadExGamesCount().Result;
                         break;
                     case "steam_trade":
                         raffleType = Common.GiveawayTypes.STEAMTRADE;
