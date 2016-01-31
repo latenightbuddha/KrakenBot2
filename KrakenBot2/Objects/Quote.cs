@@ -22,6 +22,16 @@ namespace KrakenBot2.Objects
             author = quoteProperties.SelectToken("author").ToString();
             id = int.Parse(quoteProperties.SelectToken("id").ToString());
             quoteContents = quoteProperties.SelectToken("contents").ToString();
+            if(quoteContents.Contains('-'))
+            {
+                string newCnts = "";
+                foreach(string section in quoteContents.Split('-'))
+                {
+                    if (section.ToLower() != " burkeblack" && section.ToLower() != " burke")
+                        newCnts = section;
+                }
+                quoteContents = newCnts;
+            }
         }
     }
 }
