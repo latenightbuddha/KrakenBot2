@@ -45,8 +45,7 @@ namespace KrakenBot2
                 switch(raffleProperties.Raffle_Type)
                 {
                     case Common.GiveawayTypes.EXGAMES:
-                        Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: !GAMES; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
-                        Common.ChatClient.sendMessage(string.Format("There are currently {0} !games available on BurkeBlack.TV!", raffleProperties.ExGamesCount), Common.DryRun);
+                        Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: !GAMES; Giveaway Length: {0} minutes. There are currently {1} !games available on BurkeBlack.TV!", raffleProperties.Raffle_Length, raffleProperties.ExGamesCount), Common.DryRun);
                         break;
                     case Common.GiveawayTypes.HUMBLEBUNDLE:
                         Common.ChatClient.sendMessage(string.Format("/me Giveaway Type: HUMBLEBUNDLE; Giveaway Length: {0} minutes", raffleProperties.Raffle_Length), Common.DryRun);
@@ -162,7 +161,6 @@ namespace KrakenBot2
                 if(activeWinner.ToLower() == username.ToLower())
                 {
                     claimTimer.Stop();
-                    Common.ChatClient.sendMessage(string.Format("GIVEAWAY CLAIMED BY: {0}", username), Common.DryRun);
                     string entries = "";
                     foreach(string entry in enteredViewers)
                     {
@@ -173,7 +171,7 @@ namespace KrakenBot2
                     }
                     Objects.RaffleWin raffleWin = WebCalls.addRaffleWinner(activeWinner, raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator,
                         entries, raffleProperties.Raffle_Linker, claimCurrentSecond).Result;
-                    Common.ChatClient.sendMessage(string.Format("Congrats on your win {0}! You've won {1} raffles, and entered {2} (that's a win percentage of {3}%). Your claim time was {4} seconds," +
+                    Common.ChatClient.sendMessage(string.Format("GIVEAWAY CLAIMED BY: {0}! You've won {1} raffles, and entered {2} (that's a win percentage of {3}%). Your claim time was {4} seconds," +
                         " however your average claim time is {5} seconds.", raffleWin.Winner, raffleWin.WinCount, raffleWin.EnterCount, raffleWin.WinPercentage, raffleWin.ClaimTime, raffleWin.ClaimTimeAvg), Common.DryRun);
                     sendWinnerWhisper();
                     if (raffleProperties.Raffle_Type == Common.GiveawayTypes.SOUND_BYTES)
@@ -182,9 +180,10 @@ namespace KrakenBot2
                         Common.ChatClient.sendMessage(string.Format("[Auto] Added {0} soundbyte credits to {1}'s total.", raffleProperties.Soundbyte_Count, raffleWin.Winner), Common.DryRun);
                     }
                     int latestID = WebCalls.downloadRaffleID().Result;
-                    Common.ChatClient.sendMessage(string.Format("Giveaway details can be viewed here: http://burkeblack.tv/giveaways/listing.php?gid={0}", latestID.ToString()), Common.DryRun);
                     if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
-                        Common.ChatClient.sendMessage("Video on how automatic !games giveaways work: http://www.twitch.tv/burkeblack/c/5663793");
+                        Common.ChatClient.sendMessage(string.Format("Giveaway details can be viewed here: http://burkeblack.tv/giveaways/listing.php?gid={0} .  Video on how automatic !games giveaways work: http://www.twitch.tv/burkeblack/c/5663793", latestID.ToString()));
+                    else
+                        Common.ChatClient.sendMessage(string.Format("Giveaway details can be viewed here: http://burkeblack.tv/giveaways/listing.php?gid={0}", latestID.ToString()), Common.DryRun);
                     Common.notify("NEW GIVEAWAY CLAIM", raffleWin.Winner + " claimed " + raffleProperties.Raffle_Name);
                     Common.DiscordClient.SendMessageToChannel(string.Format("NEW CLAIM: Winner: {0}, Name: {1}, Donator: {2}, Author: {3}", raffleWin.Winner, raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator, raffleProperties.Raffle_Author), Common.DiscordClient.GetChannelByName("kraken-relay"));
                     return true;
@@ -356,8 +355,8 @@ namespace KrakenBot2
             {
                 Common.ChatClient.sendMessage(string.Format("/me Giveaway is for: {0}, donated by: {1}", raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator), Common.DryRun);
                 Common.ChatClient.sendMessage(string.Format("Entries so far: {0}; Time Remaining: {1} minutes", enteredViewers.Count, 3), Common.DryRun);
-                if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
-                    Common.ChatClient.sendMessage(string.Format("There are currently {0} !games available on BurkeBlack.TV!", raffleProperties.ExGamesCount), Common.DryRun);
+                //if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
+                    //Common.ChatClient.sendMessage(string.Format("There are currently {0} !games available on BurkeBlack.TV!", raffleProperties.ExGamesCount), Common.DryRun);
             }
             raffleCurrentMinute++;
             Common.rep("Minutes passed: " + raffleCurrentMinute);

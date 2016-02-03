@@ -9,13 +9,19 @@ namespace KrakenBot2
 {
     public class FollowerTracker
     {
+        private bool ENABLED = false;
+
         List<TwitchLib.TwitchAPIClasses.TwitchFollower> recentFollowers = new List<TwitchLib.TwitchAPIClasses.TwitchFollower>();
         private Timer followerTimer = new Timer(900000);
         public FollowerTracker()
         {
-            recentFollowers = TwitchLib.TwitchAPI.getTwitchFollowers("burkeblack", 50); 
-            followerTimer.Elapsed += followerTimerTick;
-            followerTimer.Start();
+            if(ENABLED)
+            {
+                recentFollowers = TwitchLib.TwitchAPI.getTwitchFollowers("burkeblack", 50); 
+                followerTimer.Elapsed += followerTimerTick;
+                followerTimer.Start();
+            }
+            
         }
 
         private void followerTimerTick(object sender, ElapsedEventArgs e)

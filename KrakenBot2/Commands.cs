@@ -42,6 +42,9 @@ namespace KrakenBot2
                 case "discordinvite":
                     HardCodedWhisperCommands.DiscordInvite.handleCommand(command);
                     break;
+                case "giveawayhistory":
+                    HardCodedWhisperCommands.GiveawayHistory.handleCommand(command);
+                    break;
                 default:
                     Common.WhisperClient.sendWhisper(command.Username, "To view available whisper commands, whisper the bot !commands", Common.DryRun);
                     //Handle dynamically created whisper commands
@@ -52,6 +55,12 @@ namespace KrakenBot2
         {
             switch(command.Command)
             {
+                case "notifyme":
+                    HardCodedChatCommands.OnlineNotifications.NotifyMe.handleCommand(command);
+                    break;
+                case "removeme":
+                    HardCodedChatCommands.OnlineNotifications.RemoveMe.handleCommand(command);
+                    break;
                 case "kraken":
                     HardCodedChatCommands.Kraken.handleCommand(command);
                     break;

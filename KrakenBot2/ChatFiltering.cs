@@ -167,7 +167,7 @@ namespace KrakenBot2
                 Common.notify("CHAT FLAG - SWIFTY", username + ": " + message);
             if(!sub)
             {
-                if(violateCapsProtection(message))
+                if(violateCapsProtection(message) && !linkPermitExists(username))
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, capsMessages[new Random().Next(0, capsMessages.Length)], "Please don't use so many caps."), Common.DryRun);
                     Common.WhisperClient.sendWhisper(username, "Please don't use so many capital letters. *warned*", Common.DryRun);
@@ -178,7 +178,7 @@ namespace KrakenBot2
                     Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: CAPS, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("kraken-relay"));
                     return true;
                 }
-                if(violateSpamProtection(message) && !violateLinkProtection(message) && !message.Contains("PRIVMSG"))
+                if(violateSpamProtection(message) && !violateLinkProtection(message) && !message.Contains("PRIVMSG") && !linkPermitExists(username))
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, spamMessages[new Random().Next(0, spamMessages.Length)], "Please don't use so much spam."), Common.DryRun);
                     Common.WhisperClient.sendWhisper(username, "Please don't use so much spam. *warned*", Common.DryRun);
@@ -189,7 +189,7 @@ namespace KrakenBot2
                     Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: SPAM, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("kraken-relay"));
                     return true;
                 }
-                if(violateEmoteProtection(Common.CachedEmotes, message))
+                if(violateEmoteProtection(Common.CachedEmotes, message) && !linkPermitExists(username))
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, emoteMessages[new Random().Next(0, emoteMessages.Length)], "Please don't use so many emotes."), Common.DryRun);
                     Common.WhisperClient.sendWhisper(username, "Please don't use so many emotes. *warned*", Common.DryRun);
@@ -200,7 +200,7 @@ namespace KrakenBot2
                     Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: EMOTES, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("kraken-relay"));
                     return true;
                 }
-                if(violateLengthProtection(message) && !message.Contains("PRIVMSG"))
+                if(violateLengthProtection(message) && !message.Contains("PRIVMSG") && !linkPermitExists(username))
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, lengthMessages[new Random().Next(0, lengthMessages.Length)], "Please don't make your messages so long."), Common.DryRun);
                     Common.WhisperClient.sendWhisper(username, "Please don't make your messages so long. *warned*", Common.DryRun);

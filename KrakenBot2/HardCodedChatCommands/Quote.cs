@@ -16,14 +16,14 @@ namespace KrakenBot2.HardCodedChatCommands
                 {
                     //Random quote
                     Objects.Quote randomQuote = Common.Quotes[new Random().Next(0, Common.Quotes.Count - 1)];
-                    Common.ChatClient.sendMessage(string.Format("[{0}/{1}] {2} - {3}", randomQuote.ID, Common.Quotes.Count, randomQuote.QuoteContents, randomQuote.Author), Common.DryRun);
+                    Common.ChatClient.sendMessage(string.Format("[{0}/{1}] {2} - {3}", randomQuote.ID, Common.Quotes[Common.Quotes.Count - 1].ID, randomQuote.QuoteContents, randomQuote.Author), Common.DryRun);
                 } else
                 {
                     //Indexed quote
                     if(int.Parse(e.ArgumentsAsList[0]) <= Common.Quotes.Count)
                     {
                         Objects.Quote quote = Common.Quotes[int.Parse(e.ArgumentsAsList[0]) - 1];
-                        Common.ChatClient.sendMessage(string.Format("[{0}/{1}] {2} - {3}", quote.ID, Common.Quotes.Count, quote.QuoteContents, quote.Author), Common.DryRun);
+                        Common.ChatClient.sendMessage(string.Format("[{0}/{1}] {2} - {3}", quote.ID, Common.Quotes[Common.Quotes.Count -1].ID, quote.QuoteContents, quote.Author), Common.DryRun);
                     } else
                     {
                         Common.ChatClient.sendMessage("Invalid quote index!", Common.DryRun);
