@@ -13,10 +13,12 @@ namespace KrakenBot2.HardCodedChatCommands
             if (verifyCommand(e))
             {
                 OpenWeatherAPI.Query query = Common.OpenWeatherAPI.query(e.ArgumentsAsString);
-                if(query.ValidRequest)
+                if (query != null && query.ValidRequest)
                     Common.ChatClient.sendMessage(string.Format("{0}, {1} temperature: {2} ~F ({3} ~C).Conditions: {4} ({5}). Humidity: {6}%. Wind speed: {7} m/s ({8})",
                         query.Name, query.Sys.Country, query.Main.Temperature.FahrenheitCurrent, query.Main.Temperature.CelsiusCurrent, query.Weathers[0].Main, query.Weathers[0].Description,
                         query.Main.Humdity, query.Wind.SpeedMetersPerSecond, query.Wind.directionEnumToString(query.Wind.Direction)), Common.DryRun);
+                else
+                    Common.ChatClient.sendMessage("Failed to process weather command. Sorry :(", Common.DryRun);
             }
         }
 

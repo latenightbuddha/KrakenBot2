@@ -49,6 +49,8 @@ namespace KrakenBot2
         "knightfire5513", "larianstudios", "limpy", "lowco2525", "moblord", "molly", "mrboombati", "northernhermit", "omeed", "oodigames", "radlit1", "rallei_lol", "sattelizergames",
         "skylatron", "sumsum5513", "swiftyspiffy", "tangentgaming", "tbcquartermasterbot", "tessachka", "the_kraken_bot", "tobes101", "totalwarofficial", "tr0ysefix", "undeadrme",
         "warwitchtv", "wolfsgorawr", "xorshasia", "xwarcrimesx" };
+        private static int deathCount = 0;
+        private static int hitCount = 0;
 
         public static List<string> TopLevelDomains { get { return topLevelDomains; } set { topLevelDomains = value; } }
         public static List<Objects.RecentDonation> RecentDonations { get { return recentDonations; } set { recentDonations = value; } }
@@ -87,6 +89,8 @@ namespace KrakenBot2
         public static StreamRefresher StreamRefresher { get { return streamRefresher; } set { streamRefresher = value; } }
         public static List<Objects.Permit> Permits { get { return permits; } set { permits = value; } }
         public static List<string> Moderators { get { return moderators; } set { moderators = value; } }
+        public static int DeathCount { get { return deathCount; } set { deathCount = value; } }
+        public static int HitCount { get { return hitCount; } set { hitCount = value; } }
 
         public enum GiveawayTypes
         {

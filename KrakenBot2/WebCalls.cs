@@ -78,10 +78,10 @@ namespace KrakenBot2
             return previousWinners;
         }
 
-        public async static Task<List<string>> downloadBlockedViewers()
+        public async static Task<List<string>> downloadBlockedViewers(string donator)
         {
             List<string> blockedViewers = new List<string>();
-            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webBlockedViewers);
+            string jsonStr = await request(requestType.GET, string.Format("{0}?donator={1}", Properties.Settings.Default.webBlockedViewers, donator));
             foreach(JToken blockedViewer in JObject.Parse(jsonStr).SelectToken("blocked_viewers"))
             {
                 blockedViewers.Add(blockedViewer.ToString());

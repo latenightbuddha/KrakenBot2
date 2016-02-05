@@ -448,8 +448,6 @@ namespace KrakenBot2
 
             public RaffleProperties(JToken giveawayProperties)
             {
-                blockedViewers = downloadBlockedViewers().Result;
-
                 raffleLength = int.Parse(giveawayProperties.SelectToken("raffle_length").ToString());
                 if (raffleLength < 3)
                     raffleLength = 3;
@@ -469,6 +467,8 @@ namespace KrakenBot2
                 if (giveawayProperties.SelectToken("raffle_follower_only").ToString() == "true")
                     followerOnly = true;
                 previousWinners = WebCalls.downloadPreviousWinners().Result;
+                blockedViewers = downloadBlockedViewers(raffleDonator).Result;
+
                 switch (giveawayProperties.SelectToken("raffle_type").ToString())
                 {
                     case "exgames":
@@ -523,9 +523,9 @@ namespace KrakenBot2
                 }
             }
             //Downloads previous blocked viewers (for whatever reason)
-            private async Task<List<string>> downloadBlockedViewers()
+            private async Task<List<string>> downloadBlockedViewers(string donator)
             {
-                return await WebCalls.downloadBlockedViewers();
+                return await WebCalls.downloadBlockedViewers(donator);
             }
         }
     }
