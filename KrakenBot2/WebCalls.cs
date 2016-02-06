@@ -71,6 +71,7 @@ namespace KrakenBot2
         {
             List<Objects.PreviousRaffleWinner> previousWinners = new List<Objects.PreviousRaffleWinner>();
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webPreviousWinners);
+            Console.WriteLine(jsonStr);
             foreach(JToken prevWinner in JObject.Parse(jsonStr).SelectToken("previous_winners"))
             {
                 previousWinners.Add(new Objects.PreviousRaffleWinner(prevWinner));
@@ -520,7 +521,14 @@ namespace KrakenBot2
 
         public async static Task<Objects.FollowData> getFollowData(string channel)
         {
-            TwitchLib.TwitchChannel twitchChannel = await TwitchLib.TwitchAPI.getTwitchChannel(channel);
+            TwitchLib.TwitchChannel twitchChannel;
+            try
+            {
+                twitchChannel = await TwitchLib.TwitchAPI.getTwitchChannel(channel);
+            } catch(Exception)
+            {
+                return null;
+            }
             return new Objects.FollowData(twitchChannel);
         }
 

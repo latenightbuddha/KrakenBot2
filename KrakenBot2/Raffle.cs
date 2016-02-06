@@ -140,12 +140,6 @@ namespace KrakenBot2
                 if (viewer.Username.ToLower() == newViewer)
                     return false;
             }
-            //Check to see if viewer is blocked from entering
-            foreach(string viewer in raffleProperties.Blocked_Viewers)
-            {
-                if (viewer == newViewer)
-                    return false;
-            }
             Common.rep("New entry: " + newViewer);
             enteredViewers.Add(newViewer);
             Common.WhisperClient.sendWhisper(newViewer, "Your entry has been confirmed! Good luck!", Common.DryRun);
@@ -280,44 +274,46 @@ namespace KrakenBot2
                 Common.ChatClient.sendMessage("/me GIVEAWAY ERROR: Filtered raffle entry results failed or falls below minimum required entries.  Resorting to original entry list [NON-FATAL]", Common.DryRun);
                 masterList = enteredViewers;
             }
-            //Remove previosu winners
-
             //Draw winner and perform follower/sub only checks
             bool resultFound = false;
             string winner = "";
-            while(resultFound == false)
+            //Create local list of non-blocked users
+            List<string> drawFromList = new List<string>();
+            foreach(string entry in masterList)
             {
-                if(masterList.Count < raffleProperties.Raffle_Minimum_Entries)
+                if (!raffleProperties.Blocked_Viewers.Contains(entry))
+                    drawFromList.Add(entry);
+            }
+            while (resultFound == false)
+            {
+                if(drawFromList.Count < raffleProperties.Raffle_Minimum_Entries)
                 {
                     resultFound = true;
                     Common.ChatClient.sendMessage("/me GIVEAWAY ERROR: Entry count has fallen below required minimum entry count. [FATAL]", Common.DryRun);
                     return false;
                 }
 
-                winner = masterList[new Random().Next(0, masterList.Count)];
+                winner = drawFromList[new Random().Next(0, drawFromList.Count)];
                 if (raffleProperties.Follower_Only)
                     if (!await TwitchLib.TwitchAPI.userFollowsChannel(winner, "burkeblack"))
                     {
-                        masterList.Remove(winner);
+                        drawFromList.Remove(winner);
                         Common.ChatClient.sendMessage(string.Format("Winner ({0}) does not follow BurkeBlack! Redrawing..."), Common.DryRun);
                         continue;
                     }
                 if (raffleProperties.Sub_Only)
                     if (!TwitchLib.TwitchAPI.channelHasUserSubscribed(winner, "burkeblack", Properties.Settings.Default.BurkeOAuth))
                     {
-                        masterList.Remove(winner);
+                        drawFromList.Remove(winner);
                         Common.ChatClient.sendMessage(string.Format("Winner ({0}) is not subscribed BurkeBlack! Redrawing..."), Common.DryRun);
                         continue;
                     }
                 resultFound = true;
             }
             if(!redraw)
-            {
                 Common.ChatClient.sendMessage(string.Format("/me GIVEAWAY WINNER: {0} (out of {1} total entries, draw percentage: {2}%)", winner, masterList.Count, (Math.Round(((double)1 / masterList.Count), 2) * 100)), Common.DryRun);
-            } else
-            {
+            else
                 Common.ChatClient.sendMessage(string.Format("/me GIVEAWAY REDRAW WINNER: {0} (out of {1} total entries, draw percentage: {2}%)", winner, masterList.Count, (Math.Round(((double)1 / masterList.Count), 2) * 100)), Common.DryRun);
-            }
             Common.ChatClient.sendMessage(string.Format("/me You have {0} minutes to claim your giveaway, {1}. Use !claim to claim. Use !pass to pass on the giveaway and have the bot draw a new winner.", raffleProperties.Raffle_Claim_Length, winner), Common.DryRun);
             claimCurrentSecond = 0;
             activeWinner = winner;

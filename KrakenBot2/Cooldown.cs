@@ -31,7 +31,7 @@ namespace KrakenBot2
 
         public bool commandAvailable(TwitchLib.ChatMessage.uType userType, string command, int seconds)
         {
-            if(seconds != 0 && userType != TwitchLib.ChatMessage.uType.Moderator)
+            if(seconds != 0 || userType != TwitchLib.ChatMessage.uType.Moderator)
             {
                 foreach (CommandCooldown cooldown in cooldowns)
                 {

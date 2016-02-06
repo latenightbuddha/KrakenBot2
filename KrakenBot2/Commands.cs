@@ -55,6 +55,12 @@ namespace KrakenBot2
         {
             switch(command.Command)
             {
+                case "pick":
+                    HardCodedChatCommands.Pick.handleCommand(command);
+                    break;
+                case "kappa":
+                    HardCodedChatCommands.Kappa.handleCommand(command);
+                    break;
                 case "dc":
                     HardCodedChatCommands.DeathCount.handleCommand(command);
                     break;

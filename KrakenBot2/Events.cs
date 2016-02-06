@@ -79,7 +79,7 @@ namespace KrakenBot2
 
         public static void onDiscordMessageReceived(object sender, DiscordMessageEventArgs e)
         {
-            if (e.message_text[0] == '!')
+            if (e.message_text.Length > 0 && e.message_text[0] == '!')
                 Commands.handleDiscordCommand(new Objects.DiscordCommand(e.author.user.username, e.message_text, e.Channel.name));
             Console.WriteLine(string.Format("[{0}] {1}: {2}", e.Channel.name, e.author.user.username, e.message_text));
         }

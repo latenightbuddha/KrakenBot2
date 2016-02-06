@@ -24,7 +24,7 @@ namespace KrakenBot2.Objects
                 affectWinLimit = false;
             switch(previousWinnerData.SelectToken("giveaway_type").ToString())
             {
-                case "exgames":
+                case "!games":
                     giveawayType = Common.GiveawayTypes.EXGAMES;
                     break;
                 case "steam_trade":

@@ -17,28 +17,11 @@ namespace KrakenBot2.HardCodedChatCommands
                 if (Common.LastFollow != null)
                     Common.ChatClient.sendMessage(Common.LastFollow.ChatMessage, Common.DryRun);
                 else
-                    Common.ChatClient.sendMessage(guessChannelName(e.ArgumentsAsList[0].ToLower()), Common.DryRun);
+                    Common.ChatClient.sendMessage(string.Format("Failed to query '{0}' channel.  You can still follow them though! http://twitch.tv/{0}", e.ArgumentsAsList[0]), Common.DryRun);
                 Common.command(e.Command, true);
             } else
             {
                 Common.command(e.Command, false);
-            }
-        }
-
-        private static string guessChannelName(string invalidChannel)
-        {
-            List<TwitchLib.TwitchChannel> results = TwitchLib.TwitchAPI.searchChannels(invalidChannel);
-            if (results.Count > 0)
-            {
-                TwitchLib.TwitchChannel bestGuess = results[0];
-                foreach (TwitchLib.TwitchChannel result in results)
-                    if (result.Followers > bestGuess.Followers)
-                        bestGuess = result;
-                return string.Format("The channel '{0}' is invalid or has no status.  Perhaps you meant '{1}'? In that case... {2}", invalidChannel, bestGuess.Name, WebCalls.getFollowData(bestGuess.Name).Result.ChatMessage);
-            }
-            else
-            {
-                return string.Format("The channel '{0}' is invalid or has no status, and I could not figure out which channel you meant :(", invalidChannel);
             }
         }
 
