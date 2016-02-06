@@ -155,7 +155,7 @@ namespace KrakenBot2
                     hosts.Add(newHost);
                     currentHost = newHost;
                     Common.ChatClient.sendMessage(string.Format("Multihost started with '{0}'.", newHost.Streamer), Common.DryRun);
-                    hostStreamer(newHost);
+                    hostStreamer(newHost, true);
                     Common.ChatClient.sendMessage(multihostInfo);
                     break;
                 case StartType.MANUAL:
@@ -288,9 +288,10 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format("There are currently {0} minutes remaining {1}'s host. Use !next to get a guess of which streamer will be hosted next.", defaultMinuteLimit - curMinute, currentHost.Streamer), Common.DryRun);
         }
 
-        private void hostStreamer(Host streamer)
+        private void hostStreamer(Host streamer, bool firstHost = false)
         {
-            Common.ChatClient.sendMessage("/unhost");
+            if(!firstHost)
+                Common.ChatClient.sendMessage("/unhost");
             System.Threading.Thread.Sleep(3000);
             Common.ChatClient.sendMessage(string.Format("/host {0}", streamer.Streamer));
         }
