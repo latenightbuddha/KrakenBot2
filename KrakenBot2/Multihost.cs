@@ -29,7 +29,7 @@ namespace KrakenBot2
 
         public Multihost(JToken multihostProperties)
         {
-            switch(multihostProperties.SelectToken("start_type").ToString())
+            switch (multihostProperties.SelectToken("start_type").ToString())
             {
                 case "manual":
                     startType = StartType.MANUAL;
@@ -64,7 +64,7 @@ namespace KrakenBot2
 
         public void start()
         {
-            if(firstHost())
+            if (firstHost())
                 rotator.Start();
         }
 
@@ -77,19 +77,19 @@ namespace KrakenBot2
 
         public bool guess()
         {
-            if(currentHost == null)
+            if (currentHost == null)
             {
                 Common.ChatClient.sendMessage("Cannot guess the host of a manually assigned host, or a host that does not exist in the multihost list.");
                 return false;
             }
-            if(TwitchLib.TwitchAPI.broadcasterOnline(currentHost.Streamer).Result)
+            if (TwitchLib.TwitchAPI.broadcasterOnline(currentHost.Streamer).Result)
             {
                 refreshHostsList();
                 List<Host> onlineHosts = WebCalls.getOnlineMultihostStreamers(hosts).Result;
                 int curIndex = 0;
-                foreach(Host host in onlineHosts)
+                foreach (Host host in onlineHosts)
                 {
-                    if(currentHost.Streamer.ToLower() == host.Streamer.ToLower())
+                    if (currentHost.Streamer.ToLower() == host.Streamer.ToLower())
                     {
                         if (curIndex == onlineHosts.Count - 1)
                         {
@@ -124,10 +124,10 @@ namespace KrakenBot2
                 case StartType.RANDOM:
                     Common.ChatClient.sendMessage("Multihost started. Discovering a random online multihost streamer...", Common.DryRun);
                     List<Host> onlineHosts = WebCalls.getOnlineMultihostStreamers(hosts).Result;
-                    if(onlineHosts.Count != 0)
+                    if (onlineHosts.Count != 0)
                     {
                         currentHost = onlineHosts[new Random().Next(0, onlineHosts.Count - 1)];
-                        if(currentHost.Information != "")
+                        if (currentHost.Information != "")
                             Common.ChatClient.sendMessage(string.Format("We'll kick things off with '{0}'. {1}", currentHost.Streamer, currentHost.Information), Common.DryRun);
                         else
                             Common.ChatClient.sendMessage(string.Format("We'll kick things off with '{0}'.", currentHost.Streamer), Common.DryRun);
@@ -139,9 +139,9 @@ namespace KrakenBot2
                     }
                     break;
                 case StartType.SET_HOST:
-                    foreach(Host streamer in hosts)
+                    foreach (Host streamer in hosts)
                     {
-                        if(streamer.Streamer.ToLower() == setHostName.ToLower())
+                        if (streamer.Streamer.ToLower() == setHostName.ToLower())
                         {
                             currentHost = streamer;
                             if (streamer.Information != "")
@@ -168,7 +168,7 @@ namespace KrakenBot2
         //Rotates to next ONLINE host in multihost list
         private bool nextHost()
         {
-            if(TwitchLib.TwitchAPI.broadcasterOnline("burkeblack").Result)
+            if (TwitchLib.TwitchAPI.broadcasterOnline("burkeblack").Result)
             {
                 Common.ChatClient.sendMessage("[Multihost] Burke detected as being online.  Multihost stopped.");
                 rotator.Stop();
@@ -177,7 +177,7 @@ namespace KrakenBot2
             Host nextHost;
             refreshHostsList();
             List<Host> onlineHosts = WebCalls.getOnlineMultihostStreamers(hosts).Result;
-            if(onlineHosts.Count != 0)
+            if (onlineHosts.Count != 0)
             {
                 if (currentHost != null && TwitchLib.TwitchAPI.broadcasterOnline(currentHost.Streamer).Result)
                 {
@@ -204,7 +204,7 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format("Next host: {0}.", nextHost.Streamer), Common.DryRun);
                 Common.ChatClient.sendMessage(string.Format("Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host! Use !checkhost to rotate offline host.", extendDuration), Common.DryRun);
                 curMinute = 0;
-                if(currentHost != null && nextHost.Streamer.ToLower() != currentHost.Streamer.ToLower())
+                if (currentHost != null && nextHost.Streamer.ToLower() != currentHost.Streamer.ToLower())
                     hostStreamer(nextHost);
                 currentHost = nextHost;
                 return true;
@@ -219,13 +219,13 @@ namespace KrakenBot2
         public bool handleExtend(string username)
         {
             //Check to see if viewer has already used an extend
-            if(currentHost != null)
+            if (currentHost != null)
             {
-                foreach(UserExtend extend in extends)
+                foreach (UserExtend extend in extends)
                 {
-                    if(extend.Username.ToLower() == username.ToLower())
+                    if (extend.Username.ToLower() == username.ToLower())
                     {
-                        if(extend.RemainingExtends > 0)
+                        if (extend.RemainingExtends > 0)
                         {
                             curMinute -= extendDuration;
                             int extendsRemaining = extend.useExtend();
@@ -259,7 +259,7 @@ namespace KrakenBot2
 
         public void checkHost()
         {
-            if(currentHost != null)
+            if (currentHost != null)
             {
                 if (TwitchLib.TwitchAPI.broadcasterOnline(currentHost.Streamer).Result)
                 {
@@ -274,7 +274,7 @@ namespace KrakenBot2
             {
                 Common.ChatClient.sendMessage("The currently hosted streamer cannot be checked.", Common.DryRun);
             }
-            
+
         }
 
         public void remaining()

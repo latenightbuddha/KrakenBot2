@@ -20,13 +20,18 @@ namespace KrakenBot2.HardCodedChatCommands
                 } else
                 {
                     //Indexed quote
-                    if(int.Parse(e.ArgumentsAsList[0]) <= Common.Quotes.Count)
+                    if(int.Parse(e.ArgumentsAsList[0]) <= Common.Quotes[Common.Quotes.Count - 1].ID)
                     {
-                        Objects.Quote quote = Common.Quotes[int.Parse(e.ArgumentsAsList[0]) - 1];
-                        Common.ChatClient.sendMessage(string.Format("[{0}/{1}] {2} - {3}", quote.ID, Common.Quotes[Common.Quotes.Count -1].ID, quote.QuoteContents, quote.Author), Common.DryRun);
+                        foreach(Objects.Quote quote in Common.Quotes)
+                            if(quote.ID.ToString() == e.ArgumentsAsList[0])
+                            {
+                                Common.ChatClient.sendMessage(string.Format("[{0}/{1}] {2} - {3}", quote.ID, Common.Quotes[Common.Quotes.Count - 1].ID, quote.QuoteContents, quote.Author), Common.DryRun);
+                                return;
+                            }
+                        Common.ChatClient.sendMessage("Invalid quote index [quote deleted]!", Common.DryRun);
                     } else
                     {
-                        Common.ChatClient.sendMessage("Invalid quote index!", Common.DryRun);
+                        Common.ChatClient.sendMessage("Invalid quote index [too large]!", Common.DryRun);
                     }
                 }
             }
