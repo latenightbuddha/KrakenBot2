@@ -39,6 +39,7 @@ namespace KrakenBot2
                 {
                     currentlyOnline = false;
                     Common.DoubloonDistributor.forceOffline();
+                    Common.AhoyRewarder.restartActive();
                 }
                     
             }

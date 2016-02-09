@@ -43,6 +43,7 @@ namespace KrakenBot2
         private static OpenWeatherAPI.OpenWeatherAPI openWeatherAPI;
         private static StreamRefresher streamRefresher;
         private static List<Objects.Permit> permits = new List<Objects.Permit>();
+        private static AhoyRewarder ahoyRewarder;
         private static List<string> moderators = new List<string> { "acebravo69", "andyl_sandbox", "ara_gaming", "arykitty", "batty0", "bikeman", "bioadmiralx", "bruisedlee01", "burkeblack",
         "burke_listener", "caimspact", "captain_zyloh", "chrizzzzzzz", "clamtaco", "cohhcarnage", "cohhilitionteambot", "cruisette", "dara226", "dianadd", "djtechlive", "docgotgame",
         "ebrech", "echoics", "ellohime", "evilbunny101", "ferretbomb", "fu_grimreaper1979", "fuzzyfreaks", "g0dispink", "geekdomo", "itsgime", "jazzalynn", "jonsmith13", "kingradinov",
@@ -91,6 +92,7 @@ namespace KrakenBot2
         public static List<string> Moderators { get { return moderators; } set { moderators = value; } }
         public static int DeathCount { get { return deathCount; } set { deathCount = value; } }
         public static int HitCount { get { return hitCount; } set { hitCount = value; } }
+        public static AhoyRewarder AhoyRewarder { get { return ahoyRewarder; } set { ahoyRewarder = value; } }
 
         public enum GiveawayTypes
         {

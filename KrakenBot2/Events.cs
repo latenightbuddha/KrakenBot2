@@ -30,6 +30,8 @@ namespace KrakenBot2
             if(e.ChatMessage.Message[0] != '!')
                 Common.rep(string.Format("MESSAGE {0}: {1}", e.ChatMessage.DisplayName, e.ChatMessage.Message));
             ChatFiltering.violatesProtections(e.ChatMessage.Username, Common.isSub(e), Common.isMod(e), e.ChatMessage.Message);
+            if (Common.AhoyRewarder.isActive())
+                Common.AhoyRewarder.processMessage(e);
             Common.ChatMessageTracker.addMessage(e.ChatMessage);
         }
 
