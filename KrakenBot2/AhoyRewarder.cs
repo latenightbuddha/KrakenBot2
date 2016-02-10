@@ -41,22 +41,23 @@ namespace KrakenBot2
                     {
                         first = new ahoyReward(e.ChatMessage.Username, firstReward);
                         WebCalls.addDoubloons(first.Username, first.Reward);
-                        Common.ChatClient.sendMessage(string.Format("/me [auto] rewarded {0} some doubloons ({1}) for the first Ahoy message!", first.Username, first.Reward));
+                        Common.ChatClient.sendMessage(string.Format("/me rewarded {0} some doubloons ({1}) for the first Ahoy message! [auto] ", first.Username, first.Reward));
                     } else if(second == null)
                     {
                         second = new ahoyReward(e.ChatMessage.Username, secondReward);
                         WebCalls.addDoubloons(second.Username, second.Reward);
-                        Common.ChatClient.sendMessage(string.Format("/me [auto] rewarded {0} some doubloons ({1}) for the second Ahoy message!", second.Username, second.Reward));
+                        Common.ChatClient.sendMessage(string.Format("/me rewarded {0} some doubloons ({1}) for the second Ahoy message! [auto] ", second.Username, second.Reward));
                     } else
                     {
                         third = new ahoyReward(e.ChatMessage.Username, thirdReward);
                         WebCalls.addDoubloons(third.Username, third.Reward);
-                        Common.ChatClient.sendMessage(string.Format("/me [auto] rewarded {0} some doubloons ({1}) for the third Ahoy message!", second.Username, second.Reward));
+                        Common.ChatClient.sendMessage(string.Format("/me rewarded {0} some doubloons ({1}) for the third Ahoy message! [auto] ", third.Username, third.Reward));
+                        connectedMsgReceived = false;
                     }
                 }
             } else
             {
-                if (e.ChatMessage.Username.ToLower() == "burke_listener" && e.ChatMessage.Message.ToLower().Contains("connect"))
+                if (e.ChatMessage.Username.ToLower() == "burke_listener" && e.ChatMessage.Message.ToLower().Contains("connected!"))
                     connectedMsgReceived = true;
             }
         }

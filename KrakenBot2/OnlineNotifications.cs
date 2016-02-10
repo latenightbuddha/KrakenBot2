@@ -23,7 +23,7 @@ namespace KrakenBot2
             burkeOnlineTimer.Start();
         }
 
-        private void burkeOnlineTimerTick(object sender, System.Timers.ElapsedEventArgs e)
+        private void burkeOnlineTimerTick(object sender, ElapsedEventArgs e)
         {
             if (Common.StreamRefresher.isOnline())
             {
