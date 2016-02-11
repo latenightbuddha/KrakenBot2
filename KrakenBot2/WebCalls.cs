@@ -595,10 +595,16 @@ namespace KrakenBot2
         private async static Task<string> get(string url, bool utf8 = false)
         {
             Common.rep("QUERY: " + url);
-            System.Net.WebClient wc = new System.Net.WebClient();
-            if (utf8)
-                wc.Encoding = Encoding.UTF8;
-            return await wc.DownloadStringTaskAsync(url);
+            try
+            {
+                System.Net.WebClient wc = new System.Net.WebClient();
+                if (utf8)
+                    wc.Encoding = Encoding.UTF8;
+                return await wc.DownloadStringTaskAsync(url);
+            } catch (Exception)
+            {
+                return "";
+            }
         }
 
         private async static Task<string> post(string host, List<KeyValuePair<string, string>> args, bool utf8)

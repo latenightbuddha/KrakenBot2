@@ -52,6 +52,7 @@ namespace KrakenBot2
         "warwitchtv", "wolfsgorawr", "xorshasia", "xwarcrimesx" };
         private static int deathCount = 0;
         private static int hitCount = 0;
+        private static List<string> chatSubs = new List<string>();
 
         public static List<string> TopLevelDomains { get { return topLevelDomains; } set { topLevelDomains = value; } }
         public static List<Objects.RecentDonation> RecentDonations { get { return recentDonations; } set { recentDonations = value; } }
@@ -93,6 +94,7 @@ namespace KrakenBot2
         public static int DeathCount { get { return deathCount; } set { deathCount = value; } }
         public static int HitCount { get { return hitCount; } set { hitCount = value; } }
         public static AhoyRewarder AhoyRewarder { get { return ahoyRewarder; } set { ahoyRewarder = value; } }
+        public static List<string> ChatSubs { get { return chatSubs; } }
 
         public enum GiveawayTypes
         {

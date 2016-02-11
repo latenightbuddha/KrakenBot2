@@ -32,6 +32,7 @@ namespace KrakenBot2
             ChatFiltering.violatesProtections(e.ChatMessage.Username, Common.isSub(e), Common.isMod(e), e.ChatMessage.Message);
             if (Common.AhoyRewarder.isActive())
                 Common.AhoyRewarder.processMessage(e);
+            processPotentialSub(e);
             Common.ChatMessageTracker.addMessage(e.ChatMessage);
         }
 
@@ -40,6 +41,7 @@ namespace KrakenBot2
             Common.rep(string.Format("[CHAT]COMMAND {0}: {1}", e.ChatMessage.Message, e.Command + e.ArgumentsAsString));
             ChatFiltering.violatesProtections(e.ChatMessage.Username, Common.isSub(e), Common.isMod(e), e.ChatMessage.Message);
             Commands.handleChatCommand(e);
+            processPotentialSub(e);
             Common.ChatMessageTracker.addMessage(e.ChatMessage);
         }
 
@@ -90,6 +92,18 @@ namespace KrakenBot2
         {
             //if (e.message[0] == '!')
             //Commands.handleDiscordCommand(new Objects.DiscordCommand(e.author.user.username, e.message, "", true));
+        }
+
+        private static void processPotentialSub(TwitchLib.TwitchChatClient.NewChatMessageArgs e)
+        {
+            if (e.ChatMessage.Subscriber && !Common.ChatSubs.Contains(e.ChatMessage.Username.ToLower()))
+                Common.ChatSubs.Add(e.ChatMessage.Username.ToLower());
+        }
+
+        private static void processPotentialSub(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        {
+            if (e.ChatMessage.Subscriber && !Common.ChatSubs.Contains(e.ChatMessage.Username.ToLower()))
+                Common.ChatSubs.Add(e.ChatMessage.Username.ToLower());
         }
     }
 }
