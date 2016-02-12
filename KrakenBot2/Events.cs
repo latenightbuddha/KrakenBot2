@@ -88,12 +88,6 @@ namespace KrakenBot2
             Console.WriteLine(string.Format("[{0}] {1}: {2}", e.Channel.name, e.author.user.username, e.message_text));
         }
 
-        public static void onDiscordPrivateMessageReceived(object sender, DiscordPrivateMessageEventArgs e)
-        {
-            //if (e.message[0] == '!')
-            //Commands.handleDiscordCommand(new Objects.DiscordCommand(e.author.user.username, e.message, "", true));
-        }
-
         private static void processPotentialSub(TwitchLib.TwitchChatClient.NewChatMessageArgs e)
         {
             if (e.ChatMessage.Subscriber && !Common.ChatSubs.Contains(e.ChatMessage.Username.ToLower()))

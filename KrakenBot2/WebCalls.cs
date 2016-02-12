@@ -13,89 +13,86 @@ namespace KrakenBot2
 {
     public static class WebCalls
     {
+        // Downloads and loads timeout words into list; returns list
         public async static Task<List<Objects.TimeoutWord>> downloadTimeoutWords()
         {
             List<Objects.TimeoutWord> words = new List<Objects.TimeoutWord>();
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webTimeoutWordsURL);
             foreach(JToken word in JObject.Parse(jsonStr).SelectToken("words"))
-            {
                 words.Add(new Objects.TimeoutWord(word));
-            }
             return words;
         }
 
+        // Downloads and loads spoiler words into list; returns list
         public async static Task<List<Objects.SpoilerWord>> downloadSpoilerWords()
         {
             List<Objects.SpoilerWord> words = new List<Objects.SpoilerWord>();
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webSpoilerWordsURL);
             foreach(JToken word in JObject.Parse(jsonStr).SelectToken("words"))
-            {
                 words.Add(new Objects.SpoilerWord(word));
-            }
             return words;
         }
 
+        // Downloads and loads chat commands into list; returns list
         public async static Task<List<Objects.ChatCommand>> downloadChatCommands()
         {
             List<Objects.ChatCommand> commands = new List<Objects.ChatCommand>();
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webCommandsURL);
             foreach(JToken command in JObject.Parse(jsonStr).SelectToken("commands"))
-            {
                 commands.Add(new Objects.ChatCommand(command));
-            }
             return commands;
         }
 
+        // Download and loads quotes into list; returns list
         public async static Task<List<Objects.Quote>> downloadQuotes()
         {
             List<Objects.Quote> quotes = new List<Objects.Quote>();
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webQuotes);
             foreach(JToken quote in JObject.Parse(jsonStr).SelectToken("quotes"))
-            {
                 quotes.Add(new Objects.Quote(quote));
-            }
             return quotes;
         }
 
+        // Downloads server settings; returns them in form of ServerSetting object
         public async static Task<ServerSettings> downloadServerSettings()
         {
             return new ServerSettings(JObject.Parse(await request(requestType.GET, Properties.Settings.Default.webSettingsURL)).SelectToken("settings"));
         }
 
+        // Downloads and returns JSON string of timed messages
         public async static Task<string> downloadTimedMessages()
         {
             return await request(requestType.GET, Properties.Settings.Default.webMessagesURL);
         }
 
+        // Downloads and loads previous raffle winners into list; returns list
         public async static Task<List<Objects.PreviousRaffleWinner>> downloadPreviousWinners()
         {
             List<Objects.PreviousRaffleWinner> previousWinners = new List<Objects.PreviousRaffleWinner>();
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webPreviousWinners);
-            Console.WriteLine(jsonStr);
             foreach(JToken prevWinner in JObject.Parse(jsonStr).SelectToken("previous_winners"))
-            {
                 previousWinners.Add(new Objects.PreviousRaffleWinner(prevWinner));
-            }
             return previousWinners;
         }
 
+        // Downloads and returns JSON string of blocked viewers
         public async static Task<List<string>> downloadBlockedViewers(string donator)
         {
             List<string> blockedViewers = new List<string>();
             string jsonStr = await request(requestType.GET, string.Format("{0}?donator={1}", Properties.Settings.Default.webBlockedViewers, donator));
             foreach(JToken blockedViewer in JObject.Parse(jsonStr).SelectToken("blocked_viewers"))
-            {
                 blockedViewers.Add(blockedViewer.ToString());
-            }
             return blockedViewers;
         }
 
+        // Downloads !Games count and returns the int value
         public async static Task<int> downloadExGamesCount()
         {
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webExGamesCount);
             return int.Parse(JObject.Parse(jsonStr).SelectToken("exgames_count").ToString());
         }
 
+        // Downloads and loads minute limiting entries into list; returns list
         public async static Task<List<string>> downloadMinuteEntries(int minutes, List<string> entries)
         {
             string entryStr = "";
@@ -114,12 +111,11 @@ namespace KrakenBot2
             };
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webMinuteEntries, args);
             foreach(JToken validEntry in JObject.Parse(jsonStr).SelectToken("valid_entries"))
-            {
                 validEntries.Add(validEntries.ToString());
-            }
             return validEntries;
         }
 
+        // Downloads doubloon limiting users and loads them into list; returns list
         public async static Task<List<string>> downloadDoubloonEntries(int doubloons, List<string> entries)
         {
             string entryStr = "";
@@ -138,17 +134,17 @@ namespace KrakenBot2
             };
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webDoubloonEntries, args);
             foreach(JToken validEntry in JObject.Parse(jsonStr).SelectToken("valid_entries"))
-            {
                 validEntries.Add(validEntry.ToString());
-            }
             return validEntries;
         }
 
+        // Downloads raffle ID of the most recently successfully run giveaway, and return int value
         public async static Task<int> downloadRaffleID()
         {
             return int.Parse(JObject.Parse(await request(requestType.GET, Properties.Settings.Default.webRecentRaffleID)).SelectToken("raffle_id").ToString());
         }
 
+        // Performs a GET request with giveaway details to BurkeBlack.TV 
         public async static Task<Objects.RaffleWin> addRaffleWinner(string winner, string raffleName, string donator, string entries, string linker, int claimSeconds)
         {
             List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
@@ -165,6 +161,7 @@ namespace KrakenBot2
             return raffleWin;
         }
 
+        // Downloads all emotes (subscriber, global, BTTV) and loads them into a list; returns list
         public async static Task<List<Objects.Emote>> downloadGlobalEmotes()
         {
             if(!File.Exists("subscriber_emotes.json") || DateTime.UtcNow - File.GetLastWriteTimeUtc("subscriber_emotes.json") > TimeSpan.FromDays(3))
@@ -179,40 +176,30 @@ namespace KrakenBot2
             List<Objects.Emote> emotes = new List<Objects.Emote>();
             //Parse sub emotes
             foreach(JToken sub in JObject.Parse(sub_emotes).SelectToken("channels"))
-            {
                 foreach(JToken details in sub)
-                {
                     foreach(JToken emote in details.SelectToken("emotes"))
-                    {
                         emotes.Add(new Objects.Emote(emote.SelectToken("code").ToString(), details.SelectToken("id").ToString(), true));
-                    }
-                }
-            }
             //Parse global emotes
             JToken gEmotes = JObject.Parse(global_emotes).SelectToken("emotes");
             foreach (JToken emote in gEmotes)
-            {
                 foreach(JToken part in emote)
-                {
                     emotes.Add(new Objects.Emote(((JProperty)part.Parent).Name, "global_emote", false));
-                }
-            }
             //Parse bettertwitchtv emotes
             JToken bttvEmotes = JObject.Parse(bttv_emotes).SelectToken("emotes");
             foreach(JToken emote in bttvEmotes)
-            {
                 emotes.Add(new Objects.Emote(emote.SelectToken("code").ToString(), "bttv_emote", false));
-            }
             Common.rep("Emotes loaded into memory: " + emotes.Count);
             return emotes;
         }
 
+        // Downloads a streamer's most recent game asynchonously from TwitchLib API and returns it
         public async static Task<string> getStreamersMostRecentGame(string streamer)
         {
             TwitchLib.TwitchChannel channelData = await TwitchLib.TwitchAPI.getTwitchChannel(streamer);
             return channelData.Game;
         }
 
+        // Performs GET request to BurkeBlack.TV detailing a new highlight to be mad
         public async static Task<bool> createHighlight(string username, string title)
         {
             if (Common.StreamRefresher.isOnline())
@@ -241,16 +228,15 @@ namespace KrakenBot2
             return false;
         }
 
+        // Downloads a sub's personal command and returns the string value
         public async static Task<string> getSetPersonalCommand(string username, string newData)
         {
             if(newData == null)
             {
                 //Fetch current data
                 foreach(Objects.PersonalCommand command in Common.PersonalCommands)
-                {
                     if (command.Username.ToLower() == username.ToLower())
                         return command.Data;
-                }
                 List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>("name", username),
@@ -280,13 +266,12 @@ namespace KrakenBot2
                     }
                 }
                 if(found == false)
-                {
                     Common.PersonalCommands.Add(new Objects.PersonalCommand(username, newData));
-                }
                 return string.Format("[{0}] Your personal command has been updated!", username);
             }
         }
 
+        // Queries talk server with contents of twitch message, returns string value
         public async static Task<string> talk(string username, string message)
         {
             List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
@@ -297,17 +282,17 @@ namespace KrakenBot2
             return string.Format("[{0}] {1}", username, resp);
         }
 
+        // Downloads and loads multihost streamers into list; returns list
         public async static Task<List<Host>> downloadMultihostStreamers()
         {
             List<Host> streamers = new List<Host>();
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webMultihostStreamers);
             foreach (JToken streamer in JObject.Parse(jsonStr).SelectToken("streamers"))
-            {
                 streamers.Add(new Host(streamer.SelectToken("streamer").ToString(), streamer.SelectToken("information").ToString()));
-            }
             return streamers;
         }
 
+        // Queries Twitch API for each streamer in the list to get a list of online streamers; returns list
         public async static Task<List<Host>> getOnlineMultihostStreamers(List<Host> streamers)
         {
             List<Host> onlineStreamers = new List<Host>();
@@ -322,17 +307,17 @@ namespace KrakenBot2
             return onlineStreamers;
         }
 
+        // Downloads and loads users to notify; returns list
         public async static Task<List<string>> downloadUsersToNotify()
         {
             List<string> usersToNotify = new List<string>();
             string jsonStr = await request(requestType.GET, Properties.Settings.Default.webNotifyMeUsers);
             foreach(JToken user in JObject.Parse(jsonStr).SelectToken("users"))
-            {
                 usersToNotify.Add(user.SelectToken("username").ToString());
-            }
             return usersToNotify;
         }
 
+        // Queries BurkeBlack.TV to add user to notify list
         public async static void addNotifyUser(string username)
         {
             if (!Common.DryRun)
@@ -345,6 +330,7 @@ namespace KrakenBot2
             }
         }
 
+        // Queries BurkeBlack.TV to disable notifications for user
         public async static void removeNotifyUser(string username)
         {
             if (!Common.DryRun)
@@ -357,6 +343,7 @@ namespace KrakenBot2
             }
         }
 
+        // Performs query to add doubloons to a user
         public async static void addDoubloons(string username, int amount)
         {
             if (!Common.DryRun)
@@ -370,6 +357,7 @@ namespace KrakenBot2
             }
         }
 
+        // Performs query to add soundbyte credits to a user
         public async static void addSoundbyteCredits(string username, int amount)
         {
             if (!Common.DryRun)
@@ -383,6 +371,7 @@ namespace KrakenBot2
             }
         }
 
+        // Performs query to distribute doubloons to all viewers
         public async static Task<bool> distibuteDoubloons(int amount)
         {
             if (Common.DryRun)
@@ -401,6 +390,7 @@ namespace KrakenBot2
             }
         }
 
+        // Performs GET query to upload message counts
         public async static void uploadChatMessageCounts(string userMessageCounts)
         {
             if (!Common.DryRun)
@@ -413,6 +403,7 @@ namespace KrakenBot2
             }
         }
 
+        // Downloads all TLDS and loads them into list; returns list
         public async static Task<List<string>> downloadTopLevelDomains()
         {
             List<string> tlds = new List<string>();
@@ -431,6 +422,7 @@ namespace KrakenBot2
             return tlds;
         }
 
+        // Performs query to get a specific user's doubloon count; returns string value
         public async static Task<string> getUserDoubloons(string username)
         {
             List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
@@ -440,6 +432,7 @@ namespace KrakenBot2
             return await request(requestType.GET, Properties.Settings.Default.webDoubloonCount, args);
         }
 
+        // Downloads bot update details; returns UpdateDetails object
         public async static Task<UpdateDetails> downloadUpdateDetails()
         {
             List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
@@ -450,11 +443,13 @@ namespace KrakenBot2
             return new UpdateDetails(JObject.Parse(cnts).SelectToken("update_data"));
         }
 
+        // Query to download a file (used for updates)
         public static void downloadFile(string onlineLocation, string fileName)
         {
             new System.Net.WebClient().DownloadFile(onlineLocation, fileName);
         }
 
+        // Downloads and loads the last 10 donations into a list; returns list
         public async static Task<List<Objects.RecentDonation>> downloadRecentDonations()
         {
             List<Objects.RecentDonation> recentDonations = new List<Objects.RecentDonation>();
@@ -465,12 +460,11 @@ namespace KrakenBot2
             }
             catch (Exception) { return null; }
             foreach(JToken donation in JObject.Parse(jsonStr).SelectToken("donations"))
-            {
                 recentDonations.Add(new Objects.RecentDonation(donation));
-            }
             return recentDonations;
         }
 
+        // Downloads Burke's latest youtube video from YT API; returns YoutubeVideo object
         public async static Task<Objects.YoutubeVideo> getBurkesLatestYTVideo()
         {
             List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
@@ -497,6 +491,7 @@ namespace KrakenBot2
                 int.Parse(stats.SelectToken("favoriteCount").ToString()), int.Parse(stats.SelectToken("commentCount").ToString()));
         }
 
+        // Downloads Burke's YouTube channel stats, returns YoutubeStats object
         public async static Task<Objects.YoutubeStats> getYoutubeChannelStats(string channel)
         {
             List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
@@ -509,6 +504,7 @@ namespace KrakenBot2
             return new Objects.YoutubeStats(JObject.Parse(jsonStr).SelectToken("items")[0].SelectToken("statistics"));
         }
 
+        // Performs query to send push notification to Swifty's phone
         public async static void notifySwifty(string title, string descriptor)
         {
             List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
@@ -519,6 +515,7 @@ namespace KrakenBot2
             await request(requestType.GET, Properties.Settings.Default.webNotify, args);
         }
 
+        // Downloads follow data for a specific channel; returns FollowData object
         public async static Task<Objects.FollowData> getFollowData(string channel)
         {
             TwitchLib.TwitchChannel twitchChannel;
@@ -532,6 +529,7 @@ namespace KrakenBot2
             return new Objects.FollowData(twitchChannel);
         }
 
+        // Queries Discord API to generate 1 use, 2 minute Discord invite code; returns discord invite string value
         public static string createInviteCode()
         {
             string url = Endpoints.BaseAPI + Endpoints.Channels + $"/{Common.DiscordClient.GetChannelByName("general").id}" + Endpoints.Invites;
@@ -546,6 +544,7 @@ namespace KrakenBot2
             }
         }
 
+        // Performs query to add invite code to listing in database so users cant generate more than one
         public async static void addInviteCode(string username, string code)
         {
             List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
@@ -556,6 +555,7 @@ namespace KrakenBot2
             await request(requestType.GET, Properties.Settings.Default.webAddInvite, args);
         }
 
+        // Performs query to pull existing discord invite from database; returns string value
         public async static Task<string> getExistingDiscordInvite(string username)
         {
             List<KeyValuePair<string, string>> args = new List<KeyValuePair<string, string>>()
@@ -570,7 +570,8 @@ namespace KrakenBot2
                 return null;
         }
 
-        public async static Task<string> request(requestType type, string host, List<KeyValuePair<string, string>> args = null, bool utf8 = true)
+        // Private web request function, performs GET or POST calls, returns downloaded string value
+        private async static Task<string> request(requestType type, string host, List<KeyValuePair<string, string>> args = null, bool utf8 = true)
         {
             switch(type)
             {
@@ -584,7 +585,6 @@ namespace KrakenBot2
                                 url = string.Format("{0}&{1}={2}", url, arg.Key, arg.Value);
                     url = host + url;
                     return await get(url, utf8);
-                    //return null;
                 case requestType.POST:
                     return await post(host, args, utf8);
                 default:
@@ -592,6 +592,7 @@ namespace KrakenBot2
             }
         }
 
+        // Private web GET request; returns downloaded string value
         private async static Task<string> get(string url, bool utf8 = false)
         {
             Common.rep("QUERY: " + url);
@@ -607,6 +608,7 @@ namespace KrakenBot2
             }
         }
 
+        // Private web POST request; returns download string value
         private async static Task<string> post(string host, List<KeyValuePair<string, string>> args, bool utf8)
         {
             Common.rep("QUERY (POST): " + host);
@@ -619,7 +621,8 @@ namespace KrakenBot2
             return null;
         }
 
-        public enum requestType
+        // Web request type distinguisher
+        private enum requestType
         {
             GET,
             POST
