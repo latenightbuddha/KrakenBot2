@@ -51,6 +51,14 @@ namespace KrakenBot2.HardCodedChatCommands
                             else
                                 Common.ChatClient.sendMessage("Fewer than 3 subs exist in the sub chatter list.  Please allow more subs to speak in chat before using this command.", Common.DryRun);
                             break;
+                        case "clear":
+                            Common.ChatSubs.Clear();
+                            Common.ChatClient.sendMessage("Subscriber list has been cleared.");
+                            break;
+                        case "reset":
+                            Common.ChatSubs.Clear();
+                            Common.ChatClient.sendMessage("Subscriber list has been cleared.");
+                            break;
                     }
                 }
                 Common.command(e.Command, true);

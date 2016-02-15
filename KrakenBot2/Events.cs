@@ -14,10 +14,11 @@ namespace KrakenBot2
         public static bool connected = false;
         public static void onChannelState(object sender, TwitchLib.TwitchChatClient.ChannelStateAssignedArgs e)
         {
+            if(!connected)
+                Common.ChatClient.sendMessage(string.Format("/me [V2] connected[v{0}]!", Assembly.GetExecutingAssembly().GetName().Version), Common.DryRun);
             connected = true;
             if (!Common.EntryMessage)
                 return;
-            Common.ChatClient.sendMessage(string.Format("/me [V2] connected[v{0}]!", Assembly.GetExecutingAssembly().GetName().Version), Common.DryRun);
         }
 
         public static void chatOnConnect(object sender, TwitchLib.TwitchChatClient.OnConnectedArgs e)
