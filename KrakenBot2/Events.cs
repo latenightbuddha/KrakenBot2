@@ -21,7 +21,7 @@ namespace KrakenBot2
                 return;
         }
 
-        public static void onHostedStreamerWentOffline(object sender, EventHandler e)
+        public static void onHostedStreamerWentOffline(object sender, EventArgs e)
         {
             if (Common.Multihost != null)
                 Common.Multihost.handleHostOfflineDetected();
