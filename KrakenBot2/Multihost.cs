@@ -257,6 +257,19 @@ namespace KrakenBot2
             }
         }
 
+        public void handleHostOfflineDetected()
+        {
+            if(currentHost != null)
+            {
+                Common.ChatClient.sendMessage(string.Format("It looks like {0} just went offline! Rotating host!"));
+                nextHost();
+            } else
+            {
+                Common.ChatClient.sendMessage(string.Format("The hosted streamer just went offline! Rotating host!"));
+                nextHost();
+            }
+        }
+
         public void checkHost()
         {
             if (currentHost != null)

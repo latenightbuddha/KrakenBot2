@@ -21,6 +21,12 @@ namespace KrakenBot2
                 return;
         }
 
+        public static void onHostedStreamerWentOffline(object sender, EventHandler e)
+        {
+            if (Common.Multihost != null)
+                Common.Multihost.handleHostOfflineDetected();
+        }
+
         public static void chatOnConnect(object sender, TwitchLib.TwitchChatClient.OnConnectedArgs e)
         {
             Common.success("[CHAT]Connected to channel!");
