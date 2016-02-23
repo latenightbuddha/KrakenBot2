@@ -91,8 +91,17 @@ namespace KrakenBot2
         public static void onDiscordMessageReceived(object sender, DiscordMessageEventArgs e)
         {
             if (e.message_text.Length > 0 && e.message_text[0] == '!')
-                Commands.handleDiscordCommand(new Objects.DiscordCommand(e.author.user.username, e.message_text, e.Channel.name));
-            Console.WriteLine(string.Format("[{0}] {1}: {2}", e.Channel.name, e.author.user.username, e.message_text));
+                Commands.handleDiscordCommand(new Objects.DiscordCommand(e.author.Username, e.message_text, e.Channel.Name));
+            if(e.Channel.Name.ToLower() == "kraken-relay")
+            {
+                if (e.message.content.ToLower() == "!restart")
+                {
+                    Common.DiscordClient.SendMessageToChannel("Restarting... Please standby!", Common.DiscordClient.GetChannelByName("kraken-relay"));
+                    System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
+                    Environment.Exit(0);
+                }
+            }
+            Console.WriteLine(string.Format("[{0}] {1}: {2}", e.Channel.Name, e.author.Username, e.message_text));
         }
 
         private static void processPotentialSub(TwitchLib.TwitchChatClient.NewChatMessageArgs e)

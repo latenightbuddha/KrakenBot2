@@ -19,7 +19,6 @@ namespace KrakenBot2
         private static string[] spoilerWordMessages = { "This has all the signs of a spoiler!", "Spoil you shall not!", "You mustn't spoil. You mustn't spoil.", "No story details!!!", "And then there was no spoilers!" };
         private static string[] linkMessages = { "Link you shall not!", "Sub status: False. Link status: Purged.", "Once upon a time THERE WAS NO LINK!!", "Just when you thought you could link...", "Your link will not see the light of day!!" };
 
-        //Returns true if 
         private static int minimumCharacters = 5;
         private static int capsPercentage = 75;
         private static bool violateCapsProtection(string message)

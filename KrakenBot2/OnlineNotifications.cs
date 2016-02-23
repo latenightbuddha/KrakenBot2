@@ -67,7 +67,7 @@ namespace KrakenBot2
             foreach(string user in usersToNotify)
             {
                 Common.WhisperClient.sendWhisper(user, string.Format("Burke just went live playing: {0}, title: {1}. Channel: {2}. !removeme to stop receiving notifications.", channel.Game, channel.Status,  "http://twitch.tv/burkeblack"), Common.DryRun);
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(2000);
             }
         }
     }
