@@ -306,6 +306,7 @@ namespace KrakenBot2
             if(!firstHost)
                 Common.ChatClient.sendMessage("/unhost");
             System.Threading.Thread.Sleep(3000);
+            Console.WriteLine(string.Format("Host command sent: /host {0}", streamer.Streamer));
             Common.ChatClient.sendMessage(string.Format("/host {0}", streamer.Streamer));
         }
 

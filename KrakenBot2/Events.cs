@@ -35,7 +35,7 @@ namespace KrakenBot2
         public static void chatOnMessage(object sender, TwitchLib.TwitchChatClient.NewChatMessageArgs e)
         {
             if(e.ChatMessage.Message[0] != '!')
-                Common.rep(string.Format("MESSAGE {0}: {1}", e.ChatMessage.DisplayName, e.ChatMessage.Message));
+                Common.message(string.Format("MESSAGE {0}: {1}", e.ChatMessage.DisplayName, e.ChatMessage.Message));
             ChatFiltering.violatesProtections(e.ChatMessage.Username, Common.isSub(e), Common.isMod(e), e.ChatMessage.Message);
             if (Common.AhoyRewarder.isActive())
                 Common.AhoyRewarder.processMessage(e);
@@ -45,7 +45,6 @@ namespace KrakenBot2
 
         public static void chatOnCommand(object sender, TwitchLib.TwitchChatClient.CommandReceivedArgs e)
         {
-            Common.rep(string.Format("[CHAT]COMMAND {0}: {1}", e.ChatMessage.Message, e.Command + e.ArgumentsAsString));
             ChatFiltering.violatesProtections(e.ChatMessage.Username, Common.isSub(e), Common.isMod(e), e.ChatMessage.Message);
             Commands.handleChatCommand(e);
             processPotentialSub(e);
@@ -54,7 +53,7 @@ namespace KrakenBot2
 
         public static void chatOnSubscribe(object sender, TwitchLib.TwitchChatClient.NewSubscriberArgs e)
         {
-            Common.rep(string.Format("SUBSCRIBER {0}, months: ", e.Subscriber.Months));
+            Common.other(string.Format("SUBSCRIBER {0}, months: ", e.Subscriber.Months));
             Subscriptions.handleSubscription(e);
         }
 
@@ -66,18 +65,18 @@ namespace KrakenBot2
         public static void whisperOnWhisper(object sender, TwitchLib.TwitchWhisperClient.NewWhisperReceivedArgs e)
         {
             if(e.WhisperMessage.Message[0] != '!')
-                Common.rep(string.Format("WHISPER {0}: {1}", e.WhisperMessage.DisplayName, e.WhisperMessage.Message));
+                Common.other(string.Format("WHISPER {0}: {1}", e.WhisperMessage.DisplayName, e.WhisperMessage.Message));
         }
 
         public static void whisperOnCommand(object sender, TwitchLib.TwitchWhisperClient.CommandReceivedArgs e)
         {
-            Common.rep(string.Format("[WHISPER]COMMAND {0}: {1}", e.Username, e.Command + e.ArgumentsAsString));
+            Common.command(string.Format("[WHISPER]COMMAND {0}: {1}", e.Username, e.Command + e.ArgumentsAsString), true);
             Commands.handleWhisperCommand(e);
         }
 
         public static void raidOnMessage(object sender, TwitchLib.TwitchChatClient.NewChatMessageArgs e)
         {
-            Common.rep(string.Format("[RAID]MESSAGE {0}: {1}", e.ChatMessage.DisplayName, e.ChatMessage.Message));
+            Common.other(string.Format("[RAID]MESSAGE {0}: {1}", e.ChatMessage.DisplayName, e.ChatMessage.Message));
             if (Common.RaidInstance != null)
                 Common.RaidInstance.handleMessage(e);
         }

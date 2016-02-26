@@ -110,6 +110,21 @@ namespace KrakenBot2
             OTHER
         }
 
+        public static void initialize(string message)
+        {
+            baseMessage(ConsoleColor.White, message);
+        }
+
+        public static void other(string message)
+        {
+            baseMessage(ConsoleColor.Blue, message);
+        }
+
+        public static void message(string message)
+        {
+            baseMessage(ConsoleColor.Magenta, message);
+        }
+
         public static void command(string command, bool success)
         {
             baseMessage(ConsoleColor.Cyan, "Command: " + command + ", success: " + success);
@@ -128,27 +143,6 @@ namespace KrakenBot2
         public static void notify(string title, string descriptor)
         {
             WebCalls.notifySwifty(title, descriptor);
-        }
-
-        private static int color = 0;
-        public static void rep(string data)
-        {
-            switch(color)
-            {
-                case 0:
-                    baseMessage(ConsoleColor.Red, data);
-                    color++;
-                    break;
-                case 1:
-                    baseMessage(ConsoleColor.White, data);
-                    color++;
-                    break;
-                case 2:
-                    baseMessage(ConsoleColor.Cyan, data);
-                    color = 0;
-                    break;
-            }
-            
         }
 
         private static void baseMessage(ConsoleColor color, string message)

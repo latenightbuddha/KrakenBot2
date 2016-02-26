@@ -140,7 +140,7 @@ namespace KrakenBot2
                 if (viewer.Username.ToLower() == newViewer)
                     return false;
             }
-            Common.rep("New entry: " + newViewer);
+            Common.initialize("New entry: " + newViewer);
             enteredViewers.Add(newViewer);
             Common.WhisperClient.sendWhisper(newViewer, "Your entry has been confirmed! Good luck!", Common.DryRun);
             return true;
@@ -318,7 +318,7 @@ namespace KrakenBot2
             claimCurrentSecond = 0;
             activeWinner = winner;
             claimTimer.Start();
-            Common.rep("Claim timer started.");
+            Common.initialize("Claim timer started.");
             return true;
         }
 
@@ -355,7 +355,7 @@ namespace KrakenBot2
                     //Common.ChatClient.sendMessage(string.Format("There are currently {0} !games available on BurkeBlack.TV!", raffleProperties.ExGamesCount), Common.DryRun);
             }
             raffleCurrentMinute++;
-            Common.rep("Minutes passed: " + raffleCurrentMinute);
+            Common.other("Minutes passed: " + raffleCurrentMinute);
         }
         //Ticks every minute, will tick max 120 times
         int claimCurrentSecond = 0;

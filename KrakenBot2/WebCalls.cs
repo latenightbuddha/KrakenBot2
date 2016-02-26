@@ -189,7 +189,7 @@ namespace KrakenBot2
             JToken bttvEmotes = JObject.Parse(bttv_emotes).SelectToken("emotes");
             foreach(JToken emote in bttvEmotes)
                 emotes.Add(new Objects.Emote(emote.SelectToken("code").ToString(), "bttv_emote", false));
-            Common.rep("Emotes loaded into memory: " + emotes.Count);
+            Common.initialize("Emotes loaded into memory: " + emotes.Count);
             return emotes;
         }
 
@@ -645,7 +645,7 @@ namespace KrakenBot2
         // Private web GET request; returns downloaded string value
         private async static Task<string> get(string url, bool utf8 = false)
         {
-            Common.rep("QUERY: " + url);
+            Common.other("QUERY: " + url);
             try
             {
                 System.Net.WebClient wc = new System.Net.WebClient();
@@ -661,7 +661,7 @@ namespace KrakenBot2
         // Private web POST request; returns download string value
         private async static Task<string> post(string host, List<KeyValuePair<string, string>> args, bool utf8)
         {
-            Common.rep("QUERY (POST): " + host);
+            Common.other("QUERY (POST): " + host);
             if(args == null) { args = new List<KeyValuePair<string, string>>(); }
             HttpClient client = new HttpClient();
             FormUrlEncodedContent body = new FormUrlEncodedContent(args);
