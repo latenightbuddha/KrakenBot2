@@ -155,7 +155,9 @@ namespace KrakenBot2
                     hosts.Add(newHost);
                     currentHost = newHost;
                     Common.ChatClient.sendMessage(string.Format("Multihost started with '{0}'.", newHost.Streamer), Common.DryRun);
-                    hostStreamer(newHost, true);
+                    System.Threading.Thread.Sleep(500);
+                    hostStreamer(newHost);
+                    System.Threading.Thread.Sleep(500);
                     Common.ChatClient.sendMessage(multihostInfo);
                     break;
                 case StartType.MANUAL:
@@ -204,8 +206,8 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format("Next host: {0}.", nextHost.Streamer), Common.DryRun);
                 Common.ChatClient.sendMessage(string.Format("Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host! Use !checkhost to rotate offline host.", extendDuration), Common.DryRun);
                 curMinute = 0;
-                if (currentHost != null && nextHost.Streamer.ToLower() != currentHost.Streamer.ToLower())
-                    hostStreamer(nextHost);
+                // if (currentHost != null && nextHost.Streamer.ToLower() != currentHost.Streamer.ToLower())
+                hostStreamer(nextHost);
                 currentHost = nextHost;
                 return true;
             } else
@@ -301,11 +303,8 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format("There are currently {0} minutes remaining {1}'s host. Use !next to get a guess of which streamer will be hosted next.", defaultMinuteLimit - curMinute, currentHost.Streamer), Common.DryRun);
         }
 
-        private void hostStreamer(Host streamer, bool firstHost = false)
+        private void hostStreamer(Host streamer)
         {
-            if(!firstHost)
-                Common.ChatClient.sendMessage("/unhost");
-            System.Threading.Thread.Sleep(3000);
             Console.WriteLine(string.Format("Host command sent: /host {0}", streamer.Streamer));
             Common.ChatClient.sendMessage(string.Format("/host {0}", streamer.Streamer));
         }
