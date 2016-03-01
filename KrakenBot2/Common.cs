@@ -177,9 +177,7 @@ namespace KrakenBot2
         public static bool isMod(TwitchLib.TwitchChatClient.NewChatMessageArgs e)
         {
             TwitchLib.ChatMessage.uType uType = e.ChatMessage.UserType;
-            if (uType == TwitchLib.ChatMessage.uType.Admin || uType == TwitchLib.ChatMessage.uType.GlobalModerator || uType == TwitchLib.ChatMessage.uType.Moderator ||
-                uType == TwitchLib.ChatMessage.uType.Staff || Moderators.Contains(e.ChatMessage.Username.ToLower()) ||
-                 e.ChatMessage.Username.ToLower() == "swiftyspiffy")
+            if (Moderators.Contains(e.ChatMessage.Username.ToLower()))
                 return true;
             else
                 return false;
@@ -188,9 +186,7 @@ namespace KrakenBot2
         public static bool isMod(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
         {
             TwitchLib.ChatMessage.uType uType = e.ChatMessage.UserType;
-            if (uType == TwitchLib.ChatMessage.uType.Admin || uType == TwitchLib.ChatMessage.uType.GlobalModerator || uType == TwitchLib.ChatMessage.uType.Moderator ||
-                uType == TwitchLib.ChatMessage.uType.Staff || Moderators.Contains(e.ChatMessage.Username.ToLower()) ||
-                 e.ChatMessage.Username.ToLower() == "swiftyspiffy")
+            if (Moderators.Contains(e.ChatMessage.Username))
                 return true;
             else
                 return false;

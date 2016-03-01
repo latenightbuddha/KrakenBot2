@@ -41,7 +41,7 @@ namespace KrakenBot2
                 foreach (UserMessages userMessage in userMessages)
                 {
                     if (uploadStr == "")
-                        uploadStr = string.Format("{0},{1}");
+                        uploadStr = string.Format("{0},{1}", userMessage.Username, userMessage.Messages);
                     else
                         uploadStr = string.Format("{0}|{1},{2}", uploadStr, userMessage.Username, userMessage.Messages);
                 }

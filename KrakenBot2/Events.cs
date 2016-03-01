@@ -32,10 +32,20 @@ namespace KrakenBot2
             Common.success("[CHAT]Connected to channel!");
         }
 
+        public static bool showRawIRC = true;
         public static void chatOnMessage(object sender, TwitchLib.TwitchChatClient.NewChatMessageArgs e)
         {
             if(e.ChatMessage.Message[0] != '!')
-                Common.message(string.Format("MESSAGE {0}: {1}", e.ChatMessage.DisplayName, e.ChatMessage.Message));
+            {
+                if(showRawIRC)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Common.message(string.Format("MESSAGE {0}", e.ChatMessage.RawIRCMessage));
+                } else
+                {
+                    Common.message(string.Format("MESSAGE {0}: {1}", e.ChatMessage.DisplayName, e.ChatMessage.Message));
+                }
+            }
             ChatFiltering.violatesProtections(e.ChatMessage.Username, Common.isSub(e), Common.isMod(e), e.ChatMessage.Message);
             if (Common.AhoyRewarder.isActive())
                 Common.AhoyRewarder.processMessage(e);

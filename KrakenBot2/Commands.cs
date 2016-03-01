@@ -55,6 +55,9 @@ namespace KrakenBot2
         {
             switch(command.Command)
             {
+                case "games":
+                    HardCodedChatCommands.Games.handleCommand(command);
+                    break;
                 case "pick":
                     HardCodedChatCommands.Pick.handleCommand(command);
                     break;
@@ -162,17 +165,36 @@ namespace KrakenBot2
                     } else
                     {
                         //Handle dynamically created chat commands
+                        bool found = false;
                         foreach(Objects.ChatCommand dynCommand in Common.ChatCommands)
                         {
-                            if(dynCommand.Command == command.Command)
+                            if(dynCommand.Command.ToLower() == command.Command.ToLower())
                             {
                                 if (validateTiers(command, dynCommand))
-                                    if(Common.Cooldown.commandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
+                                {
+                                    if (Common.Cooldown.commandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
                                     {
                                         string msg = processDynamicVariables(command, dynCommand);
-                                        if(msg != "")
+                                        if (msg != "")
                                             Common.ChatClient.sendMessage(msg, Common.DryRun);
                                     }
+                                }
+                                found = true;
+                            }
+                        }
+                        if(!found)
+                        {
+                            foreach(Objects.ChatCommand dynCommand in Common.ChatCommands)
+                            {
+                                Console.WriteLine(dynCommand.Command);
+                                if(dynCommand.Return.ToLower().Contains(" " + command.Command.ToLower() + " ") && validateTiers(command, dynCommand)) {
+                                    if (Common.Cooldown.commandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
+                                    {
+                                        string msg = processDynamicVariables(command, dynCommand);
+                                        if (msg != "")
+                                            Common.ChatClient.sendMessage(string.Format("Did you mean !{0}? {1}", dynCommand.Command, msg), Common.DryRun);
+                                    }
+                                }
                             }
                         }
                     }

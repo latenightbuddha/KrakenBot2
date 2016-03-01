@@ -263,11 +263,11 @@ namespace KrakenBot2
         {
             if(currentHost != null)
             {
-                Common.ChatClient.sendMessage(string.Format("It looks like {0} just went offline! Rotating host!"));
+                Common.ChatClient.sendMessage(string.Format("It looks like {0} just went offline! Rotating host!", currentHost.Streamer), Common.DryRun);
                 nextHost();
             } else
             {
-                Common.ChatClient.sendMessage(string.Format("The hosted streamer just went offline! Rotating host!"));
+                Common.ChatClient.sendMessage(string.Format("The hosted streamer just went offline! Rotating host!"), Common.DryRun);
                 nextHost();
             }
         }

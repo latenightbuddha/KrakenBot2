@@ -44,7 +44,8 @@ namespace KrakenBot2.HardCodedChatCommands
                 return false;
             if (e.ArgumentsAsList.Count < 1 && e.ArgumentsAsList.Count > 2)
                 return false;
-            if(e.ArgumentsAsList.Count == 2 && !Common.IsNumeric(e.ArgumentsAsList[1]))
+            if (e.ArgumentsAsList.Count == 2 && !Common.IsNumeric(e.ArgumentsAsList[1]))
+                return false;
             if (!Common.isMod(e))
                 return false;
             if (Common.DryRun)
