@@ -176,11 +176,12 @@ namespace KrakenBot2
                     }
                     int latestID = WebCalls.downloadRaffleID().Result;
                     if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
-                        Common.ChatClient.sendMessage(string.Format("Giveaway details can be viewed here: http://burkeblack.tv/giveaways/listing.php?gid={0} .  Video on how automatic !games giveaways work: http://www.twitch.tv/burkeblack/c/5663793", latestID.ToString()));
+                        Common.ChatClient.sendMessage(string.Format("Giveaway details can be viewed here: http://burkeblack.tv/giveaways/listing.php?gid={0} .  Video on how automatic !games giveaways work: https://www.twitch.tv/burkeblack/v/30553157", latestID.ToString()));
                     else
                         Common.ChatClient.sendMessage(string.Format("Giveaway details can be viewed here: http://burkeblack.tv/giveaways/listing.php?gid={0}", latestID.ToString()), Common.DryRun);
                     Common.notify("NEW GIVEAWAY CLAIM", raffleWin.Winner + " claimed " + raffleProperties.Raffle_Name);
                     Common.DiscordClient.SendMessageToChannel(string.Format("NEW CLAIM: Winner: {0}, Name: {1}, Donator: {2}, Author: {3}", raffleWin.Winner, raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator, raffleProperties.Raffle_Author), Common.DiscordClient.GetChannelByName("kraken-relay"));
+                    Common.CommandQueue.checkQueueOnce();
                     return true;
                 } else
                 {
@@ -253,6 +254,7 @@ namespace KrakenBot2
                 enteredViewers.Remove(activeWinner);
             if (enteredViewers.Count < raffleProperties.Raffle_Minimum_Entries)
             {
+                claimTimer.Stop();
                 Common.ChatClient.sendMessage(string.Format("/me GIVEAWAY ERROR: Entry count below minimum ({0}) required for giveaway to proceed. [FATAL]", raffleProperties.Raffle_Minimum_Entries), Common.DryRun);
                 return false;
             }

@@ -21,6 +21,11 @@ namespace KrakenBot2
         // Method that runs update process
         public static void processUpdateRequest()
         {
+            if(Common.Raffle != null && Common.Raffle.raffleIsActive())
+            {
+                Console.WriteLine("Update request placed in command queue.");
+                return;
+            }
             UpdateDetails details = WebCalls.downloadUpdateDetails().Result;
             if (!details.RequestSuccessful || !details.UpdateAvailable)
             {

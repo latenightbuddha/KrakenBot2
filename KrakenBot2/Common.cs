@@ -56,6 +56,7 @@ namespace KrakenBot2
         private static OpenWeatherAPI.OpenWeatherAPI openWeatherAPI;
         private static StreamRefresher streamRefresher;
         private static AhoyRewarder ahoyRewarder;
+        private static CommandQueue commandQueue;
         
         // [Public] Common variables
         public static List<string> TopLevelDomains { get { return topLevelDomains; } set { topLevelDomains = value; } }
@@ -100,6 +101,7 @@ namespace KrakenBot2
         public static OpenWeatherAPI.OpenWeatherAPI OpenWeatherAPI { get { return openWeatherAPI; } set { openWeatherAPI = value; } }
         public static StreamRefresher StreamRefresher { get { return streamRefresher; } set { streamRefresher = value; } }       
         public static AhoyRewarder AhoyRewarder { get { return ahoyRewarder; } set { ahoyRewarder = value; } }       
+        public static CommandQueue CommandQueue { get { return commandQueue; } set { commandQueue = value; } }
 
         public enum GiveawayTypes
         {
