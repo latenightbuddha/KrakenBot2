@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace KrakenBot2
 {
+    // Static class pertaining to message replacement variables
     public static class Variables
     {
         //{user} = valid user provided in the command, must also be present in return

@@ -8,6 +8,12 @@ namespace KrakenBot2
     //This class serves to implement multihost and host rotating functionality
     public class Multihost
     {
+        // Configurable variables
+        private int defaultMinuteLimit = 30;
+        private static int extendsAllowed = 2;
+        private static int extendDuration = 10;
+        private static string multihostInfo = string.Format("Use !extend to extend the hosting duration by {0} minutes.  Use !remaining to see how many minutes remain in the current host.", extendDuration);
+
         private enum StartType
         {
             MANUAL = 1,
@@ -16,17 +22,13 @@ namespace KrakenBot2
         }
         private Timer rotator = new Timer(60000);
         private int curMinute = 0;
-        private int defaultMinuteLimit = 30;
         private StartType startType = StartType.RANDOM;
         private string setHostName;
         private List<Host> hosts;
         private Host currentHost;
-
         List<UserExtend> extends = new List<UserExtend>();
-        private static int extendsAllowed = 2;
-        private static int extendDuration = 10;
-        private static string multihostInfo = string.Format("Use !extend to extend the hosting duration by {0} minutes.  Use !remaining to see how many minutes remain in the current host.", extendDuration);
 
+        // Multihost constructor using JSON data from API
         public Multihost(JToken multihostProperties)
         {
             switch (multihostProperties.SelectToken("start_type").ToString())
@@ -49,6 +51,7 @@ namespace KrakenBot2
             rotator.Elapsed += rotatorTick;
         }
 
+        // Multihost timer tick event
         private void rotatorTick(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (curMinute == defaultMinuteLimit)
@@ -57,17 +60,20 @@ namespace KrakenBot2
                 curMinute++;
         }
 
+        // Public method to refresh multihosts list
         public void refreshHostsList()
         {
             hosts = WebCalls.downloadMultihostStreamers().Result;
         }
 
+        // Public method to start timer
         public void start()
         {
             if (firstHost())
                 rotator.Start();
         }
 
+        // Public method to stop timer
         public void stop()
         {
             rotator.Stop();
@@ -75,6 +81,7 @@ namespace KrakenBot2
             Common.ChatClient.sendMessage("Multihost disabled.", Common.DryRun);
         }
 
+        // Public function to guess next hosted streamer, returns true if successful, false if failed
         public bool guess()
         {
             if (currentHost == null)
@@ -117,6 +124,7 @@ namespace KrakenBot2
             }
         }
 
+        // Function that is run on first host, returns true if successful, false if failed
         private bool firstHost()
         {
             switch (startType)
@@ -218,6 +226,7 @@ namespace KrakenBot2
             }
         }
 
+        // Handles a viewers attempt to extend the currently hosted streamer
         public bool handleExtend(string username)
         {
             //Check to see if viewer has already used an extend
@@ -259,6 +268,7 @@ namespace KrakenBot2
             }
         }
 
+        // Handle an event in which the currently hosted streamer is determined to have gone offline
         public void handleHostOfflineDetected()
         {
             if(currentHost != null)
@@ -272,6 +282,7 @@ namespace KrakenBot2
             }
         }
 
+        // Checks host to determine whether or not they are online (will be deprecated soon) and rotates if they are
         public void checkHost()
         {
             if (currentHost != null)
@@ -292,6 +303,7 @@ namespace KrakenBot2
 
         }
 
+        // Public method that sends chat message indicating time remaining in currently hosted streamer
         public void remaining()
         {
             if (defaultMinuteLimit - curMinute == 1)
@@ -303,18 +315,21 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format("There are currently {0} minutes remaining {1}'s host. Use !next to get a guess of which streamer will be hosted next.", defaultMinuteLimit - curMinute, currentHost.Streamer), Common.DryRun);
         }
 
+        // Method to initiate host of a streamer
         private void hostStreamer(Host streamer)
         {
             Console.WriteLine(string.Format("Host command sent: /host {0}", streamer.Streamer));
             Common.ChatClient.sendMessage(string.Format("/host {0}", streamer.Streamer));
         }
 
+        // Method to unhost the currently hosted streamer (will be deprecated soon)
         private void unhostStreamer()
         {
             Common.ChatClient.sendMessage("/unhost");
         }
 
-        class UserExtend
+        // Class that represents properties of a user extend and subsequently limits them
+        private class UserExtend
         {
             private string username;
             private int allowedExtends;
@@ -327,6 +342,7 @@ namespace KrakenBot2
             public int RemainingExtends { get { return allowedExtends - usedExtends; } }
             public int ExtendBy { get { return extendBy; } }
 
+            // UserExtend constructor accepting username, allowedExtends (from vars above), and extendBy (from vars above)
             public UserExtend(string username, int allowedExtends, int extendBy)
             {
                 this.username = username;
@@ -334,6 +350,7 @@ namespace KrakenBot2
                 this.extendBy = extendBy;
             }
 
+            // Attempts to use an extend
             public int useExtend()
             {
                 if(allowedExtends - usedExtends > 0)
@@ -347,6 +364,8 @@ namespace KrakenBot2
             }
         }
     }
+
+    // Class that represents the properties of a particular host
     public class Host
     {
         private string streamer;
@@ -355,7 +374,8 @@ namespace KrakenBot2
         public string Streamer { get { return streamer; } }
         public string Information { get { return information; } }
 
-        public Host(string streamer, string information)
+        // Constructor for a Host accepting the streamer name and information (if available)
+        public Host(string streamer, string information = "")
         {
             this.streamer = streamer;
             this.information = information;

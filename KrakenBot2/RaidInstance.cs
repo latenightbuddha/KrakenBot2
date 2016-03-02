@@ -9,15 +9,18 @@ namespace KrakenBot2
 {
     public class RaidInstance
     {
-        private string channel;
+        // Configurable variables
+        private string[] participantIdentifiers = { "r)", "burkeship", "burkebooty", "burkefire", "burkeboom", "ahoy", "booty", "burkeomg", "burkeahoy",
+                                                        "burkelove", "burkeepic", "burkeflag", "burkeevil", "burkemug"};
         private Timer raidTimer = new Timer(60000);
         private int raidLength = 5;
-        private List<string> participants = new List<string>();
-        private string[] participantIdentifiers = { "r)", "burkeship", "burkebooty", "burkefire", "burkeboom", "ahoy", "booty", "burkeboy", "burkepew", "burkeomg", "burkeahoy",
-                                                        "burkelove", "burkeepic", "burkeflag"};
 
+        private string channel;
+        private List<string> participants = new List<string>();
+        
         public string Channel { get { return channel; } }
 
+        // RaidInstance constructor accepts channel param
         public RaidInstance(string channel)
         {
             this.channel = channel;
@@ -27,6 +30,7 @@ namespace KrakenBot2
             Common.RaidClient.connect();
         }
 
+        // Handles raid chat event
         public void handleMessage(TwitchLib.TwitchChatClient.NewChatMessageArgs message)
         {
             if(raidTimer.Enabled)
@@ -50,7 +54,10 @@ namespace KrakenBot2
             }
         }
 
+        // Length raid client has been connected to raided channel
         private int minutesCompleted = 0;
+
+        // Raid Timer tick event
         private void raidTimerTick(object sender, ElapsedEventArgs e)
         {
             if (minutesCompleted == raidLength)
@@ -59,6 +66,7 @@ namespace KrakenBot2
                 minutesCompleted++;
         }
 
+        // Handles post raid messages and doubloon distrobution
         private void postRaid()
         {
             if (participants.Count != 0)

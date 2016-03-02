@@ -9,14 +9,16 @@ using System.Reflection;
 
 namespace KrakenBot2
 {
+    // Static class pertaining to the process of updating bot
     public static class Update
     {
-
+        // Checks to see if updater.exe exists, indicating an update was just completed
         public static bool checkForPostUpdate()
         {
             return File.Exists("updater.exe");
         }
 
+        // Method that runs update process
         public static void processUpdateRequest()
         {
             UpdateDetails details = WebCalls.downloadUpdateDetails().Result;
@@ -41,6 +43,7 @@ namespace KrakenBot2
             Environment.Exit(1);
         }
 
+        // Method called if updater.exe exists, and announces changes if instructed to do so
         public static void afterUpdate()
         {
             if(File.Exists("updater.exe"))

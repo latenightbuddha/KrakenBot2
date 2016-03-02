@@ -10,11 +10,14 @@ namespace KrakenBot2
     //Class will serve to implement user whisper notifications when burkeblack goes live
     public class OnlineNotifications
     {
+        // Configurable variables
         private Timer burkeOnlineTimer = new Timer(60000);
+        private string[] greetings = { "Bonjour!", "Hola!", "Guten tag!", "Ciao!", "Namaste!", "Salaam!", "Goedendag!", "Szia!", "Dobar dan!", "God dag!", "Good day!" };
+
         private List<string> usersToNotify;
         private bool currentlyOnline = false;
-        private string[] greetings = { "Bonjour!", "Hola!", "Guten tag!", "Ciao!", "Namaste!", "Salaam!", "Goedendag!", "Szia!", "Dobar dan!", "God dag!", "Good day!"};
 
+        // Constructor for OnlineNotifications
         public OnlineNotifications()
         {
             currentlyOnline = Common.StreamRefresher.isOnline();
@@ -23,6 +26,7 @@ namespace KrakenBot2
             burkeOnlineTimer.Start();
         }
 
+        // OnlineNotifications timer tick event
         private void burkeOnlineTimerTick(object sender, ElapsedEventArgs e)
         {
             if (Common.StreamRefresher.isOnline())
@@ -45,6 +49,7 @@ namespace KrakenBot2
             }
         }
 
+        // Public method to remove user from notifyMe list
         public void removeMe(string username)
         {
             WebCalls.removeNotifyUser(username);
@@ -52,6 +57,7 @@ namespace KrakenBot2
             Common.WhisperClient.sendWhisper(username, "You will no longer be notified when Burke goes live. :( To be notified again, whisper !notifyme", Common.DryRun);
         }
 
+        // Public method to add user to notifyMe list
         public void notifyMe(string username)
         {
             WebCalls.addNotifyUser(username);
@@ -59,6 +65,7 @@ namespace KrakenBot2
             Common.WhisperClient.sendWhisper(username, "You will now be notified via a whisper when Burke goes live! burkeEpic To remove yourself from this list, whisper !removeme", Common.DryRun);
         }
 
+        // Method to send message in discord and fire all whispers
         private void fireAllWhisperNotifications()
         {
             TwitchLib.TwitchChannel channel = Common.StreamRefresher.Stream.Channel;

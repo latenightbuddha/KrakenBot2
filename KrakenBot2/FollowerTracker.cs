@@ -9,24 +9,29 @@ namespace KrakenBot2
 {
     public class FollowerTracker
     {
+        // Enable/disable follow tracker
         private bool ENABLED = false;
 
-        List<TwitchLib.TwitchAPIClasses.TwitchFollower> recentFollowers = new List<TwitchLib.TwitchAPIClasses.TwitchFollower>();
+        private List<TwitchLib.TwitchAPIClasses.TwitchFollower> recentFollowers = new List<TwitchLib.TwitchAPIClasses.TwitchFollower>();
         private Timer followerTimer = new Timer(900000);
+
+        // Follow tracker constructor
         public FollowerTracker()
         {
             if(ENABLED)
             {
+                // Gets the most recent 50 followers of burkeblack
                 recentFollowers = TwitchLib.TwitchAPI.getTwitchFollowers("burkeblack", 50); 
                 followerTimer.Elapsed += followerTimerTick;
                 followerTimer.Start();
             }
-            
         }
 
+        // Follower timer tick event
         private void followerTimerTick(object sender, ElapsedEventArgs e)
         {
             List<TwitchLib.TwitchAPIClasses.TwitchFollower> newFollowers = new List<TwitchLib.TwitchAPIClasses.TwitchFollower>();
+            // Gets the most recent 50 followers of burkeblack
             List<TwitchLib.TwitchAPIClasses.TwitchFollower> followers = TwitchLib.TwitchAPI.getTwitchFollowers("burkeblack", 50);
             foreach(TwitchLib.TwitchAPIClasses.TwitchFollower follower in recentFollowers)
             {
@@ -44,6 +49,7 @@ namespace KrakenBot2
                 handleNewFollowers(newFollowers);
         }
 
+        // Handles new followers by constructing string with all names and sending to chat
         private void handleNewFollowers(List<TwitchLib.TwitchAPIClasses.TwitchFollower> newFollowers)
         {
             if(newFollowers.Count == 1)

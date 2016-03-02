@@ -13,17 +13,18 @@ namespace KrakenBot2
         private RaffleProperties raffleProperties;
         private List<string> enteredViewers = new List<string>();
 
-        //Minute interval timers
+        //Configurable variables
         private Timer raffleTimer = new Timer(60000);
         private Timer claimTimer = new Timer(1000);
+        private int invalidPassTimeoutHours = 1;
 
         //Raffle instance exclusive variables
         private string activeWinner;
-
         public string RaffleName { get { return raffleProperties.Raffle_Name; } }
         public string RaffleDonator { get { return raffleProperties.Raffle_Donator; } }
         public string RaffleAuthor { get { return raffleProperties.Raffle_Author; } }
 
+        // Raffle constructor accepts JSON data from API
         public Raffle(JToken giveawayProperties)
         {
             raffleProperties = new RaffleProperties(giveawayProperties);
@@ -192,7 +193,7 @@ namespace KrakenBot2
             return false;
         }
 
-        private int invalidPassTimeoutHours = 1;
+        // Attempt to pass on raffle to new winner
         public bool tryPass(string username)
         {
             int invalidPassTimeoutDuration = TimeoutConverter.Hours(invalidPassTimeoutHours);
@@ -212,6 +213,7 @@ namespace KrakenBot2
             }
         }
 
+        // Sends winner a whisper upon claim
         private void sendWinnerWhisper()
         {
             if(raffleProperties.Raffle_Linker != "")
@@ -237,11 +239,13 @@ namespace KrakenBot2
             return raffleTimer.Enabled || claimTimer.Enabled;
         }
 
+        // Processes async draw function
         private bool processDraw(bool redraw = false)
         {
             return processDrawAsync(redraw).Result;
         }
 
+        // Async drawing function, accepts param bool indicating a redraw, returns bool indicating success
         private async Task<bool> processDrawAsync(bool redraw = false)
         {
             //Validate drawing process
@@ -442,6 +446,7 @@ namespace KrakenBot2
             public List<Objects.PreviousRaffleWinner> Previous_Winners { get { return previousWinners; } }
             public List<string> Blocked_Viewers { get { return blockedViewers; } }
 
+            // RaffleProperties constructor accepts JSON data from API
             public RaffleProperties(JToken giveawayProperties)
             {
                 raffleLength = int.Parse(giveawayProperties.SelectToken("raffle_length").ToString());

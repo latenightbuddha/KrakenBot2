@@ -22,7 +22,7 @@ namespace KrakenBot2.HardCodedChatCommands.Multihost
 
         private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
         {
-            if (!Common.Cooldown.commandAvailable(e.ChatMessage.UserType, e.Command, 0))
+            if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 0))
                 return false;
             if (Common.Multihost == null)
                 return false;

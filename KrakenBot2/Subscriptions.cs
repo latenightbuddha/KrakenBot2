@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace KrakenBot2
 {
+    // Static class with methods relating to subscription event
     public static class Subscriptions
     {
+        // Configurable variables
         private static int newSubDoubloons = 100;
         private static int newSubSoundbytes = 5;
         private static int resubDoubloons = 50;
         private static int resubSoundbytes = 5;
+
+        // Handles subscription event
         public static void handleSubscription(TwitchLib.TwitchChatClient.NewSubscriberArgs e)
         {
             Common.RecentSub = e.Subscriber;

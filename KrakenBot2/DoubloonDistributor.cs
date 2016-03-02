@@ -9,9 +9,11 @@ namespace KrakenBot2
 {
     public class DoubloonDistributor
     {
+        // Doubloon distrobution interval: online = 15 minutes, offline = 1 hour
         Timer onlineAllocator = new Timer(900000);
         Timer offlineAllocator = new Timer(3600000);
 
+        // DoubloonDistributor constructor
         public DoubloonDistributor()
         {
             onlineAllocator.Elapsed += onlineAllocatorTick;
@@ -22,21 +24,24 @@ namespace KrakenBot2
                 offlineAllocator.Start();
         }
 
+        // Method to set both timers to an online environment
         public void forceOnline()
         {
             offlineAllocator.Stop();
             onlineAllocator.Start();
         }
 
+        // Method to set both timers to an offline environment
         public void forceOffline()
         {
             onlineAllocator.Stop();
             offlineAllocator.Start();
         }
 
+        // Online timer tick event
         public void onlineAllocatorTick(object sender, ElapsedEventArgs e)
         {
-            if(Common.StreamRefresher.isOffline())
+            if(!Common.StreamRefresher.isOnline())
             {
                 onlineAllocator.Stop();
                 offlineAllocator.Start();
@@ -45,6 +50,7 @@ namespace KrakenBot2
                 Common.ChatClient.sendMessage("Failed to distribute doubloons.");
         }
 
+        // Offline timer tick event
         public void offlineAllocatorTick(object sender, ElapsedEventArgs e)
         {
             if(Common.StreamRefresher.isOnline())

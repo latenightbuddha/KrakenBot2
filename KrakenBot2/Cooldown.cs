@@ -10,11 +10,11 @@ namespace KrakenBot2
     {
         private List<CommandCooldown> cooldowns = new List<CommandCooldown>();
         private List<CommandCooldown> discordCooldowns = new List<CommandCooldown>();
-        public Cooldown()
-        {
+        
+        // Cooldown object constructor
+        public Cooldown() { }
 
-        }
-
+        // Checks availability of discord command, and resets cooldown if available
         public bool discordCommandAvailable(string command, int seconds)
         {
             if(seconds != 0)
@@ -29,7 +29,8 @@ namespace KrakenBot2
             return true;
         }
 
-        public bool commandAvailable(TwitchLib.ChatMessage.uType userType, string command, int seconds)
+        // Checks availability of chat command, and resets cooldown if available
+        public bool chatCommandAvailable(TwitchLib.ChatMessage.uType userType, string command, int seconds)
         {
             if(seconds != 0 || userType != TwitchLib.ChatMessage.uType.Moderator)
             {
@@ -44,7 +45,8 @@ namespace KrakenBot2
             return true;
         }
 
-        class CommandCooldown
+        // Class that represents a command's cooldown variables
+        private class CommandCooldown
         {
             private string command;
             private int seconds;
@@ -52,6 +54,7 @@ namespace KrakenBot2
 
             public string Command { get { return command; } }
 
+            // CommandCooldown constructor accepting both command, and cooldown seconds
             public CommandCooldown(string command, int seconds)
             {
                 this.command = command;
@@ -59,6 +62,7 @@ namespace KrakenBot2
                 startTime = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds;
             }
 
+            // Determines if command is available, and resets time if it is
             public bool activate()
             {
                 if((DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds - startTime > seconds)

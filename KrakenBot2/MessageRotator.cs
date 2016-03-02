@@ -21,6 +21,7 @@ namespace KrakenBot2
         public RotatingMessage Current_Message { get { return messages[currentMessageIndex]; } }
         public int Seconds_Remaining { get { return nextMessageIn; } }
 
+        // Message rotator constructor using API data received from burkeblack.tv
         public MessageRotator(string data)
         {
             foreach(JToken message in JObject.Parse(data).SelectToken("messages"))
@@ -37,17 +38,20 @@ namespace KrakenBot2
             
         }
 
+        // Starts message timer
         public void Start()
         {
             messageTimer.Start();
         }
 
+        // Stops message timer
         public void Stop()
         {
             messageTimer.Stop();
         }
 
-        public void onTick(object sender, System.Timers.ElapsedEventArgs e)
+        // MessageRotator timer tick event
+        public void onTick(object sender, ElapsedEventArgs e)
         {
             if (nextMessageIn == 0)
             {
@@ -71,6 +75,7 @@ namespace KrakenBot2
             }
         }
 
+        // Method to handle API data and use it to refresh local rotating message cache
         public void refreshMessages(string data)
         {
             messages.Clear();
@@ -81,6 +86,7 @@ namespace KrakenBot2
             nextMessageIn = messages[0].Interval;
         }
 
+        // Function to replace various message place holders with data retrieved internally or externally
         private string messageReplacements(string message)
         {
             if(message.Contains("[recent_twitch]"))
@@ -99,6 +105,7 @@ namespace KrakenBot2
         }
     }
 
+    // Class representing the properties of a rotating message
     public class RotatingMessage
     {
         private string name, contents;
@@ -111,6 +118,7 @@ namespace KrakenBot2
         public int Interval { get { return interval; } }
         public bool Dedicated { get { return dedicated; } }
 
+        // RotatingMessage constructor using JSON data from API
         public RotatingMessage(JToken data)
         {
             name = data.SelectToken("name").ToString();
@@ -120,6 +128,7 @@ namespace KrakenBot2
                 dedicated = true;
         }
 
+        // Increments if message is deemed dedicated
         public bool dedicatedValid()
         {
             curSeconds++;

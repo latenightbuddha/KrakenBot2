@@ -8,6 +8,7 @@ namespace KrakenBot2
 {
     public static class Commands
     {
+        // Handles all discord commands (messages that have ! prefix) from event
         public static void handleDiscordCommand(Objects.DiscordCommand command)
         {
             switch(command.Command)
@@ -23,6 +24,7 @@ namespace KrakenBot2
             }
         }
 
+        // Handles all whisper commands (whispers that have ! prefix) from event
         public static void handleWhisperCommand(TwitchLib.TwitchWhisperClient.CommandReceivedArgs command)
         {
             switch(command.Command)
@@ -51,6 +53,8 @@ namespace KrakenBot2
                     break;
             }
         }
+
+        // Handles all chat commands (chat messages that have ! prefix) from event
         public static void handleChatCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs command)
         {
             switch(command.Command)
@@ -172,7 +176,7 @@ namespace KrakenBot2
                             {
                                 if (validateTiers(command, dynCommand))
                                 {
-                                    if (Common.Cooldown.commandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
+                                    if (Common.Cooldown.chatCommandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
                                     {
                                         string msg = processDynamicVariables(command, dynCommand);
                                         if (msg != "")
@@ -188,7 +192,7 @@ namespace KrakenBot2
                             {
                                 Console.WriteLine(dynCommand.Command);
                                 if(dynCommand.Return.ToLower().Contains(" " + command.Command.ToLower() + " ") && validateTiers(command, dynCommand)) {
-                                    if (Common.Cooldown.commandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
+                                    if (Common.Cooldown.chatCommandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
                                     {
                                         string msg = processDynamicVariables(command, dynCommand);
                                         if (msg != "")
@@ -202,6 +206,7 @@ namespace KrakenBot2
             }
         }
 
+        // Determine if command received's UserTier meets command UserTier in descending fashion
         private static bool validateTiers(TwitchLib.TwitchChatClient.CommandReceivedArgs e, Objects.ChatCommand command)
         {
             switch(command.UserTier)
@@ -227,6 +232,7 @@ namespace KrakenBot2
             }
         }
 
+        // Replaces dynamic variables in command or command return strings
         private static string processDynamicVariables(TwitchLib.TwitchChatClient.CommandReceivedArgs e, Objects.ChatCommand command)
         {
             if (e.ArgumentsAsList.Count >= (command.ArgsAsList.Count + 1))

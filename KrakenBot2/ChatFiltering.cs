@@ -21,6 +21,8 @@ namespace KrakenBot2
 
         private static int minimumCharacters = 5;
         private static int capsPercentage = 75;
+
+        // Function to determine whether or not message violates caps protections
         private static bool violateCapsProtection(string message)
         {
             if(message.Length >= minimumCharacters)
@@ -42,7 +44,7 @@ namespace KrakenBot2
             return false;
         }
 
-        //Returns true if words are too long
+        // Returns true if words are too long
         private static int longestWord = 26;
         private static bool violateSpamProtection(string message)
         {
@@ -56,7 +58,7 @@ namespace KrakenBot2
             return false;
         }
 
-        //returns true if emote count in message is larger than that of the limit passed in
+        // Returns true if emote count in message is larger than that of the limit passed in
         private static int emoteLimit = 16;
         private static bool violateEmoteProtection(List<Objects.Emote> emotes, string message)
         {
@@ -74,14 +76,14 @@ namespace KrakenBot2
             return false;
         }
 
-        //Returns true if message length is larger than limit passed in
+        // Returns true if message length is larger than limit passed in
         private static int lengthLimit = 400;
         private static bool violateLengthProtection(string message)
         {
             return (message.Length > lengthLimit);
         }
 
-        //Returns true if timeout word found in message
+        // Returns true if timeout word found in message
         private static Objects.TimeoutWord violateTimeoutWordsProtection(List<Objects.TimeoutWord> words, string message)
         {
             foreach (Objects.TimeoutWord word in words)
@@ -106,7 +108,7 @@ namespace KrakenBot2
             return null;
         }
 
-        //Returns true if spoiler word found in message
+        // Returns true if spoiler word found in message
         private static Objects.SpoilerWord violateSpoilerWordsProtection(List<Objects.SpoilerWord> words, string message)
         {
             foreach (Objects.SpoilerWord word in words)
@@ -132,6 +134,7 @@ namespace KrakenBot2
             return null;
         }
 
+        // Returns true if message contains violating word
         private static bool messageContainsViolation(List<string> violationWords, string message)
         {
             foreach (string vioWord in violationWords)
@@ -140,7 +143,7 @@ namespace KrakenBot2
             return false;
         }
 
-        //Returns true if link is detected in message
+        // Returns true if link is detected in message
         private static bool violateLinkProtection(string message)
         {
             foreach(string word in message.Split(' '))
@@ -160,6 +163,7 @@ namespace KrakenBot2
             return false;
         }
 
+        // Returns true if message violates any of the protective functions
         public static bool violatesProtections(string username, bool sub, bool mod, string message)
         {
             if (username != "the_kraken_bot" && username != "swiftyspiffy" && message.ToLower().Contains("swifty"))
@@ -253,6 +257,7 @@ namespace KrakenBot2
             return false;
         }
 
+        // Check if link permit exists, and remove it
         private static bool linkPermitExists(string username)
         {
             foreach(Objects.Permit permit in Common.Permits)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace KrakenBot2
 {
+    // NOT IMPLEMENTED
     public class Mutiny
     {
         private List<string> mutineers = new List<string>();

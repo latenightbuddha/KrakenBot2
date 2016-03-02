@@ -24,6 +24,7 @@ namespace KrakenBot2
         public int Offline_Doubloons_Amount { get { return offlineDoubloonsAmount; } }
         public int Automated_Giveaway_Mins { get { return automatedGiveawayMins; } }
 
+        // Constructor for ServerSettings accepts JSON data from API
         public ServerSettings(JToken data)
         {
             capsProtectionChars = int.Parse(data.SelectToken("capsProtectionChars").ToString());

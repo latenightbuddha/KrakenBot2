@@ -8,7 +8,7 @@ namespace KrakenBot2
 {
     public class AhoyRewarder
     {
-
+        // Ahoy rewards
         private int firstReward = 25;
         private int secondReward = 15;
         private int thirdReward = 5;
@@ -16,8 +16,10 @@ namespace KrakenBot2
         ahoyReward first, second, third;
         private bool connectedMsgReceived = false;
 
+        // AhoyRewarder constructor
         public AhoyRewarder() { }
 
+        // Resets AhoyRewarder
         public void restartActive()
         {
             first = null;
@@ -26,11 +28,13 @@ namespace KrakenBot2
             connectedMsgReceived = false;
         }
 
+        // Determines if any rewards are available
         public bool isActive()
         {
             return (first == null || second == null || third == null);
         }
 
+        // Process message from event
         public void processMessage(TwitchLib.TwitchChatClient.NewChatMessageArgs e)
         {
             if (connectedMsgReceived)
@@ -69,6 +73,7 @@ namespace KrakenBot2
             }
         }
 
+        // Determine if someone has already been rewarded
         private bool isFraud(string username)
         {
             if (first != null)
@@ -83,6 +88,7 @@ namespace KrakenBot2
             return false;
         }
 
+        // Class for ahoy reward
         private class ahoyReward
         {
             private string username;
@@ -91,6 +97,7 @@ namespace KrakenBot2
             public string Username { get { return username; } }
             public int Reward { get { return reward; } }
 
+            // ahoyReward constructor
             public ahoyReward(string username, int reward)
             {
                 this.username = username;

@@ -24,7 +24,7 @@ namespace KrakenBot2.HardCodedChatCommands.Raffle
 
         private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
         {
-            if (!Common.Cooldown.commandAvailable(e.ChatMessage.UserType, e.Command, 0))
+            if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 0))
                 return false;
             if (Common.Raffle == null || !Common.Raffle.raffleIsActive())
                 return false;

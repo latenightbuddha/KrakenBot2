@@ -10,7 +10,8 @@ namespace KrakenBot2
     public class DonationUpdater
     {
         private bool enabled = true;
-
+        
+        // Donation Timer interval set to every minute
         private Timer donationTimer = new Timer(60000);
 		public DonationUpdater()
         {
@@ -19,6 +20,7 @@ namespace KrakenBot2
                 donationTimer.Start();
         }
 
+        // Donation timer tick event
 		private void donationTimerTick(object sender, ElapsedEventArgs e)
         {
 			if(Common.StreamRefresher.isOnline())

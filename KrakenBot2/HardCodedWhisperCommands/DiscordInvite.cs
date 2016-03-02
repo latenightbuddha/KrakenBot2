@@ -10,7 +10,7 @@ namespace KrakenBot2.HardCodedWhisperCommands
     {
         public static void handleCommand(TwitchLib.TwitchWhisperClient.CommandReceivedArgs e)
         {
-            if (Common.Cooldown.commandAvailable(TwitchLib.ChatMessage.uType.Viewer, e.Command, 20))
+            if (Common.Cooldown.chatCommandAvailable(TwitchLib.ChatMessage.uType.Viewer, e.Command, 20))
             {
                 if (int.Parse(WebCalls.getUserDoubloons(e.Username).Result) > Common.DiscordInviteLimit)
                 {

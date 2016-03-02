@@ -12,6 +12,7 @@ using System.Net;
 
 namespace KrakenBot2
 {
+    // Static class pertaining to various web and TwitchLib API calls
     public static class WebCalls
     {
         // Downloads and loads timeout words into list; returns list
