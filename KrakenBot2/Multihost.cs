@@ -52,7 +52,7 @@ namespace KrakenBot2
         }
 
         // Multihost timer tick event
-        private void rotatorTick(object sender, System.Timers.ElapsedEventArgs e)
+        private void rotatorTick(object sender, ElapsedEventArgs e)
         {
             if (curMinute == defaultMinuteLimit)
                 nextHost();
@@ -214,9 +214,7 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format("Next host: {0}.", nextHost.Streamer), Common.DryRun);
                 Common.ChatClient.sendMessage(string.Format("Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host! Use !checkhost to rotate offline host.", extendDuration), Common.DryRun);
                 curMinute = 0;
-                // if (currentHost != null && nextHost.Streamer.ToLower() != currentHost.Streamer.ToLower())
                 hostStreamer(nextHost);
-                currentHost = nextHost;
                 return true;
             } else
             {
@@ -238,7 +236,7 @@ namespace KrakenBot2
                     {
                         if (extend.RemainingExtends > 0)
                         {
-                            curMinute -= extendDuration;
+                            curMinute -= extend.ExtendBy;
                             int extendsRemaining = extend.useExtend();
                             if (extendsRemaining > 0)
                                 Common.ChatClient.sendMessage(string.Format("{0} has extended {1}'s host by {2} minutes! They have {3} remaining host extension(s).",
@@ -320,6 +318,9 @@ namespace KrakenBot2
         {
             Console.WriteLine(string.Format("Host command sent: /host {0}", streamer.Streamer));
             Common.ChatClient.sendMessage(string.Format("/host {0}", streamer.Streamer));
+            currentHost = streamer;
+            if (defaultMinuteLimit - curMinute < 29)
+                curMinute -= 30 - (defaultMinuteLimit - curMinute);
         }
 
         // Method to unhost the currently hosted streamer (will be deprecated soon)
