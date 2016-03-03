@@ -116,9 +116,6 @@ namespace KrakenBot2
                 case "remaining":
                     HardCodedChatCommands.Multihost.Remaining.handleCommand(command);
                     break;
-                case "checkhost":
-                    HardCodedChatCommands.Multihost.CheckHost.handleCommand(command);
-                    break;
                 case "next":
                     HardCodedChatCommands.Multihost.Guess.handleCommand(command);
                     break;

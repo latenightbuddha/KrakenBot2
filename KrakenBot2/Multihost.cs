@@ -77,7 +77,7 @@ namespace KrakenBot2
         public void stop()
         {
             rotator.Stop();
-            unhostStreamer();
+            Common.ChatClient.sendMessage("/unhost");
             Common.ChatClient.sendMessage("Multihost disabled.", Common.DryRun);
         }
 
@@ -169,7 +169,7 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(multihostInfo);
                     break;
                 case StartType.MANUAL:
-                    Common.ChatClient.sendMessage(string.Format("Multihost started, remaining on the current host! Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host! Use !checkhost to rotate offline host.", extendDuration), Common.DryRun);
+                    Common.ChatClient.sendMessage(string.Format("Multihost started, remaining on the current host! Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host!", extendDuration), Common.DryRun);
                     break;
             }
             return true;
@@ -212,7 +212,7 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format("Next host: {0}. {1}", nextHost.Streamer, nextHost.Information), Common.DryRun);
                 else
                     Common.ChatClient.sendMessage(string.Format("Next host: {0}.", nextHost.Streamer), Common.DryRun);
-                Common.ChatClient.sendMessage(string.Format("Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host! Use !checkhost to rotate offline host.", extendDuration), Common.DryRun);
+                Common.ChatClient.sendMessage(string.Format("Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host!", extendDuration), Common.DryRun);
                 curMinute = 0;
                 hostStreamer(nextHost);
                 return true;
@@ -280,27 +280,6 @@ namespace KrakenBot2
             }
         }
 
-        // Checks host to determine whether or not they are online (will be deprecated soon) and rotates if they are
-        public void checkHost()
-        {
-            if (currentHost != null)
-            {
-                if (TwitchLib.TwitchAPI.broadcasterOnline(currentHost.Streamer).Result)
-                {
-                    Common.ChatClient.sendMessage(string.Format("The current host ({0}) is currently online.  Please only use this command to rotate offline hosts.", currentHost.Streamer), Common.DryRun);
-                }
-                else
-                {
-                    Common.ChatClient.sendMessage(string.Format("The current host ({0}) appears to be offline.  Rotating to new host.", currentHost.Streamer), Common.DryRun);
-                    nextHost();
-                }
-            } else
-            {
-                Common.ChatClient.sendMessage("The currently hosted streamer cannot be checked.", Common.DryRun);
-            }
-
-        }
-
         // Public method that sends chat message indicating time remaining in currently hosted streamer
         public void remaining()
         {
@@ -319,14 +298,8 @@ namespace KrakenBot2
             Console.WriteLine(string.Format("Host command sent: /host {0}", streamer.Streamer));
             Common.ChatClient.sendMessage(string.Format("/host {0}", streamer.Streamer));
             currentHost = streamer;
-            if (defaultMinuteLimit - curMinute < 29)
-                curMinute -= 30 - (defaultMinuteLimit - curMinute);
-        }
-
-        // Method to unhost the currently hosted streamer (will be deprecated soon)
-        private void unhostStreamer()
-        {
-            Common.ChatClient.sendMessage("/unhost");
+            if (defaultMinuteLimit - curMinute < (defaultMinuteLimit - 1))
+                curMinute -= defaultMinuteLimit - (defaultMinuteLimit - curMinute);
         }
 
         // Class that represents properties of a user extend and subsequently limits them
