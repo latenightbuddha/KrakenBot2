@@ -295,6 +295,12 @@ namespace KrakenBot2
         // Method to initiate host of a streamer
         private void hostStreamer(Host streamer)
         {
+            if (currentHost != null && currentHost.Streamer.ToLower() == streamer.Streamer.ToLower())
+            {
+                Common.ChatClient.sendMessage("The current streamer is being rehosted.");
+                return;
+            }
+                
             Console.WriteLine(string.Format("Host command sent: /host {0}", streamer.Streamer));
             Common.ChatClient.sendMessage(string.Format("/host {0}", streamer.Streamer));
             currentHost = streamer;
