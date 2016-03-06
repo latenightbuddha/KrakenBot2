@@ -85,9 +85,9 @@ namespace KrakenBot2
             {
                 Common.RaidClient.disconnect();
                 if(boarders.Count  == 0 || gunners.Count == 0)
-                    Common.ChatClient.sendMessage(string.Format("The raid has ended! There were {0} ( R) ) boarders and {1} (burkeShip burkeFire burkeFire) gunners!! In total, there were {2} participants in this raid, with boarder {3} and gunner {4} leading the charge! Your doubloon counts will be updated shortly!", boarders.Count, gunners.Count, participants.Count, boarders[0], gunners[0]), Common.DryRun);
+                    Common.ChatClient.sendMessage(string.Format("The raid has ended! There were {0} ( R) ) boarders and {1} ( burkeShip burkeFire burkeFire ) gunners!! In total, there were {2} participants in this raid, with boarder {3} and gunner {4} leading the charge! Your doubloon counts will be updated shortly!", boarders.Count, gunners.Count, participants.Count, boarders[0], gunners[0]), Common.DryRun);
                 else
-                    Common.ChatClient.sendMessage(string.Format("The raid has ended! There were {0} ( R) ) boarders and {1} (burkeShip burkeFire burkeFire) gunners!! In total, there were {2} participants in this raid! Your doubloon counts will be updated shortly!", boarders.Count, gunners.Count, participants.Count), Common.DryRun);
+                    Common.ChatClient.sendMessage(string.Format("The raid has ended! There were {0} ( R) ) boarders and {1} ( burkeShip burkeFire burkeFire ) gunners!! In total, there were {2} participants in this raid! Your doubloon counts will be updated shortly!", boarders.Count, gunners.Count, participants.Count), Common.DryRun);
 
                 if (WebCalls.distibuteDoubloons(participants.Count).Result)
                     Common.ChatClient.sendMessage("[Auto] Doubloon counts updated successfully!");
