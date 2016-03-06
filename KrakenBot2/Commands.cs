@@ -59,6 +59,12 @@ namespace KrakenBot2
         {
             switch(command.Command)
             {
+                case "killgiveaway":
+                    HardCodedChatCommands.Raffle.KillGiveaway.handleCommand(command);
+                    break;
+                case "giveawaykill":
+                    HardCodedChatCommands.Raffle.KillGiveaway.handleCommand(command);
+                    break;
                 case "games":
                     HardCodedChatCommands.Games.handleCommand(command);
                     break;
