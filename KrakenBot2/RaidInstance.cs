@@ -10,12 +10,15 @@ namespace KrakenBot2
     public class RaidInstance
     {
         // Configurable variables
-        private string[] participantIdentifiers = { "r)", "burkeship", "burkebooty", "burkefire", "burkeboom", "ahoy", "booty", "burkeomg", "burkeahoy",
+        private string[] boarderIdentifiers = { "r)" };
+        private string[] gunnerIdentifiers = { "burkeship", "burkebooty", "burkefire", "burkeboom", "ahoy", "booty", "burkeomg", "burkeahoy",
                                                         "burkelove", "burkeepic", "burkeflag", "burkeevil", "burkemug"};
         private Timer raidTimer = new Timer(60000);
         private int raidLength = 5;
 
         private string channel;
+        private List<string> boarders = new List<string>(); // Users that use R)
+        private List<string> gunners = new List<string>(); // Users that use channel emotes
         private List<string> participants = new List<string>();
         
         public string Channel { get { return channel; } }
@@ -37,9 +40,18 @@ namespace KrakenBot2
             {
                 foreach(string word in message.ChatMessage.Message.ToLower().Split(' '))
                 {
-                    foreach(string partWord in participantIdentifiers)
+                    foreach(string gunnerWord in gunnerIdentifiers)
                     {
-                        if (word == partWord && !participants.Contains(message.ChatMessage.Username.ToLower()) && message.ChatMessage.Username.ToLower() != "the_kraken_bot")
+                        if (word == gunnerWord && !gunners.Contains(message.ChatMessage.Username.ToLower()) && message.ChatMessage.Username.ToLower() != "the_kraken_bot")
+                            gunners.Add(message.ChatMessage.Username.ToLower());
+                        if (word == gunnerWord && !participants.Contains(message.ChatMessage.Username.ToLower()) && message.ChatMessage.Username.ToLower() != "the_kraken_bot")
+                            participants.Add(message.ChatMessage.Username.ToLower());
+                    }
+                    foreach(string boarderWord in boarderIdentifiers)
+                    {
+                        if (word == boarderWord && !boarders.Contains(message.ChatMessage.Username.ToLower()) && message.ChatMessage.Username.ToLower() != "the_kraken_bot")
+                            boarders.Add(message.ChatMessage.Username.ToLower());
+                        if (word == boarderWord && !participants.Contains(message.ChatMessage.Username.ToLower()) && message.ChatMessage.Username.ToLower() != "the_kraken_bot")
                             participants.Add(message.ChatMessage.Username.ToLower());
                     }
                 }
@@ -72,7 +84,11 @@ namespace KrakenBot2
             if (participants.Count != 0)
             {
                 Common.RaidClient.disconnect();
-                Common.ChatClient.sendMessage(string.Format("The raid has ended! In total, there were {0} participants in the raid, with {1} leading the charge! Your doubloon counts will be updated shortly to reflect your raid participation!", participants.Count, participants[0]), Common.DryRun);
+                if(boarders.Count  == 0 || gunners.Count == 0)
+                    Common.ChatClient.sendMessage(string.Format("The raid has ended! There were {0} ( R) ) boarders and {1} (burkeShip burkeFire burkeFire) gunners!! In total, there were {2} participants in this raid, with boarder {3} and gunner {4} leading the charge! Your doubloon counts will be updated shortly!", boarders.Count, gunners.Count, participants.Count, boarders[0], gunners[0]), Common.DryRun);
+                else
+                    Common.ChatClient.sendMessage(string.Format("The raid has ended! There were {0} ( R) ) boarders and {1} (burkeShip burkeFire burkeFire) gunners!! In total, there were {2} participants in this raid! Your doubloon counts will be updated shortly!", boarders.Count, gunners.Count, participants.Count), Common.DryRun);
+
                 if (WebCalls.distibuteDoubloons(participants.Count).Result)
                     Common.ChatClient.sendMessage("[Auto] Doubloon counts updated successfully!");
                 else
