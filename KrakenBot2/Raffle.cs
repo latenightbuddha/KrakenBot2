@@ -16,7 +16,8 @@ namespace KrakenBot2
         //Configurable variables
         private Timer raffleTimer = new Timer(60000);
         private Timer claimTimer = new Timer(1000);
-        private int invalidPassTimeoutHours = 1;
+        private int invalidPassTimeoutHours = 12;
+        private int invalidClaimTimeoutHours = 24;
 
         //Raffle instance exclusive variables
         private string activeWinner;
@@ -146,9 +147,15 @@ namespace KrakenBot2
             Common.WhisperClient.sendWhisper(newViewer, "Your entry has been confirmed! Good luck!", Common.DryRun);
             return true;
         }
+        
+        // Kills active giveaway
+        public void killGiveaway()
+        {
+            raffleTimer.Stop();
+            claimTimer.Stop();
+        }
 
         //Performs attempt to claim
-        private int invalidClaimTimeoutDuration = TimeoutConverter.Hours(12);
         public bool tryClaim(string username)
         {
             if(raffleIsActive())
@@ -186,9 +193,9 @@ namespace KrakenBot2
                 } else
                 {
                     System.Threading.Thread.Sleep(400);
-                    Common.ChatClient.sendMessage(string.Format("*WARNING* [{0}] Timed out for 12 hours. [Invalid Claim])", username), Common.DryRun);
-                    Common.WhisperClient.sendWhisper(username, "You have been timedout for 12 hours.  Do NOT try to claim a giveaway that you did not win.", Common.DryRun);
-                    Common.ChatClient.sendMessage(string.Format(".timeout {0} {1}", username, invalidClaimTimeoutDuration), Common.DryRun);
+                    Common.ChatClient.sendMessage(string.Format("*WARNING* [{0}] Timed out for {1} hours. [Invalid Claim])", username, invalidClaimTimeoutHours.ToString()), Common.DryRun);
+                    Common.WhisperClient.sendWhisper(username, string.Format("You have been timedout for {0} hours.  Do NOT try to claim a giveaway that you did not win.", invalidClaimTimeoutHours.ToString()), Common.DryRun);
+                    Common.ChatClient.sendMessage(string.Format(".timeout {0} {1}", username, TimeoutConverter.Hours(invalidClaimTimeoutHours)), Common.DryRun);
                 }
             }
             return false;
