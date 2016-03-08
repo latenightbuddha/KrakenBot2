@@ -203,7 +203,8 @@ namespace KrakenBot2
                     Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: EMOTES, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("kraken-relay"));
                     return true;
                 }
-                if(violateLengthProtection(message) && !message.Contains("PRIVMSG") && !linkPermitExists(username))
+                // Disables length violations
+                /*if(violateLengthProtection(message) && !message.Contains("PRIVMSG") && !linkPermitExists(username))
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, lengthMessages[new Random().Next(0, lengthMessages.Length)], "Please don't make your messages so long."), Common.DryRun);
                     Common.WhisperClient.sendWhisper(username, "Please don't make your messages so long. *warned*", Common.DryRun);
@@ -213,7 +214,7 @@ namespace KrakenBot2
                     Common.notify("CHAT FILTER - LENGTH PROTECTION", "User: " + username + ", message(length: " + message.Length + "): " + message);
                     Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: LENGTH, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("kraken-relay"));
                     return true;
-                }
+                } */
                 if(violateLinkProtection(message) && !linkPermitExists(username))
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, linkMessages[new Random().Next(0, linkMessages.Length)], "Please get permission for sending links."), Common.DryRun);
