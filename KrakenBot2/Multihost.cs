@@ -156,6 +156,8 @@ namespace KrakenBot2
                                 Common.ChatClient.sendMessage(string.Format("Multihost started with '{0}'. {1}", streamer.Streamer, streamer.Information), Common.DryRun);
                             else
                                 Common.ChatClient.sendMessage(string.Format("Multihost started with '{0}'.", streamer.Streamer), Common.DryRun);
+                            currentHost = streamer;
+                            hostStreamer(streamer);
                             return true;
                         }
                     }
@@ -163,9 +165,7 @@ namespace KrakenBot2
                     hosts.Add(newHost);
                     currentHost = newHost;
                     Common.ChatClient.sendMessage(string.Format("Multihost started with '{0}'.", newHost.Streamer), Common.DryRun);
-                    System.Threading.Thread.Sleep(500);
                     hostStreamer(newHost);
-                    System.Threading.Thread.Sleep(500);
                     Common.ChatClient.sendMessage(multihostInfo);
                     break;
                 case StartType.MANUAL:
@@ -300,9 +300,7 @@ namespace KrakenBot2
                 Common.ChatClient.sendMessage("The current streamer is being rehosted.");
                 return;
             }
-                
-            Console.WriteLine(string.Format("Host command sent: /host {0}", streamer.Streamer));
-            Common.ChatClient.sendMessage(string.Format("/host {0}", streamer.Streamer));
+            Common.ChatClient.sendMessage(string.Format(".host {0}", streamer.Streamer));
             currentHost = streamer;
             if (defaultMinuteLimit - curMinute < (defaultMinuteLimit - 1))
                 curMinute -= defaultMinuteLimit - (defaultMinuteLimit - curMinute);
