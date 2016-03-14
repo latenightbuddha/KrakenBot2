@@ -13,7 +13,7 @@ namespace KrakenBot2.HardCodedChatCommands
             if(verifyCommand(e))
             {
                 if (WebCalls.createHighlight(e.ChatMessage.Username, e.ArgumentsAsString).Result)
-                    Common.ChatClient.sendMessage(string.Format("Created a highlight marker by '{0}' titled '{1}'!", e.ChatMessage.Username, e.ArgumentsAsString), Common.DryRun);
+                    Common.ChatClient.sendMessage(string.Format("Created a highlight marker by '{0}' titled '{1}'! You can view bookmarked highlights here: https://burkeblack.tv/highlights.php", e.ChatMessage.Username, e.ArgumentsAsString), Common.DryRun);
                 else
                     Common.ChatClient.sendMessage("Highlight was not created.  Please make sure Burke is online before creating a highlight.");
 
