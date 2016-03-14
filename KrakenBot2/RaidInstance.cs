@@ -61,7 +61,7 @@ namespace KrakenBot2
                 {
                     raidTimer.Start();
                     Common.RaidClient.sendMessage("burkeFlag burkeFlag The Black Crew, ATTACK!!!! burkeFlag burkeFlag", Common.DryRun);
-                    Common.ChatClient.sendMessage(string.Format("burkeFlag burkeFlag The attack has beguon on {0}, get in there! http://twitch.tv/{0}", message.ChatMessage.Channel), Common.DryRun);
+                    Common.ChatClient.sendMessage(string.Format("burkeFlag burkeFlag The attack has begun on {0}, get in there! http://twitch.tv/{0}", message.ChatMessage.Channel), Common.DryRun);
                 }
             }
         }
