@@ -12,7 +12,7 @@ namespace KrakenBot2.HardCodedChatCommands.Raffle
         {
             if(verifyCommand(e) && !Common.DryRun)
             {
-                Common.Raffle.addEntry(e.ChatMessage.Username);
+                Common.Raffle.addEntry(e.ChatMessage.Username, e.Command);
                 Common.command(e.Command, true);
             } else
             {
