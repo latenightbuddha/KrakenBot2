@@ -184,9 +184,12 @@ namespace KrakenBot2
                                 {
                                     if (Common.Cooldown.chatCommandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
                                     {
-                                        string msg = processDynamicVariables(command, dynCommand);
-                                        if (msg != "")
-                                            Common.ChatClient.sendMessage(msg, Common.DryRun);
+                                        Console.WriteLine(dynCommand.ReturnMessages[0]);
+                                        List<string> msgs = processDynamicVariables(command, dynCommand);
+                                        Console.WriteLine(dynCommand.ReturnMessages[0]);
+                                        foreach(string msg in msgs)
+                                            if(msg != "")
+                                                Common.ChatClient.sendMessage(msg, Common.DryRun);
                                     }
                                 }
                                 found = true;
@@ -197,12 +200,17 @@ namespace KrakenBot2
                             foreach(Objects.ChatCommand dynCommand in Common.ChatCommands)
                             {
                                 Console.WriteLine(dynCommand.Command);
-                                if(dynCommand.Return.ToLower().Contains(" " + command.Command.ToLower() + " ") && validateTiers(command, dynCommand)) {
-                                    if (Common.Cooldown.chatCommandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
+                                foreach(string returnMessage in dynCommand.ReturnMessages)
+                                {
+                                    if (returnMessage.ToLower().Contains(" " + command.Command.ToLower() + " ") && validateTiers(command, dynCommand))
                                     {
-                                        string msg = processDynamicVariables(command, dynCommand);
-                                        if (msg != "")
-                                            Common.ChatClient.sendMessage(string.Format("Did you mean !{0}? {1}", dynCommand.Command, msg), Common.DryRun);
+                                        if (Common.Cooldown.chatCommandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
+                                        {
+                                            List<string> msgs = processDynamicVariables(command, dynCommand);
+                                            foreach(string msg in msgs)
+                                                if(msg != "")
+                                                    Common.ChatClient.sendMessage(string.Format("Did you mean !{0}? {1}", dynCommand.Command, msg), Common.DryRun);
+                                        }
                                     }
                                 }
                             }
@@ -239,36 +247,40 @@ namespace KrakenBot2
         }
 
         // Replaces dynamic variables in command or command return strings
-        private static string processDynamicVariables(TwitchLib.TwitchChatClient.CommandReceivedArgs e, Objects.ChatCommand command)
+        private static List<string> processDynamicVariables(TwitchLib.TwitchChatClient.CommandReceivedArgs e, Objects.ChatCommand command)
         {
             if (e.ArgumentsAsList.Count >= (command.ArgsAsList.Count + 1))
-                return "";
-            string retStr = command.Return;      
-            retStr = retStr.Replace("{sender}", Variables.SENDER(e));
-            retStr = retStr.Replace("{recent_sub_name}", Variables.RECENT_SUB_NAME());
-            retStr = retStr.Replace("{recent_sub_length}", Variables.RECENT_SUB_LENGTH());
-            retStr = retStr.Replace("{stream_game}", Variables.STREAM_GAME());
-            retStr = retStr.Replace("{stream_link}", Variables.STREAM_LINK());
-            retStr = retStr.Replace("{stream_status}", Variables.STREAM_STATUS());
-            retStr = retStr.Replace("{viewer_count}", Variables.VIEWER_COUNT());
-            retStr = retStr.Replace("{command_count}", Variables.COMMAND_COUNT());
-            retStr = retStr.Replace("{rotating_message_count}", Variables.ROTATING_MESSAGE_COUNT());
-            retStr = retStr.Replace("{online_status}", Variables.ONLINE_STATUS());
-            retStr = retStr.Replace("{raffle_name}", Variables.RAFFLE_NAME());
-            retStr = retStr.Replace("{raffle_donator}", Variables.RAFFLE_DONATOR());
-            retStr = retStr.Replace("{raffle_author}", Variables.RAFFLE_AUTHOR());
-
-            if (e.ArgumentsAsList.Count > 0)
+                return new List<string>();
+            List<string> returnMessages = command.ReturnMessages.ToList();  
+            
+            for(int i = 0; i < returnMessages.Count; i++)
             {
-                int currentReplace = 0;
-                foreach (string arg in e.ArgumentsAsList)
+                returnMessages[i] = returnMessages[i].Replace("{sender}", Variables.SENDER(e));
+                returnMessages[i] = returnMessages[i].Replace("{recent_sub_name}", Variables.RECENT_SUB_NAME());
+                returnMessages[i] = returnMessages[i].Replace("{recent_sub_length}", Variables.RECENT_SUB_LENGTH());
+                returnMessages[i] = returnMessages[i].Replace("{stream_game}", Variables.STREAM_GAME());
+                returnMessages[i] = returnMessages[i].Replace("{stream_link}", Variables.STREAM_LINK());
+                returnMessages[i] = returnMessages[i].Replace("{stream_status}", Variables.STREAM_STATUS());
+                returnMessages[i] = returnMessages[i].Replace("{viewer_count}", Variables.VIEWER_COUNT());
+                returnMessages[i] = returnMessages[i].Replace("{command_count}", Variables.COMMAND_COUNT());
+                returnMessages[i] = returnMessages[i].Replace("{rotating_message_count}", Variables.ROTATING_MESSAGE_COUNT());
+                returnMessages[i] = returnMessages[i].Replace("{online_status}", Variables.ONLINE_STATUS());
+                returnMessages[i] = returnMessages[i].Replace("{raffle_name}", Variables.RAFFLE_NAME());
+                returnMessages[i] = returnMessages[i].Replace("{raffle_donator}", Variables.RAFFLE_DONATOR());
+                returnMessages[i] = returnMessages[i].Replace("{raffle_author}", Variables.RAFFLE_AUTHOR());
+
+                if (e.ArgumentsAsList.Count > 0)
                 {
-                    retStr = retStr.Replace(command.ArgsAsList[currentReplace], e.ArgumentsAsList[currentReplace]);
-                    currentReplace++;
+                    int currentReplace = 0;
+                    foreach (string arg in e.ArgumentsAsList)
+                    {
+                        returnMessages[i] = returnMessages[i].Replace(command.ArgsAsList[currentReplace], e.ArgumentsAsList[currentReplace]);
+                        currentReplace++;
+                    }
                 }
             }
 
-            return retStr;
+            return returnMessages;
         }
     }
 }
