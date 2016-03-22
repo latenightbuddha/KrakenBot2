@@ -53,6 +53,8 @@ namespace KrakenBot2
                     Common.message(string.Format("MESSAGE {0}: {1}", e.ChatMessage.DisplayName, e.ChatMessage.Message));
                 }
             }
+            if (Common.Raffle != null && Common.Raffle.raffleIsActive())
+                Common.Raffle.addEntry(e.ChatMessage.Username, e.ChatMessage.Message);
             ChatFiltering.violatesProtections(e.ChatMessage.Username, Common.isSub(e), Common.isMod(e), e.ChatMessage.Message);
             if (Common.AhoyRewarder.isActive())
                 Common.AhoyRewarder.processMessage(e);
