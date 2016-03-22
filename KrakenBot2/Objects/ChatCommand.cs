@@ -20,14 +20,15 @@ namespace KrakenBot2.Objects
         }
 
         private uTier userTier;
-        private string command, strReturn;
+        private string command;
+        private List<string> returnMessages = new List<string>();
         private int secondCooldown;
         private List<string> argsAsList = new List<string>();
         private string argsAsString;
 
         public uTier UserTier { get { return userTier; } }
         public string Command { get { return command; } }
-        public string Return { get { return strReturn; } }
+        public List<string> ReturnMessages { get { return returnMessages; } }
         public int Cooldown { get { return secondCooldown; } }
         public List<string> ArgsAsList { get { return argsAsList; } }
         public string ArgsAsString { get { return argsAsString; } }
@@ -46,7 +47,15 @@ namespace KrakenBot2.Objects
                 {
                     command = command.Substring(1, command.Length - 1);
                 }
-            strReturn = data.SelectToken("return").ToString();
+            if (!data.SelectToken("return").ToString().Contains("|"))
+            {
+                returnMessages.Add(data.SelectToken("return").ToString());
+            }
+            else
+            {
+                foreach (string message in data.SelectToken("return").ToString().Split('|'))
+                    returnMessages.Add(message);
+            }
             secondCooldown = int.Parse(data.SelectToken("cooldown").ToString());
             switch(data.SelectToken("tier").ToString())
             {
