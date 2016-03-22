@@ -104,7 +104,10 @@ namespace KrakenBot2
                         break;
                 }
                 //Finally we want to say how to enter, start the raffle, and log to debug console that a raffle was started
-                Common.ChatClient.sendMessage("To enter giveaway, type: !enter", Common.DryRun);
+                if (!raffleProperties.Kappa_Entry)
+                    Common.ChatClient.sendMessage("To enter giveaway, type: !enter", Common.DryRun);
+                else
+                    Common.ChatClient.sendMessage("To enter giveaway, write a message that has Kappa (Kappa) in it :D");
                 Common.notify("New GIVEAWAY; from: " + raffleProperties.Raffle_Author, "Game: " + raffleProperties.Raffle_Name + ", from: " + raffleProperties.Raffle_Donator);
                 Common.DiscordClient.SendMessageToChannel(string.Format("NEW GIVEAWAY: Name: {0}, Donator: {1}, Author: {2}", raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator, raffleProperties.Raffle_Author), Common.DiscordClient.GetChannelByName("kraken-relay"));
                 raffleTimer.Start();
@@ -113,8 +116,12 @@ namespace KrakenBot2
         }
 
         //Perform sanity checks and adds viewer to active raffle
-        public bool addEntry(string newViewer)
+        public bool addEntry(string newViewer, string entryMessage)
         {
+            if (raffleProperties.Kappa_Entry && !entryMessage.ToLower().Contains("kappa"))
+                return false;
+            if (!raffleProperties.Kappa_Entry && !entryMessage.ToLower().Equals("enter"))
+                return false;
             if(!raffleIsActive())
             {
                 System.Threading.Thread.Sleep(500);
@@ -360,12 +367,18 @@ namespace KrakenBot2
                 Common.ChatClient.sendMessage(string.Format("Entries so far: {0}; Time Remaining: {1} minute", enteredViewers.Count, 1), Common.DryRun);
                 if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
                     Common.ChatClient.sendMessage(string.Format("There are currently {0} !games available on BurkeBlack.TV!", raffleProperties.ExGamesCount), Common.DryRun);
+                if (!raffleProperties.Kappa_Entry)
+                    Common.ChatClient.sendMessage("Type !enter to enter the giveaway.");
+                else
+                    Common.ChatClient.sendMessage("To enter this giveaway, write a message that has Kappa (Kappa) in it :D");
             } else if(raffleCurrentMinute == (raffleProperties.Raffle_Length - 4))
             {
                 Common.ChatClient.sendMessage(string.Format("/me Giveaway is for: {0}, donated by: {1}", raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator), Common.DryRun);
                 Common.ChatClient.sendMessage(string.Format("Entries so far: {0}; Time Remaining: {1} minutes", enteredViewers.Count, 3), Common.DryRun);
-                //if (raffleProperties.Raffle_Type == Common.GiveawayTypes.EXGAMES)
-                    //Common.ChatClient.sendMessage(string.Format("There are currently {0} !games available on BurkeBlack.TV!", raffleProperties.ExGamesCount), Common.DryRun);
+                if (!raffleProperties.Kappa_Entry)
+                    Common.ChatClient.sendMessage("Type !enter to enter the giveaway.");
+                else
+                    Common.ChatClient.sendMessage("To enter this giveaway, write a message that has Kappa (Kappa) in it :D");
             }
             raffleCurrentMinute++;
             Common.other("Minutes passed: " + raffleCurrentMinute);
@@ -435,6 +448,7 @@ namespace KrakenBot2
             private List<Objects.PreviousRaffleWinner> previousWinners;
             private List<string> blockedViewers;
             private int exGamesCount = 0;
+            private bool kappaEntry = false;
 
             public int ExGamesCount { get { return exGamesCount; } }
             public int Raffle_Length { get { return raffleLength; } }
@@ -452,6 +466,7 @@ namespace KrakenBot2
             public Filters Raffle_Filter { get { return raffleFilter; } }
             public bool Sub_Only { get { return subOnly; } }
             public bool Follower_Only { get { return followerOnly; } }
+            public bool Kappa_Entry { get { return kappaEntry; } }
             public List<Objects.PreviousRaffleWinner> Previous_Winners { get { return previousWinners; } }
             public List<string> Blocked_Viewers { get { return blockedViewers; } }
 
@@ -478,6 +493,9 @@ namespace KrakenBot2
                     followerOnly = true;
                 previousWinners = WebCalls.downloadPreviousWinners().Result;
                 blockedViewers = downloadBlockedViewers(raffleDonator).Result;
+                if (giveawayProperties.SelectToken("kappa_entry") != null)
+                    if (giveawayProperties.SelectToken("kappa_entry").ToString() == "true")
+                        kappaEntry = true;
 
                 switch (giveawayProperties.SelectToken("raffle_type").ToString())
                 {
