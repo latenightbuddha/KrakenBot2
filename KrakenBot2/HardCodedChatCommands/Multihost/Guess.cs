@@ -12,7 +12,10 @@ namespace KrakenBot2.HardCodedChatCommands.Multihost
         {
             if (verifyCommand(e))
             {
-                Common.Multihost.guess();
+                if(Common.Multihost != null)
+                    Common.Multihost.guess();
+                else
+                    Common.ChatClient.sendMessage("Multihost is not currently initialized.", Common.DryRun);
                 Common.command(e.Command, true);
             }
             else
