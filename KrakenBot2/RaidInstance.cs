@@ -73,14 +73,25 @@ namespace KrakenBot2
         private void raidTimerTick(object sender, ElapsedEventArgs e)
         {
             if (minutesCompleted == raidLength)
+            {
+                raidTimer.Stop();
                 postRaid();
+            }
             else
+            {
                 minutesCompleted++;
+            }
+                
         }
 
         // Handles post raid messages and doubloon distrobution
+        private bool postRaidFired = false;
         private void postRaid()
         {
+            if (postRaidFired)
+                return;
+            else
+                postRaidFired = true;
             if (participants.Count != 0)
             {
                 Common.RaidClient.disconnect();
