@@ -16,7 +16,7 @@ namespace KrakenBot2
         // Fires when channel state message is received from Twitch
         public static void onChannelState(object sender, TwitchLib.TwitchChatClient.ChannelStateAssignedArgs e)
         {
-            if(!connected)
+            if(!connected && !Common.DefaultOverride)
                 Common.ChatClient.sendMessage(string.Format("/me [V2] connected[v{0}]!", Assembly.GetExecutingAssembly().GetName().Version), Common.DryRun);
             connected = true;
             if (!Common.EntryMessage)
