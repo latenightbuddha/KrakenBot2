@@ -92,6 +92,8 @@ namespace KrakenBot2
             if(message.Contains("[recent_twitch]"))
             {
                 TwitchLib.TwitchAPIClasses.TwitchVideo recentVideo = TwitchLib.TwitchAPI.getChannelVideos("burkeblack", 1).Result[0];
+                if (recentVideo == null)
+                    return message.Replace("[recent_twitch]", "Not Available - query failed");
                 TimeSpan ts = new TimeSpan(0, 0, recentVideo.Length);
                 string duration = string.Format("{0}:{1}", ts.Minutes, ts.Seconds);
                 message = message.Replace("[recent_twitch]", string.Format("{0} [Views: {1}] [Duration: {2}] - {3}", recentVideo.Title, recentVideo.Views, duration, recentVideo.URL));
@@ -99,6 +101,8 @@ namespace KrakenBot2
             if(message.Contains("[recent_youtube]"))
             {
                 Objects.YoutubeVideo recentVideo = WebCalls.getBurkesLatestYTVideo().Result;
+                if (recentVideo == null)
+                    return message.Replace("[recent_youtube]", "Not Available - query failed");
                 message = message.Replace("[recent_youtube]", string.Format("{0} [Views: {1}] - http://youtu.be/{2}", recentVideo.Title, recentVideo.Views, recentVideo.VideoID));
             }
             return message;
