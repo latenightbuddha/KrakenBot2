@@ -50,6 +50,7 @@ namespace KrakenBot2
                         uploadStr = string.Format("{0}|{1},{2}", uploadStr, userMessage.Username, userMessage.Messages);
                 }
                 WebCalls.uploadChatMessageCounts(uploadStr);
+                userMessages.Clear();
             }
         }
 
