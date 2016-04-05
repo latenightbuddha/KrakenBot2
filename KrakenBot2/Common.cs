@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using DiscordSharp;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace KrakenBot2
 {
@@ -22,7 +24,7 @@ namespace KrakenBot2
         "ebrech", "echoics", "ellohime", "evilbunny101", "ferretbomb", "fu_grimreaper1979", "fuzzyfreaks", "g0dispink", "geekdomo", "itsgime", "jazzalynn", "jonsmith13", "kingradinov",
         "knightfire5513", "larianstudios", "limpy", "lowco2525", "moblord", "molly", "mrboombati", "northernhermit", "omeed", "oodigames", "radlit1", "rallei_lol", "sattelizergames",
         "skylatron", "sumsum5513", "swiftyspiffy", "tangentgaming", "tbcquartermasterbot", "tessachka", "the_kraken_bot", "tobes101", "totalwarofficial", "tr0ysefix", "undeadrme",
-        "warwitchtv", "wolfsgorawr", "xorshasia", "xwarcrimesx" };
+        "warwitchtv", "wolfsgorawr", "xorshasia", "xwarcrimesx", "aeovanti", "kaiju2013" };
         private static int deathCount = 0;
         private static int hitCount = 0;
         private static List<string> chatSubs = new List<string>();
@@ -215,6 +217,18 @@ namespace KrakenBot2
         public static bool IsNumeric(string value)
         {
             return System.Text.RegularExpressions.Regex.IsMatch(value, "^\\d+$");
+        }
+
+        // MD5 hashes passed in string
+        public static string getCacheMD5Hash(string data)
+        {
+            MD5 md5 = MD5.Create();
+            byte[] inputBytes = Encoding.ASCII.GetBytes(data);
+            byte[] hash = md5.ComputeHash(inputBytes);
+            StringBuilder hashStr = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+               hashStr.Append(hash[i].ToString("X2"));
+            return hashStr.ToString().ToLower();
         }
 
         // Class representing an UpdateDetails object
