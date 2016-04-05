@@ -12,8 +12,8 @@ namespace KrakenBot2.HardCodedChatCommands
         {
             if (verifyCommand(e))
             {
-                if (Common.RaidClient == null || Common.RaidClient.Channel.ToLower() != e.ArgumentsAsList[0].ToLower())
-                    launchRaidInstance(e.ArgumentsAsList[0]);
+                //if (Common.RaidClient == null || Common.RaidClient.Channel.ToLower() != e.ArgumentsAsList[0].ToLower())
+                //    launchRaidInstance(e.ArgumentsAsList[0]);
                 Common.ChatClient.sendMessage(string.Format("Go raid {0}!!! Viewers: R)", e.ArgumentsAsList[0]), Common.DryRun);
                 Common.ChatClient.sendMessage(string.Format("Go raid http://twitch.tv/{0}!!! Sub: burkeShip burkeFire burkeFire", e.ArgumentsAsList[0]), Common.DryRun);
                 Common.ChatClient.sendMessage(string.Format("Go raid {0}!!! Viewers: R)", e.ArgumentsAsList[0]), Common.DryRun);
