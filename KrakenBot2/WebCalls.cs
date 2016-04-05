@@ -16,55 +16,105 @@ namespace KrakenBot2
     public static class WebCalls
     {
         // Downloads and loads timeout words into list; returns list
-        public async static Task<List<Objects.TimeoutWord>> downloadTimeoutWords()
+        public async static Task<List<Objects.TimeoutWord>> downloadTimeoutWords(bool forceRefresh)
         {
             List<Objects.TimeoutWord> words = new List<Objects.TimeoutWord>();
-            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webTimeoutWordsURL);
+            string jsonStr;
+            if (File.Exists("timeout_words.json") && !forceRefresh)
+            {
+                jsonStr = File.ReadAllText("timeout_words.json");
+            } else
+            {
+                jsonStr = await request(requestType.GET, Properties.Settings.Default.webTimeoutWordsURL);
+                File.WriteAllText("timeout_words.json", jsonStr);
+            }
             foreach(JToken word in JObject.Parse(jsonStr).SelectToken("words"))
                 words.Add(new Objects.TimeoutWord(word));
             return words;
         }
 
         // Downloads and loads spoiler words into list; returns list
-        public async static Task<List<Objects.SpoilerWord>> downloadSpoilerWords()
+        public async static Task<List<Objects.SpoilerWord>> downloadSpoilerWords(bool forceRefresh)
         {
             List<Objects.SpoilerWord> words = new List<Objects.SpoilerWord>();
-            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webSpoilerWordsURL);
+            string jsonStr;
+            if(File.Exists("spoiler_words.json") && !forceRefresh)
+            {
+                jsonStr = File.ReadAllText("spoiler_words.json");
+            } else {
+                jsonStr = await request(requestType.GET, Properties.Settings.Default.webSpoilerWordsURL);
+                File.WriteAllText("spoiler_words.json", jsonStr);
+            }
             foreach(JToken word in JObject.Parse(jsonStr).SelectToken("words"))
                 words.Add(new Objects.SpoilerWord(word));
             return words;
         }
 
         // Downloads and loads chat commands into list; returns list
-        public async static Task<List<Objects.ChatCommand>> downloadChatCommands()
+        public async static Task<List<Objects.ChatCommand>> downloadChatCommands(bool forceRefresh)
         {
             List<Objects.ChatCommand> commands = new List<Objects.ChatCommand>();
-            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webCommandsURL);
+            string jsonStr;
+            if (File.Exists("chat_commands.json") && !forceRefresh)
+            {
+                jsonStr = File.ReadAllText("chat_commands.json");
+            }
+            else
+            {
+                jsonStr = await request(requestType.GET, Properties.Settings.Default.webCommandsURL);
+                File.WriteAllText("chat_commands.json", jsonStr);
+            }
             foreach(JToken command in JObject.Parse(jsonStr).SelectToken("commands"))
                 commands.Add(new Objects.ChatCommand(command));
             return commands;
         }
 
         // Download and loads quotes into list; returns list
-        public async static Task<List<Objects.Quote>> downloadQuotes()
+        public async static Task<List<Objects.Quote>> downloadQuotes(bool forceRefresh)
         {
             List<Objects.Quote> quotes = new List<Objects.Quote>();
-            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webQuotes);
+            string jsonStr;
+            if (File.Exists("quotes.json") && !forceRefresh)
+            {
+                jsonStr = File.ReadAllText("quotes.json");
+            } else
+            {
+                jsonStr = await request(requestType.GET, Properties.Settings.Default.webQuotes);
+                File.WriteAllText("quotes.json", jsonStr);
+            }
             foreach(JToken quote in JObject.Parse(jsonStr).SelectToken("quotes"))
                 quotes.Add(new Objects.Quote(quote));
             return quotes;
         }
 
         // Downloads server settings; returns them in form of ServerSetting object
-        public async static Task<ServerSettings> downloadServerSettings()
+        public async static Task<ServerSettings> downloadServerSettings(bool forceRefresh)
         {
-            return new ServerSettings(JObject.Parse(await request(requestType.GET, Properties.Settings.Default.webSettingsURL)).SelectToken("settings"));
+            string jsonStr;
+            if(File.Exists("server_settings.json") && !forceRefresh)
+            {
+                jsonStr = File.ReadAllText("server_settings.json");
+            } else
+            {
+                jsonStr = await request(requestType.GET, Properties.Settings.Default.webSettingsURL);
+                File.WriteAllText("server_settings.json", jsonStr);
+            }
+            return new ServerSettings(JObject.Parse(jsonStr).SelectToken("settings"));
         }
 
         // Downloads and returns JSON string of timed messages
-        public async static Task<string> downloadTimedMessages()
+        public async static Task<string> downloadTimedMessages(bool forceRefresh)
         {
-            return await request(requestType.GET, Properties.Settings.Default.webMessagesURL);
+            string jsonStr;
+            if(File.Exists("timed_messages.json") && !forceRefresh)
+            {
+                jsonStr = File.ReadAllText("timed_messages.json");
+            } else
+            {
+                jsonStr = await request(requestType.GET, Properties.Settings.Default.webMessagesURL);
+                File.WriteAllText("timed_messages.json", jsonStr);
+            }
+            return jsonStr;
         }
 
         // Downloads and loads previous raffle winners into list; returns list
@@ -409,7 +459,15 @@ namespace KrakenBot2
         public async static Task<List<string>> downloadTopLevelDomains()
         {
             List<string> tlds = new List<string>();
-            string cnts = await request(requestType.GET, "https://data.iana.org/TLD/tlds-alpha-by-domain.txt");
+            string cnts;
+            if (!File.Exists("tlds.txt") || DateTime.UtcNow - File.GetLastWriteTimeUtc("tlds.txt") > TimeSpan.FromDays(3))
+            {
+                cnts = await request(requestType.GET, "https://data.iana.org/TLD/tlds-alpha-by-domain.txt");
+                File.WriteAllText("tlds.txt", cnts);
+            } else
+            {
+                cnts = File.ReadAllText("tlds.txt");
+            }
             int i = 0;
             using (StringReader reader = new StringReader(cnts))
             {
