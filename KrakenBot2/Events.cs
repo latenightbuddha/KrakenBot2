@@ -116,18 +116,18 @@ namespace KrakenBot2
         // Fires when bot receives a message from any discord channel
         public static void onDiscordMessageReceived(object sender, DiscordMessageEventArgs e)
         {
-            if (e.message_text.Length > 0 && e.message_text[0] == '!')
-                Commands.handleDiscordCommand(new Objects.DiscordCommand(e.author.Username, e.message_text, e.Channel.Name));
+            if (e.MessageText.Length > 0 && e.MessageText[0] == '!')
+                Commands.handleDiscordCommand(new Objects.DiscordCommand(e.Author.Username, e.MessageText, e.Channel.Name));
             if(e.Channel.Name.ToLower() == "kraken-relay")
             {
-                if (e.message.content.ToLower() == "!restart")
+                if (e.Message.Content.ToLower() == "!restart")
                 {
                     Common.DiscordClient.SendMessageToChannel("Restarting... Please standby!", Common.DiscordClient.GetChannelByName("kraken-relay"));
                     System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
                     Environment.Exit(0);
                 }
             }
-            Console.WriteLine(string.Format("[{0}] {1}: {2}", e.Channel.Name, e.author.Username, e.message_text));
+            Console.WriteLine(string.Format("[{0}] {1}: {2}", e.Channel.Name, e.Author.Username, e.MessageText));
         }
 
         // Internal function to process a received sub and redirect stack to ChatSubs object utilizing chat message as identity
