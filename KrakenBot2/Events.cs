@@ -110,7 +110,7 @@ namespace KrakenBot2
         public static void onDiscordConnected(object sender, DiscordConnectEventArgs e)
         {
             Common.DiscordClient.UpdateCurrentGame("BurkeBlack.TV");
-            Common.DiscordClient.SendMessageToChannel("connected!", Common.DiscordClient.GetChannelByName("kraken-relay"));
+            Common.DiscordClient.SendMessageToChannel("connected!", Common.DiscordClient.GetChannelByName("relay"));
         }
 
         // Fires when bot receives a message from any discord channel
@@ -118,11 +118,11 @@ namespace KrakenBot2
         {
             if (e.MessageText.Length > 0 && e.MessageText[0] == '!')
                 Commands.handleDiscordCommand(new Objects.DiscordCommand(e.Author.Username, e.MessageText, e.Channel.Name));
-            if(e.Channel.Name.ToLower() == "kraken-relay")
+            if(e.Channel.Name.ToLower() == "relay")
             {
                 if (e.Message.Content.ToLower() == "!restart")
                 {
-                    Common.DiscordClient.SendMessageToChannel("Restarting... Please standby!", Common.DiscordClient.GetChannelByName("kraken-relay"));
+                    Common.DiscordClient.SendMessageToChannel("Restarting... Please standby!", Common.DiscordClient.GetChannelByName("relay"));
                     System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
                     Environment.Exit(0);
                 }
