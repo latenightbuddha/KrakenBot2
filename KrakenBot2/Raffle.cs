@@ -151,7 +151,8 @@ namespace KrakenBot2
             }
             Common.initialize("New entry: " + newViewer);
             enteredViewers.Add(newViewer);
-            Common.WhisperClient.sendWhisper(newViewer, "Your entry has been confirmed! Good luck!", Common.DryRun);
+            if (Common.WhisperClient != null)
+                Common.WhisperClient.sendWhisper(newViewer, "Your entry has been confirmed! Good luck!", Common.DryRun);
             return true;
         }
         
@@ -201,7 +202,8 @@ namespace KrakenBot2
                 {
                     System.Threading.Thread.Sleep(400);
                     Common.ChatClient.sendMessage(string.Format("*WARNING* [{0}] Timed out for {1} hours. [Invalid Claim])", username, invalidClaimTimeoutHours.ToString()), Common.DryRun);
-                    Common.WhisperClient.sendWhisper(username, string.Format("You have been timedout for {0} hours.  Do NOT try to claim a giveaway that you did not win.", invalidClaimTimeoutHours.ToString()), Common.DryRun);
+                    if (Common.WhisperClient != null)
+                        Common.WhisperClient.sendWhisper(username, string.Format("You have been timedout for {0} hours.  Do NOT try to claim a giveaway that you did not win.", invalidClaimTimeoutHours.ToString()), Common.DryRun);
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} {1}", username, TimeoutConverter.Hours(invalidClaimTimeoutHours)), Common.DryRun);
                 }
             }
@@ -215,14 +217,16 @@ namespace KrakenBot2
             if (username.ToLower() == activeWinner.ToLower() && raffleIsActive())
             {
                 Common.ChatClient.sendMessage(string.Format("Winner ({0}) has passed on their win, redrawing...", activeWinner), Common.DryRun);
-                Common.WhisperClient.sendWhisper(activeWinner, "Thank you for passing on your giveaway.  burkeEpic", Common.DryRun);
+                if (Common.WhisperClient != null)
+                    Common.WhisperClient.sendWhisper(activeWinner, "Thank you for passing on your giveaway.  burkeEpic", Common.DryRun);
                 processDraw(true);
                 return true;
             } else
             {
                 System.Threading.Thread.Sleep(400);
                 Common.ChatClient.sendMessage(string.Format("*WARNING* [{0}] Timed out for 1 hour. [Invalid Pass])", username), Common.DryRun);
-                Common.WhisperClient.sendWhisper(username, "You have been timedout for 1 hour.  Do NOT try to pass a giveaway that you did not win.", Common.DryRun);
+                if (Common.WhisperClient != null)
+                    Common.WhisperClient.sendWhisper(username, "You have been timedout for 1 hour.  Do NOT try to pass a giveaway that you did not win.", Common.DryRun);
                 Common.ChatClient.sendMessage(string.Format(".timeout {0} {1}", username, invalidPassTimeoutDuration), Common.DryRun);
                 return false;
             }
@@ -233,16 +237,19 @@ namespace KrakenBot2
         {
             if(raffleProperties.Raffle_Linker != "")
             {
-                Common.WhisperClient.sendWhisper(activeWinner, "Congrats on your win! Visit http://burkeblack.tv , login with your Twitch account and scroll to Prizes/Rewards.  Click on the Raffle Prizes tab to view your raffle prize!", Common.DryRun);
+                if (Common.WhisperClient != null)
+                    Common.WhisperClient.sendWhisper(activeWinner, "Congrats on your win! Visit http://burkeblack.tv , login with your Twitch account and scroll to Prizes/Rewards.  Click on the Raffle Prizes tab to view your raffle prize!", Common.DryRun);
             } else
             {
                 switch(raffleProperties.Raffle_Type)
                 {
                     case Common.GiveawayTypes.EXGAMES:
-                        Common.WhisperClient.sendWhisper(activeWinner, "Congrats on your win! Visit http://burkeblack.tv and login with your Twitch account.  A message box will detail instructions on how to claim your !games game!", Common.DryRun);
+                        if (Common.WhisperClient != null)
+                            Common.WhisperClient.sendWhisper(activeWinner, "Congrats on your win! Visit http://burkeblack.tv and login with your Twitch account.  A message box will detail instructions on how to claim your !games game!", Common.DryRun);
                         break;
                     default:
-                        Common.WhisperClient.sendWhisper(activeWinner, "Congrats on your win! A mod will get in contact with you shortly!", Common.DryRun);
+                        if (Common.WhisperClient != null)
+                            Common.WhisperClient.sendWhisper(activeWinner, "Congrats on your win! A mod will get in contact with you shortly!", Common.DryRun);
                         break;
                 }
             }
