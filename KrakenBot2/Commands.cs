@@ -48,7 +48,8 @@ namespace KrakenBot2
                     HardCodedWhisperCommands.GiveawayHistory.handleCommand(command);
                     break;
                 default:
-                    Common.WhisperClient.sendWhisper(command.Username, "To view available whisper commands, whisper the bot !commands", Common.DryRun);
+                    if (Common.WhisperClient != null)
+                        Common.WhisperClient.sendWhisper(command.Username, "To view available whisper commands, whisper the bot !commands", Common.DryRun);
                     //Handle dynamically created whisper commands
                     break;
             }
@@ -59,6 +60,11 @@ namespace KrakenBot2
         {
             switch(command.Command)
             {
+                case "drink":
+                    // Intentionally fall through
+                case "drinking":
+                    HardCodedChatCommands.Drink.handleCommand(command);
+                    break;
                 case "500":
                     HardCodedChatCommands._500.handleCommand(command);
                     break;
