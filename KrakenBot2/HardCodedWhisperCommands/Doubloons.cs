@@ -11,7 +11,8 @@ namespace KrakenBot2.HardCodedWhisperCommands
         public static void handleCommand(TwitchLib.TwitchWhisperClient.CommandReceivedArgs e)
         {
             string doubloons = WebCalls.getUserDoubloons(e.Username).Result;
-            Common.WhisperClient.sendWhisper(e.Username, string.Format("Your current doubloon count is: {0}", doubloons), Common.DryRun);
+            if (Common.WhisperClient != null)
+                Common.WhisperClient.sendWhisper(e.Username, string.Format("Your current doubloon count is: {0}", doubloons), Common.DryRun);
         }
     }
 }
