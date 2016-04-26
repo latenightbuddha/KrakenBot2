@@ -10,7 +10,8 @@ namespace KrakenBot2.HardCodedWhisperCommands
     {
         public static void handleCommand(TwitchLib.TwitchWhisperClient.CommandReceivedArgs e)
         {
-            Common.WhisperClient.sendWhisper(e.Username, "The currently available whisper commands are: !notifyme, !removeme, !doubloons, !discordinvite, !giveawayhistory", Common.DryRun);
+            if (Common.WhisperClient != null)
+                Common.WhisperClient.sendWhisper(e.Username, "The currently available whisper commands are: !notifyme, !removeme, !doubloons, !discordinvite, !giveawayhistory", Common.DryRun);
         }
     }
 }
