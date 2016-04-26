@@ -173,7 +173,8 @@ namespace KrakenBot2
                 if(violateCapsProtection(message) && !linkPermitExists(username))
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, capsMessages[new Random().Next(0, capsMessages.Length)], "Please don't use so many caps."), Common.DryRun);
-                    Common.WhisperClient.sendWhisper(username, "Please don't use so many capital letters. *warned*", Common.DryRun);
+                    if (Common.WhisperClient != null)
+                        Common.WhisperClient.sendWhisper(username, "Please don't use so many capital letters. *warned*", Common.DryRun);
                     System.Threading.Thread.Sleep(400);
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} 1", username), Common.DryRun);
                     Common.fail(string.Format("CAPS TIMEOUT: user: {0}, message: {1}", username, message));
@@ -184,7 +185,8 @@ namespace KrakenBot2
                 if(violateSpamProtection(message) && !violateLinkProtection(message) && !message.Contains("PRIVMSG") && !linkPermitExists(username))
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, spamMessages[new Random().Next(0, spamMessages.Length)], "Please don't use so much spam."), Common.DryRun);
-                    Common.WhisperClient.sendWhisper(username, "Please don't use so much spam. *warned*", Common.DryRun);
+                    if (Common.WhisperClient != null)
+                        Common.WhisperClient.sendWhisper(username, "Please don't use so much spam. *warned*", Common.DryRun);
                     System.Threading.Thread.Sleep(400);
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} 1", username), Common.DryRun);
                     Common.fail(string.Format("SPAM TIMEOUT: user: {0}, message: {1}", username, message));
@@ -195,7 +197,8 @@ namespace KrakenBot2
                 if(violateEmoteProtection(Common.CachedEmotes, message) && !linkPermitExists(username))
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, emoteMessages[new Random().Next(0, emoteMessages.Length)], "Please don't use so many emotes."), Common.DryRun);
-                    Common.WhisperClient.sendWhisper(username, "Please don't use so many emotes. *warned*", Common.DryRun);
+                    if (Common.WhisperClient != null)
+                        Common.WhisperClient.sendWhisper(username, "Please don't use so many emotes. *warned*", Common.DryRun);
                     System.Threading.Thread.Sleep(400);
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} 1", username), Common.DryRun);
                     Common.fail(string.Format("EMOTE TIMEOUT: user: {0}, message: {1}", username, message));
@@ -218,7 +221,8 @@ namespace KrakenBot2
                 if(violateLinkProtection(message) && !linkPermitExists(username))
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, linkMessages[new Random().Next(0, linkMessages.Length)], "Please get permission for sending links."), Common.DryRun);
-                    Common.WhisperClient.sendWhisper(username, "Please get permission for sending links. *warned*", Common.DryRun);
+                    if(Common.WhisperClient != null)
+                        Common.WhisperClient.sendWhisper(username, "Please get permission for sending links. *warned*", Common.DryRun);
                     System.Threading.Thread.Sleep(400);
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} 1", username), Common.DryRun);
                     Common.fail(string.Format("LINK TIMEOUT: user: {0}, message: {1}", username, message));
@@ -233,7 +237,8 @@ namespace KrakenBot2
                 if(toWord != null)
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, timeoutWordMessages[new Random().Next(0, timeoutWordMessages.Length)], "Please don't send religious, poltical, or obscene messages."), Common.DryRun);
-                    Common.WhisperClient.sendWhisper(username, "Please don't send religious, poltical, or obscene messages. *warned*", Common.DryRun);
+                    if (Common.WhisperClient != null)
+                        Common.WhisperClient.sendWhisper(username, "Please don't send religious, poltical, or obscene messages. *warned*", Common.DryRun);
                     System.Threading.Thread.Sleep(400);
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} {1}", username, toWord.Seconds), Common.DryRun);
                     Common.fail(string.Format("BAD WORD TIMEOUT: user: {0}, word: {1}, message: {2}", username, toWord.Word, message));
@@ -245,7 +250,8 @@ namespace KrakenBot2
                 if(spoilerWord != null)
                 {
                     Common.ChatClient.sendMessage(string.Format("[{0}] {1} [{2}] *warning*", username, spoilerWordMessages[new Random().Next(0, spoilerWordMessages.Length)], "Please don't include potential story spoilers in your message."), Common.DryRun);
-                    Common.WhisperClient.sendWhisper(username, "Please don't include potential story spoilers in your message. *warned*", Common.DryRun);
+                    if (Common.WhisperClient != null)
+                        Common.WhisperClient.sendWhisper(username, "Please don't include potential story spoilers in your message. *warned*", Common.DryRun);
                     System.Threading.Thread.Sleep(400);
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} {1}", username, spoilerWord.Seconds), Common.DryRun);
                     Common.fail(string.Format("SPOILER TIMEOUT: user: {0}, word: {1}, message: {2}", username, spoilerWord.Word, message));
