@@ -17,22 +17,26 @@ namespace KrakenBot2.HardCodedWhisperCommands
                     string oldInvite = WebCalls.getExistingDiscordInvite(e.Username).Result;
                     if (oldInvite != null)
                     {
-                        Common.WhisperClient.sendWhisper(e.Username, string.Format("It appears you've already requested an invite.  You may try accessing your old invite here (https://discord.gg/{0}), but it may be invalid.", oldInvite), Common.DryRun);
+                        if (Common.WhisperClient != null)
+                            Common.WhisperClient.sendWhisper(e.Username, string.Format("It appears you've already requested an invite.  You may try accessing your old invite here (https://discord.gg/{0}), but it may be invalid.", oldInvite), Common.DryRun);
                     }
                     else
                     {
                         string invite = WebCalls.createInviteCode();
-                        Common.WhisperClient.sendWhisper(e.Username, string.Format("Here is your BurkeBlack Crew Discord Chat invite.  You have two 2 minutes, and this link will expire after its first usage.  You will not receive another link. https://discord.gg/{0}", invite), Common.DryRun);
+                        if (Common.WhisperClient != null)
+                            Common.WhisperClient.sendWhisper(e.Username, string.Format("Here is your BurkeBlack Crew Discord Chat invite.  You have two 2 minutes, and this link will expire after its first usage.  You will not receive another link. https://discord.gg/{0}", invite), Common.DryRun);
                         WebCalls.addInviteCode(e.Username, invite);
                     }
                 }
                 else
                 {
-                    Common.WhisperClient.sendWhisper(e.Username, string.Format("You currently do not meet the {0} doubloon limit.  Please request an invite when you have met this requirement.", Common.DiscordInviteLimit), Common.DryRun);
+                    if (Common.WhisperClient != null)
+                        Common.WhisperClient.sendWhisper(e.Username, string.Format("You currently do not meet the {0} doubloon limit.  Please request an invite when you have met this requirement.", Common.DiscordInviteLimit), Common.DryRun);
                 }
             } else
             {
-                Common.WhisperClient.sendWhisper(e.Username, string.Format("There is a 20 second cooldown on this whisper command applied to everyone whispering me (The_Kraken_Bot).  Please try again shortly."));
+                if (Common.WhisperClient != null)
+                    Common.WhisperClient.sendWhisper(e.Username, string.Format("There is a 20 second cooldown on this whisper command applied to everyone whispering me (The_Kraken_Bot).  Please try again shortly."));
             }
         }
     }
