@@ -54,7 +54,8 @@ namespace KrakenBot2
         {
             WebCalls.removeNotifyUser(username);
             usersToNotify.Remove(username);
-            Common.WhisperClient.sendWhisper(username, "You will no longer be notified when Burke goes live. :( To be notified again, whisper !notifyme", Common.DryRun);
+            if (Common.WhisperClient != null)
+                Common.WhisperClient.sendWhisper(username, "You will no longer be notified when Burke goes live. :( To be notified again, whisper !notifyme", Common.DryRun);
         }
 
         // Public method to add user to notifyMe list
@@ -62,7 +63,8 @@ namespace KrakenBot2
         {
             WebCalls.addNotifyUser(username);
             usersToNotify.Add(username);
-            Common.WhisperClient.sendWhisper(username, "You will now be notified via a whisper when Burke goes live! burkeEpic To remove yourself from this list, whisper !removeme", Common.DryRun);
+            if (Common.WhisperClient != null)
+                Common.WhisperClient.sendWhisper(username, "You will now be notified via a whisper when Burke goes live! burkeEpic To remove yourself from this list, whisper !removeme", Common.DryRun);
         }
 
         // Method to send message in discord and fire all whispers
@@ -73,7 +75,8 @@ namespace KrakenBot2
                 Common.DiscordClient.SendMessageToChannel(string.Format("{0} Hey guys! Burke just went live playing: {1}, title: {2}. Channel: {3}.", greetings[new Random().Next(0,greetings.Length)], channel.Game, channel.Status, "http://twitch.tv/burkeblack"), Common.DiscordClient.GetChannelByName("general"));
             foreach(string user in usersToNotify)
             {
-                Common.WhisperClient.sendWhisper(user, string.Format("Burke just went live playing: {0}, title: {1}. Channel: {2}. !removeme to stop receiving notifications.", channel.Game, channel.Status,  "http://twitch.tv/burkeblack"), Common.DryRun);
+                if (Common.WhisperClient != null)
+                    Common.WhisperClient.sendWhisper(user, string.Format("Burke just went live playing: {0}, title: {1}. Channel: {2}. !removeme to stop receiving notifications.", channel.Game, channel.Status,  "http://twitch.tv/burkeblack"), Common.DryRun);
                 System.Threading.Thread.Sleep(2000);
             }
         }
