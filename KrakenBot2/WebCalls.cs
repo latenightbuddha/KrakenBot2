@@ -50,6 +50,12 @@ namespace KrakenBot2
             return words;
         }
 
+        public async static Task<string> downloadDrinking()
+        {
+            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webDrink);
+            return JObject.Parse(jsonStr).SelectToken("drinking").ToString();
+        }
+
         // Downloads and loads chat commands into list; returns list
         public async static Task<List<Objects.ChatCommand>> downloadChatCommands(bool forceRefresh)
         {
