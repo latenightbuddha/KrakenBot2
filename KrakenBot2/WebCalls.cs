@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Reflection;
-using DiscordSharp;
 using System.Net.Http;
 using System.Net;
 
@@ -593,70 +592,6 @@ namespace KrakenBot2
                 return null;
             }
             return new Objects.FollowData(twitchChannel);
-        }
-
-        // Queries Discord API to generate 1 use, 2 minute Discord invite code; returns discord invite string value
-        public static string createInviteCode()
-        {
-            string url = Endpoints.BaseAPI + Endpoints.Channels + $"/{Common.DiscordClient.GetChannelByName("general").ID}" + Endpoints.Invites;
-            try
-            {
-                var response = discordPost(url, DiscordClient.token, "{\"max_age\":120,\"max_uses\":1,\"temporary\":false,\"xkcdpass\":false}");
-                return JObject.Parse(response).SelectToken("code").ToString();
-            }
-            catch (Exception)
-            {
-                return "Failed!";
-            }
-        }
-
-        // Ripped from DiscordSharp's WebWrapper.Post internal function.  Needed for creating custom invite link
-        private static string discordPost(string url, string token, string message, bool acceptInviteWorkaround = false)
-        {
-            string UserAgentString = $"DiscordBot (http://github.com/Luigifan/DiscordSharp, {typeof(DiscordClient).Assembly.GetName().Version.ToString()})";
-            var httpRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpRequest.Headers["authorization"] = token;
-            if (acceptInviteWorkaround)
-                httpRequest.ContentLength = message.Length;
-            httpRequest.ContentType = "application/json";
-            httpRequest.Method = "POST";
-            httpRequest.UserAgent += $" {UserAgentString}";
-            if (!string.IsNullOrEmpty(message))
-            {
-                using (var sw = new StreamWriter(httpRequest.GetRequestStream()))
-                {
-                    sw.Write(message);
-                    sw.Flush();
-                    sw.Close();
-                }
-            }
-            try
-            {
-                var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
-                using (var sr = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var result = sr.ReadToEnd();
-                    if (!string.IsNullOrEmpty(result))
-                    {
-                        JObject jsonTest = JObject.Parse(result);
-                        if (jsonTest != null)
-                        {
-                            if (!jsonTest["bucket"].IsNullOrEmpty()) //you got rate limited punk
-                            {
-                                Task.Delay(jsonTest["retry_after"].ToObject<int>()).Wait(); //wait
-                                discordPost(url, token, message, acceptInviteWorkaround); //try again
-                            }
-                        }
-                    }
-                    if (result != "")
-                        return result;
-                }
-            }
-            catch (WebException e)
-            {
-                throw e;
-            }
-            return "";
         }
 
         // Performs query to add invite code to listing in database so users cant generate more than one
