@@ -179,7 +179,7 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} 1", username), Common.DryRun);
                     Common.fail(string.Format("CAPS TIMEOUT: user: {0}, message: {1}", username, message));
                     Common.notify("CHAT FILTER - CAPS PROTECTION", "User: " + username + ", message: " + message);
-                    Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: CAPS, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("relay"));
+                    Common.relay(string.Format("TIMEOUT (user: {0}): Violation: CAPS, Message: {1}", username, message));
                     return true;
                 }
                 if(violateSpamProtection(message) && !violateLinkProtection(message) && !message.Contains("PRIVMSG") && !linkPermitExists(username))
@@ -191,7 +191,7 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} 1", username), Common.DryRun);
                     Common.fail(string.Format("SPAM TIMEOUT: user: {0}, message: {1}", username, message));
                     Common.notify("CHAT FILTER - SPAM PROTECTION", "User: " + username + ", message: " + message);
-                    Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: SPAM, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("relay"));
+                    Common.relay(string.Format("TIMEOUT (user: {0}): Violation: SPAM, Message: {1}", username, message));
                     return true;
                 }
                 if(violateEmoteProtection(Common.CachedEmotes, message) && !linkPermitExists(username))
@@ -203,7 +203,7 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} 1", username), Common.DryRun);
                     Common.fail(string.Format("EMOTE TIMEOUT: user: {0}, message: {1}", username, message));
                     Common.notify("CHAT FILTER - EMOTE PROTECTION", "User: " + username + ", message: " + message);
-                    Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: EMOTES, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("relay"));
+                    Common.relay(string.Format("TIMEOUT (user: {0}): Violation: EMOTES, Message: {1}", username, message));
                     return true;
                 }
                 // Disables length violations
@@ -227,7 +227,7 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} 1", username), Common.DryRun);
                     Common.fail(string.Format("LINK TIMEOUT: user: {0}, message: {1}", username, message));
                     Common.notify("CHAT FILTER - LINK PROTECTION", "User: " + username + ", message: " + message);
-                    Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: LINK, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("relay"));
+                    Common.relay(string.Format("TIMEOUT (user: {0}): Violation: LINK, Message: {1}", username, message));
                     return true;
                 }
             }
@@ -243,7 +243,7 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} {1}", username, toWord.Seconds), Common.DryRun);
                     Common.fail(string.Format("BAD WORD TIMEOUT: user: {0}, word: {1}, message: {2}", username, toWord.Word, message));
                     Common.notify("CHAT FILTER - BAD WORD PROTECTION", "User: " + username + ", word: " + toWord.Word + "message: " + message);
-                    Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: BAD WORD, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("relay"));
+                    Common.relay(string.Format("TIMEOUT (user: {0}): Violation: BAD WORD, Message: {1}", username, message));
                     return true;
                 }
                 Objects.SpoilerWord spoilerWord = violateSpoilerWordsProtection(Common.SpoilerWords, message);
@@ -256,7 +256,7 @@ namespace KrakenBot2
                     Common.ChatClient.sendMessage(string.Format(".timeout {0} {1}", username, spoilerWord.Seconds), Common.DryRun);
                     Common.fail(string.Format("SPOILER TIMEOUT: user: {0}, word: {1}, message: {2}", username, spoilerWord.Word, message));
                     Common.notify("CHAT FILTER - SPOILER WORD PROTECTION", "User: " + username + ", word: " + spoilerWord.Word + "message: " + message);
-                    Common.DiscordClient.SendMessageToChannel(string.Format("TIMEOUT (user: {0}): Violation: SPOILER WORD, Message: {1}", username, message), Common.DiscordClient.GetChannelByName("relay"));
+                    Common.relay(string.Format("TIMEOUT (user: {0}): Violation: SPOILER WORD, Message: {1}", username, message));
                     return true;
                 }
             }

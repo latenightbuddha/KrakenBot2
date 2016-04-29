@@ -47,14 +47,14 @@ namespace KrakenBot2
                             first = new ahoyReward(e.ChatMessage.Username, firstReward);
                             WebCalls.addDoubloons(first.Username, first.Reward);
                             Common.ChatClient.sendMessage(string.Format("/me rewarded {0} some doubloons ({1}) for the first Ahoy message! [auto] ", first.Username, first.Reward));
-                            Common.DiscordClient.SendMessageToChannel(String.Format("[ahoy] First ahoy reward ({0} doubloons) awarded to: {1}", first.Reward, first.Username), Common.DiscordClient.GetChannelByName("relay"));
+                            Common.relay(String.Format("[ahoy] First ahoy reward ({0} doubloons) awarded to: {1}", first.Reward, first.Username));
                         }
                         else if (second == null)
                         {
                             second = new ahoyReward(e.ChatMessage.Username, secondReward);
                             WebCalls.addDoubloons(second.Username, second.Reward);
                             Common.ChatClient.sendMessage(string.Format("/me rewarded {0} some doubloons ({1}) for the second Ahoy message! [auto] ", second.Username, second.Reward));
-                            Common.DiscordClient.SendMessageToChannel(String.Format("[ahoy] Second ahoy reward ({0} doubloons) awarded to: {1}", second.Reward, second.Username), Common.DiscordClient.GetChannelByName("relay"));
+                            Common.relay(String.Format("[ahoy] Second ahoy reward ({0} doubloons) awarded to: {1}", second.Reward, second.Username));
                         }
                         else
                         {
@@ -62,7 +62,7 @@ namespace KrakenBot2
                             WebCalls.addDoubloons(third.Username, third.Reward);
                             Common.ChatClient.sendMessage(string.Format("/me rewarded {0} some doubloons ({1}) for the third Ahoy message! [auto] ", third.Username, third.Reward));
                             connectedMsgReceived = false;
-                            Common.DiscordClient.SendMessageToChannel(String.Format("[ahoy] Third ahoy reward ({0} doubloons) awarded to: {1}", third.Reward, third.Username), Common.DiscordClient.GetChannelByName("relay"));
+                            Common.relay(String.Format("[ahoy] Third ahoy reward ({0} doubloons) awarded to: {1}", third.Reward, third.Username));
                         }
                     }
                 }
