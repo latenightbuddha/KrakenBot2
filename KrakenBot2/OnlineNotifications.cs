@@ -21,7 +21,7 @@ namespace KrakenBot2
         public OnlineNotifications()
         {
             currentlyOnline = Common.StreamRefresher.isOnline();
-            usersToNotify = WebCalls.downloadUsersToNotify().Result;
+            usersToNotify = new List<String>(); //WebCalls.downloadUsersToNotify().Result;
             burkeOnlineTimer.Elapsed += burkeOnlineTimerTick;
             burkeOnlineTimer.Start();
         }
@@ -72,7 +72,7 @@ namespace KrakenBot2
         {
             TwitchLib.TwitchChannel channel = Common.StreamRefresher.Stream.Channel;
             if (Common.DiscordClient != null)
-                Common.DiscordClient.SendMessageToChannel(string.Format("{0} Hey guys! Burke just went live playing: {1}, title: {2}. Channel: {3}.", greetings[new Random().Next(0,greetings.Length)], channel.Game, channel.Status, "http://twitch.tv/burkeblack"), Common.DiscordClient.GetChannelByName("general"));
+                Common.relay(string.Format("{0} Hey guys! Burke just went live playing: {1}, title: {2}. Channel: {3}.", greetings[new Random().Next(0,greetings.Length)], channel.Game, channel.Status, "http://twitch.tv/burkeblack"));
             foreach(string user in usersToNotify)
             {
                 if (Common.WhisperClient != null)
