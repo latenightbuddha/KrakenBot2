@@ -4,8 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using DiscordSharp;
-using DiscordSharp.Events;
 
 namespace KrakenBot2
 {
@@ -107,27 +105,28 @@ namespace KrakenBot2
         }
 
         // Fires when bot connects to discord server
-        public static void onDiscordConnected(object sender, DiscordConnectEventArgs e)
+        public static void onDiscordConnected(Object s, Discord.ServerEventArgs e)
         {
-            Common.DiscordClient.UpdateCurrentGame("BurkeBlack.TV");
-            Common.DiscordClient.SendMessageToChannel("connected!", Common.DiscordClient.GetChannelByName("relay"));
+            Common.DiscordClient.SetGame("BurkeBlack.TV");
+            Common.relay("connected!");
         }
 
         // Fires when bot receives a message from any discord channel
-        public static void onDiscordMessageReceived(object sender, DiscordMessageEventArgs e)
+        public static void onDiscordMessageReceived(object s, Discord.MessageEventArgs e)
         {
-            if (e.MessageText.Length > 0 && e.MessageText[0] == '!')
-                Commands.handleDiscordCommand(new Objects.DiscordCommand(e.Author.Username, e.MessageText, e.Channel.Name));
+            
+            if (e.Message.Text.Length > 0 && e.Message.Text[0] == '!')
+                Commands.handleDiscordCommand(new Objects.DiscordCommand(e.User.Name, e.Message.Text, e.Channel.Name, e.Channel.Id));
             if(e.Channel.Name.ToLower() == "relay")
             {
-                if (e.Message.Content.ToLower() == "!restart")
+                if (e.Message.Text.ToLower() == "!restart")
                 {
-                    Common.DiscordClient.SendMessageToChannel("Restarting... Please standby!", Common.DiscordClient.GetChannelByName("relay"));
+                    Common.relay("Restarting... Please standby!");
                     System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
                     Environment.Exit(0);
                 }
             }
-            Console.WriteLine(string.Format("[{0}] {1}: {2}", e.Channel.Name, e.Author.Username, e.MessageText));
+            Console.WriteLine(string.Format("[{0}] {1}: {2}", e.Channel.Name, e.User.Name, e.Message.Text));
         }
 
         // Internal function to process a received sub and redirect stack to ChatSubs object utilizing chat message as identity

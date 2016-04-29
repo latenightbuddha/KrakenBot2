@@ -24,7 +24,6 @@ namespace KrakenBot2.DiscordPublicCommands
                         else
                             msgStr += string.Format(", {0} hours", uptime.Hours);
 
-
                     if (uptime.Minutes > 0)
                         if (msgStr == "")
                             msgStr += string.Format("{0} minutes", uptime.Minutes);
@@ -35,10 +34,10 @@ namespace KrakenBot2.DiscordPublicCommands
                             msgStr += string.Format("{0} seconds", uptime.Seconds);
                         else
                             msgStr += string.Format(", {0} seconds", uptime.Seconds);
-                    Common.DiscordClient.SendMessageToChannel("BurkeBlack's current uptime is: " + msgStr, Common.DiscordClient.GetChannelByName(e.Channel));
+                    Common.DiscordClient.GetChannel(e.Channel_ID).SendMessage("BurkeBlack's current uptime is: " + msgStr);
                 } else
                 {
-                    Common.DiscordClient.SendMessageToChannel("BurkeBlack does not appear to be online.", Common.DiscordClient.GetChannelByName(e.Channel));
+                    Common.DiscordClient.GetChannel(e.Channel_ID).SendMessage("BurkeBlack does not appear to be online.");
                 }
                 Common.command(e.Command, true);
             }
