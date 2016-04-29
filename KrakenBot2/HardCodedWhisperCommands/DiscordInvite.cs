@@ -22,10 +22,10 @@ namespace KrakenBot2.HardCodedWhisperCommands
                     }
                     else
                     {
-                        string invite = WebCalls.createInviteCode();
-                        if (Common.WhisperClient != null)
-                            Common.WhisperClient.sendWhisper(e.Username, string.Format("Here is your BurkeBlack Crew Discord Chat invite.  You have two 2 minutes, and this link will expire after its first usage.  You will not receive another link. https://discord.gg/{0}", invite), Common.DryRun);
-                        WebCalls.addInviteCode(e.Username, invite);
+                        //string invite = WebCalls.createInviteCode();
+                        //if (Common.WhisperClient != null)
+                        //    Common.WhisperClient.sendWhisper(e.Username, string.Format("Here is your BurkeBlack Crew Discord Chat invite.  You have two 2 minutes, and this link will expire after its first usage.  You will not receive another link. https://discord.gg/{0}", invite), Common.DryRun);
+                        //WebCalls.addInviteCode(e.Username, invite);
                     }
                 }
                 else
