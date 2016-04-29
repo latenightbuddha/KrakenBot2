@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DiscordSharp;
+using Discord;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -117,6 +117,16 @@ namespace KrakenBot2
             LOGITECH,
             SOUND_BYTES,
             OTHER
+        }
+
+        public static void relay(string message)
+        {
+            Common.DiscordClient.GetChannel(99710866420695040).SendMessage(message);
+        }
+
+        public static void general(string message)
+        {
+            Common.DiscordClient.GetChannel(90892452679933952).SendMessage(message);
         }
 
         // Print to console to indicate and initialization
