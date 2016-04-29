@@ -109,7 +109,7 @@ namespace KrakenBot2
                 else
                     Common.ChatClient.sendMessage("To enter giveaway, write a message that has Kappa (Kappa) in it :D");
                 Common.notify("New GIVEAWAY; from: " + raffleProperties.Raffle_Author, "Game: " + raffleProperties.Raffle_Name + ", from: " + raffleProperties.Raffle_Donator);
-                Common.DiscordClient.SendMessageToChannel(string.Format("NEW GIVEAWAY: Name: {0}, Donator: {1}, Author: {2}", raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator, raffleProperties.Raffle_Author), Common.DiscordClient.GetChannelByName("relay"));
+                Common.relay(string.Format("NEW GIVEAWAY: Name: {0}, Donator: {1}, Author: {2}", raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator, raffleProperties.Raffle_Author));
                 raffleTimer.Start();
             }
 
@@ -195,7 +195,7 @@ namespace KrakenBot2
                     else
                         Common.ChatClient.sendMessage(string.Format("Giveaway details can be viewed here: http://burkeblack.tv/giveaways/listing.php?gid={0}", latestID.ToString()), Common.DryRun);
                     Common.notify("NEW GIVEAWAY CLAIM", raffleWin.Winner + " claimed " + raffleProperties.Raffle_Name);
-                    Common.DiscordClient.SendMessageToChannel(string.Format("NEW CLAIM: Winner: {0}, Name: {1}, Donator: {2}, Author: {3}", raffleWin.Winner, raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator, raffleProperties.Raffle_Author), Common.DiscordClient.GetChannelByName("relay"));
+                    Common.relay(string.Format("NEW CLAIM: Winner: {0}, Name: {1}, Donator: {2}, Author: {3}", raffleWin.Winner, raffleProperties.Raffle_Name, raffleProperties.Raffle_Donator, raffleProperties.Raffle_Author));
                     Common.CommandQueue.checkQueueOnce();
                     return true;
                 } else
