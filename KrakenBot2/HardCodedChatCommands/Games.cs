@@ -23,7 +23,10 @@ namespace KrakenBot2.HardCodedChatCommands
 
         private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
         {
-            if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 0))
+            TwitchLib.ChatMessage.uType userType = e.ChatMessage.UserType;
+            if (Common.Moderators.Contains(e.ChatMessage.Username.ToLower()))
+                userType = TwitchLib.ChatMessage.uType.Moderator;
+            if (!Common.Cooldown.chatCommandAvailable(userType, e.Command, 0))
                 return false;
             if (e.ArgumentsAsList.Count != 0)
                 return false;

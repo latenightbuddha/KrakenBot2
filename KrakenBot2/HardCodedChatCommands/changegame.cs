@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KrakenBot2.HardCodedChatCommands
 {
-    public static class Game
+    public static class changegame
     {
         public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
         {

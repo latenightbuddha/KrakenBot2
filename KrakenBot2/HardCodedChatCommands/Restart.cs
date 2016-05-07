@@ -27,7 +27,7 @@ namespace KrakenBot2.HardCodedChatCommands
         {
             if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 0))
                 return false;
-            if (!Common.isSub(e))
+            if (!Common.isMod(e))
                 return false;
             if (Common.DryRun)
                 return false;

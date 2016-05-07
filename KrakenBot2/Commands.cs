@@ -167,8 +167,8 @@ namespace KrakenBot2
                 case "title":
                     HardCodedChatCommands.Title.handleCommand(command);
                     break;
-                case "game":
-                    HardCodedChatCommands.Game.handleCommand(command);
+                case "changegame":
+                    HardCodedChatCommands.changegame.handleCommand(command);
                     break;
                 case "gt":
                     HardCodedChatCommands.Gamertag.handleCommand(command);
@@ -181,6 +181,9 @@ namespace KrakenBot2
                     } else
                     {
                         //Handle dynamically created chat commands
+                        TwitchLib.ChatMessage.uType userType = command.ChatMessage.UserType;
+                        if (Common.Moderators.Contains(command.ChatMessage.Username.ToLower()))
+                            userType = TwitchLib.ChatMessage.uType.Moderator;
                         bool found = false;
                         foreach(Objects.ChatCommand dynCommand in Common.ChatCommands)
                         {
@@ -188,7 +191,7 @@ namespace KrakenBot2
                             {
                                 if (validateTiers(command, dynCommand))
                                 {
-                                    if (Common.Cooldown.chatCommandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
+                                    if (Common.Cooldown.chatCommandAvailable(userType, command.Command, dynCommand.Cooldown))
                                     {
                                         Console.WriteLine(dynCommand.ReturnMessages[0]);
                                         List<string> msgs = processDynamicVariables(command, dynCommand);
@@ -210,12 +213,15 @@ namespace KrakenBot2
                                 {
                                     if (returnMessage.ToLower().Contains(" " + command.Command.ToLower() + " ") && validateTiers(command, dynCommand))
                                     {
-                                        if (Common.Cooldown.chatCommandAvailable(command.ChatMessage.UserType, command.Command, dynCommand.Cooldown))
+                                        if (Common.Cooldown.chatCommandAvailable(userType, command.Command, dynCommand.Cooldown))
                                         {
                                             List<string> msgs = processDynamicVariables(command, dynCommand);
                                             foreach(string msg in msgs)
                                                 if(msg != "")
+                                                {
                                                     Common.ChatClient.sendMessage(string.Format("Did you mean !{0}? {1}", dynCommand.Command, msg), Common.DryRun);
+                                                    return;
+                                                }
                                         }
                                     }
                                 }
