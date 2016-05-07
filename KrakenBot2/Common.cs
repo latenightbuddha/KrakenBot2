@@ -59,6 +59,7 @@ namespace KrakenBot2
         private static StreamRefresher streamRefresher;
         private static AhoyRewarder ahoyRewarder;
         private static CommandQueue commandQueue;
+        private static UptimeTracker uptimeTracker;
         
         // [Public] Common variables
         public static List<string> TopLevelDomains { get { return topLevelDomains; } set { topLevelDomains = value; } }
@@ -104,6 +105,7 @@ namespace KrakenBot2
         public static StreamRefresher StreamRefresher { get { return streamRefresher; } set { streamRefresher = value; } }       
         public static AhoyRewarder AhoyRewarder { get { return ahoyRewarder; } set { ahoyRewarder = value; } }       
         public static CommandQueue CommandQueue { get { return commandQueue; } set { commandQueue = value; } }
+        public static UptimeTracker UptimeTracker { get { return uptimeTracker; } set { uptimeTracker = value; } }
 
         public enum GiveawayTypes
         {
