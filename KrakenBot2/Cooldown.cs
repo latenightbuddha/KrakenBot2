@@ -32,7 +32,7 @@ namespace KrakenBot2
         // Checks availability of chat command, and resets cooldown if available
         public bool chatCommandAvailable(TwitchLib.ChatMessage.uType userType, string command, int seconds)
         {
-            if(seconds != 0 || userType != TwitchLib.ChatMessage.uType.Moderator)
+            if(seconds != 0 && userType != TwitchLib.ChatMessage.uType.Moderator)
             {
                 foreach (CommandCooldown cooldown in cooldowns)
                 {
