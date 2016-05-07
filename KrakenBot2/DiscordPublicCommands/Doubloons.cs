@@ -12,7 +12,7 @@ namespace KrakenBot2.DiscordPublicCommands
         {
             if(e.CommandsAsList.Count == 1)
             {
-                string resp = WebCalls.getUserDoubloons(e.CommandsAsList[0]).Result;
+                string resp = WebCalls.getUserDoubloons(e.CommandsAsList[0].ToLower()).Result;
                 if (resp != "n/a")
                     Common.DiscordClient.GetChannel(e.Channel_ID).SendMessage(string.Format("The doubloon count for '{0}' is: {1}", e.CommandsAsList[0], resp));
                 else
