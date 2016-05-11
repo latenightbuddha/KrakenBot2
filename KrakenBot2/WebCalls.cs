@@ -166,13 +166,14 @@ namespace KrakenBot2
                 new KeyValuePair<string, string>("minutes", minutes.ToString()),
                 new KeyValuePair<string, string>("entries",entryStr)
             };
-            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webMinuteEntries, args);
+            string jsonStr = await request(requestType.POST, Properties.Settings.Default.webMinuteEntries, args);
             foreach(JToken validEntry in JObject.Parse(jsonStr).SelectToken("valid_entries"))
                 validEntries.Add(validEntries.ToString());
             return validEntries;
         }
 
         // Downloads doubloon limiting users and loads them into list; returns list
+        // XXX:
         public async static Task<List<string>> downloadDoubloonEntries(int doubloons, List<string> entries)
         {
             string entryStr = "";
@@ -189,7 +190,7 @@ namespace KrakenBot2
                 new KeyValuePair<string, string>("doubloons", doubloons.ToString()),
                 new KeyValuePair<string, string>("entries", entryStr)
             };
-            string jsonStr = await request(requestType.GET, Properties.Settings.Default.webDoubloonEntries, args);
+            string jsonStr = await request(requestType.POST, Properties.Settings.Default.webDoubloonEntries, args);
             foreach(JToken validEntry in JObject.Parse(jsonStr).SelectToken("valid_entries"))
                 validEntries.Add(validEntry.ToString());
             return validEntries;
@@ -213,7 +214,7 @@ namespace KrakenBot2
                 new KeyValuePair<string, string>("claimtime",claimSeconds.ToString()),
                 new KeyValuePair<string, string>("entries", entries)
             };
-            JToken raffleServerDetails = JObject.Parse(await request(requestType.GET, Properties.Settings.Default.webAddRaffleWinner, args)).SelectToken("raffle_win");
+            JToken raffleServerDetails = JObject.Parse(await request(requestType.POST, Properties.Settings.Default.webAddRaffleWinner, args)).SelectToken("raffle_win");
             Objects.RaffleWin raffleWin = new Objects.RaffleWin(raffleServerDetails);
             return raffleWin;
         }
