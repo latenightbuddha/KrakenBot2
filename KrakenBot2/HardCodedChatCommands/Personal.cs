@@ -12,15 +12,17 @@ namespace KrakenBot2.HardCodedChatCommands
         {
             if (verifyCommand(e))
             {
-                if(e.ArgumentsAsList[0].ToLower() == e.ChatMessage.Username.ToLower() || e.ChatMessage.Username.ToLower() == "swiftyspiffy")
-                if (e.ArgumentsAsList.Count == 0)
+                if(e.Command.ToLower() == e.ChatMessage.Username.ToLower() || e.ChatMessage.Username.ToLower() == "swiftyspiffy")
                 {
-                    Common.ChatClient.sendMessage(await WebCalls.getSetPersonalCommand(e.ChatMessage.Username, null));
-                }
-                else
-                {
-                    string resp = await WebCalls.getSetPersonalCommand(e.ChatMessage.Username, e.ArgumentsAsString);
-                    Common.ChatClient.sendMessage(resp, Common.DryRun);
+                    if (e.ArgumentsAsList.Count == 0)
+                    {
+                        Common.ChatClient.sendMessage(await WebCalls.getSetPersonalCommand(e.ChatMessage.Username, null));
+                    }
+                    else
+                    {
+                        string resp = await WebCalls.getSetPersonalCommand(e.ChatMessage.Username, e.ArgumentsAsString);
+                        Common.ChatClient.sendMessage(resp, Common.DryRun);
+                    }
                 }
                 Common.command(e.Command, true);
             } else
