@@ -191,13 +191,13 @@ namespace KrakenBot2
             {
                 if (currentHost != null && TwitchLib.TwitchAPI.broadcasterOnline(currentHost.Streamer).Result)
                 {
-                    int index = 0;
+                    int multiIndex = 0;
                     int currentHostIndex = 0;
                     foreach (Host host in onlineHosts)
                     {
                         if (currentHost.Streamer == host.Streamer)
-                            currentHostIndex = index;
-                        index++;
+                            currentHostIndex = multiIndex;
+                        multiIndex++;
                     }
                     if (currentHostIndex == onlineHosts.Count - 1)
                         nextHost = onlineHosts[0];
