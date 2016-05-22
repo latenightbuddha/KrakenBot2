@@ -9,6 +9,7 @@ namespace KrakenBot2.Objects
 {
     public class RaffleWin
     {
+        private string raffleJsonData;
         private string winner;
         private int winCount;
         private int enterCount;
@@ -24,11 +25,17 @@ namespace KrakenBot2.Objects
 
         public RaffleWin(JToken raffleWinProperties)
         {
+            raffleJsonData = raffleWinProperties.ToString();
             winner = raffleWinProperties.SelectToken("winner").ToString();
             winCount = int.Parse(raffleWinProperties.SelectToken("win_count").ToString());
             enterCount = int.Parse(raffleWinProperties.SelectToken("enter_count").ToString());
             claimTime = double.Parse(raffleWinProperties.SelectToken("claim_time").ToString());
             claimTimeAvg = double.Parse(raffleWinProperties.SelectToken("claim_time_avg").ToString());
+        }
+
+        public override string ToString()
+        {
+            return raffleJsonData;
         }
     }
 }
