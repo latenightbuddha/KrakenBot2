@@ -25,7 +25,7 @@ namespace KrakenBot2
         }
 
         // Handles all whisper commands (whispers that have ! prefix) from event
-        public static void handleWhisperCommand(TwitchLib.TwitchWhisperClient.CommandReceivedArgs command)
+        public static void handleWhisperCommand(TwitchLib.TwitchWhisperClient.OnCommandReceivedArgs command)
         {
             switch(command.Command)
             {
@@ -49,14 +49,14 @@ namespace KrakenBot2
                     break;
                 default:
                     if (Common.WhisperClient != null)
-                        Common.WhisperClient.sendWhisper(command.Username, "To view available whisper commands, whisper the bot !commands", Common.DryRun);
+                        Common.WhisperClient.SendWhisper(command.Username, "To view available whisper commands, whisper the bot !commands", Common.DryRun);
                     //Handle dynamically created whisper commands
                     break;
             }
         }
 
         // Handles all chat commands (chat messages that have ! prefix) from event
-        public static void handleChatCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs command)
+        public static void handleChatCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs command)
         {
             switch(command.Command)
             {
@@ -181,9 +181,9 @@ namespace KrakenBot2
                     } else
                     {
                         //Handle dynamically created chat commands
-                        TwitchLib.ChatMessage.uType userType = command.ChatMessage.UserType;
+                        TwitchLib.ChatMessage.UType userType = command.ChatMessage.UserType;
                         if (Common.Moderators.Contains(command.ChatMessage.Username.ToLower()))
-                            userType = TwitchLib.ChatMessage.uType.Moderator;
+                            userType = TwitchLib.ChatMessage.UType.Moderator;
                         bool found = false;
                         foreach(Objects.ChatCommand dynCommand in Common.ChatCommands)
                         {
@@ -198,7 +198,7 @@ namespace KrakenBot2
                                         Console.WriteLine(dynCommand.ReturnMessages[0]);
                                         foreach(string msg in msgs)
                                             if(msg != "")
-                                                Common.ChatClient.sendMessage(msg, Common.DryRun);
+                                                Common.ChatClient.SendMessage(msg, Common.DryRun);
                                     }
                                 }
                                 found = true;
@@ -219,7 +219,7 @@ namespace KrakenBot2
                                             foreach(string msg in msgs)
                                                 if(msg != "")
                                                 {
-                                                    Common.ChatClient.sendMessage(string.Format("Did you mean !{0}? {1}", dynCommand.Command, msg), Common.DryRun);
+                                                    Common.ChatClient.SendMessage(string.Format("Did you mean !{0}? {1}", dynCommand.Command, msg), Common.DryRun);
                                                     return;
                                                 }
                                         }
@@ -233,7 +233,7 @@ namespace KrakenBot2
         }
 
         // Determine if command received's UserTier meets command UserTier in descending fashion
-        private static bool validateTiers(TwitchLib.TwitchChatClient.CommandReceivedArgs e, Objects.ChatCommand command)
+        private static bool validateTiers(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e, Objects.ChatCommand command)
         {
             switch(command.UserTier)
             {
@@ -259,7 +259,7 @@ namespace KrakenBot2
         }
 
         // Replaces dynamic variables in command or command return strings
-        private static List<string> processDynamicVariables(TwitchLib.TwitchChatClient.CommandReceivedArgs e, Objects.ChatCommand command)
+        private static List<string> processDynamicVariables(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e, Objects.ChatCommand command)
         {
             if (e.ArgumentsAsList.Count >= (command.ArgsAsList.Count + 1))
                 return new List<string>();

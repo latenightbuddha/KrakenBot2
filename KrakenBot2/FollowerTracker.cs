@@ -21,7 +21,7 @@ namespace KrakenBot2
             if(ENABLED)
             {
                 // Gets the most recent 50 followers of burkeblack
-                recentFollowers = TwitchLib.TwitchAPI.getTwitchFollowers("burkeblack", 50); 
+                recentFollowers = TwitchLib.TwitchApi.GetTwitchFollowers("burkeblack", 50).Result; 
                 followerTimer.Elapsed += followerTimerTick;
                 followerTimer.Start();
             }
@@ -32,7 +32,7 @@ namespace KrakenBot2
         {
             List<TwitchLib.TwitchAPIClasses.TwitchFollower> newFollowers = new List<TwitchLib.TwitchAPIClasses.TwitchFollower>();
             // Gets the most recent 50 followers of burkeblack
-            List<TwitchLib.TwitchAPIClasses.TwitchFollower> followers = TwitchLib.TwitchAPI.getTwitchFollowers("burkeblack", 50);
+            List<TwitchLib.TwitchAPIClasses.TwitchFollower> followers = TwitchLib.TwitchApi.GetTwitchFollowers("burkeblack", 50).Result;
             foreach(TwitchLib.TwitchAPIClasses.TwitchFollower follower in recentFollowers)
             {
                 bool found = false;
@@ -54,7 +54,7 @@ namespace KrakenBot2
         {
             if(newFollowers.Count == 1)
             {
-                Common.ChatClient.sendMessage(string.Format("New follower from the last 15 minutes: {0}", newFollowers[0].User.DisplayName), Common.DryRun);
+                Common.ChatClient.SendMessage(string.Format("New follower from the last 15 minutes: {0}", newFollowers[0].User.DisplayName), Common.DryRun);
             } else
             {
                 string msgStr = "";
@@ -65,7 +65,7 @@ namespace KrakenBot2
                     else
                         msgStr += ", " + follower.User.DisplayName;
                 }
-                Common.ChatClient.sendMessage(string.Format("New followers from the last 15 minutes: {0}", msgStr), Common.DryRun);
+                Common.ChatClient.SendMessage(string.Format("New followers from the last 15 minutes: {0}", msgStr), Common.DryRun);
             }
         }
     }

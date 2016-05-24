@@ -8,11 +8,11 @@ namespace KrakenBot2.HardCodedChatCommands
 {
     public static class Uptime
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e))
             {
-                TimeSpan uptime = TwitchLib.TwitchAPI.getUptime("burkeblack");
+                TimeSpan uptime = TwitchLib.TwitchApi.GetUptime("burkeblack").Result;
                 string msgStr = "";
                 if (uptime.Days > 0)
                     msgStr = uptime.Days + " days";
@@ -33,11 +33,11 @@ namespace KrakenBot2.HardCodedChatCommands
                         msgStr += string.Format("{0} seconds", uptime.Seconds);
                     else
                         msgStr += string.Format(", {0} seconds", uptime.Seconds);
-                Common.ChatClient.sendMessage(string.Format("Current uptime for BurkeBlack is: {0}", msgStr), Common.DryRun);
+                Common.ChatClient.SendMessage(string.Format("Current uptime for BurkeBlack is: {0}", msgStr), Common.DryRun);
             }
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 10))
                 return false;

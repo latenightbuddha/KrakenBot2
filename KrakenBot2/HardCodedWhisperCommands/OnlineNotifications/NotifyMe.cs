@@ -8,7 +8,7 @@ namespace KrakenBot2.HardCodedWhisperCommands.OnlineNotifications
 {
     public class NotifyMe
     {
-        public static void handleCommand(TwitchLib.TwitchWhisperClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchWhisperClient.OnCommandReceivedArgs e)
         {
             Common.OnlineNotifier.notifyMe(e.Username);
             Common.command(e.Command, true);

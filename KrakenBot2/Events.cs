@@ -12,10 +12,10 @@ namespace KrakenBot2
         public static bool connected = false;
 
         // Fires when channel state message is received from Twitch
-        public static void onChannelState(object sender, TwitchLib.TwitchChatClient.ChannelStateAssignedArgs e)
+        public static void onChannelState(object sender, TwitchLib.TwitchChatClient.OnChannelStateChangedArgs e)
         {
             if(!connected && !Common.DefaultOverride)
-                Common.ChatClient.sendMessage(string.Format("/me [V2] connected[v{0}]!", Assembly.GetExecutingAssembly().GetName().Version), Common.DryRun);
+                Common.ChatClient.SendMessage(string.Format("/me [V2] connected[v{0}]!", Assembly.GetExecutingAssembly().GetName().Version), Common.DryRun);
             connected = true;
             if (!Common.EntryMessage)
                 return;
@@ -38,14 +38,14 @@ namespace KrakenBot2
         public static bool showRawIRC = true;
 
         // Fires when a chat message is received from chat client
-        public static void chatOnMessage(object sender, TwitchLib.TwitchChatClient.NewChatMessageArgs e)
+        public static void chatOnMessage(object sender, TwitchLib.TwitchChatClient.OnMessageReceivedArgs e)
         {
             if(e.ChatMessage.Message[0] != '!')
             {
                 if(showRawIRC)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Common.message(string.Format("MESSAGE {0}", e.ChatMessage.RawIRCMessage));
+                    Common.message(string.Format("MESSAGE {0}", e.ChatMessage.RawIrcMessage));
                 } else
                 {
                     Common.message(string.Format("MESSAGE {0}: {1}", e.ChatMessage.DisplayName, e.ChatMessage.Message));
@@ -61,7 +61,7 @@ namespace KrakenBot2
         }
 
         // Fires when a message is received that is prefixed with an !
-        public static void chatOnCommand(object sender, TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void chatOnCommand(object sender, TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             ChatFiltering.violatesProtections(e.ChatMessage.Username, Common.isSub(e), Common.isMod(e), e.ChatMessage.Message);
             Commands.handleChatCommand(e);
@@ -70,7 +70,7 @@ namespace KrakenBot2
         }
 
         // Fires when a subscription from channel connected to occurs (noteably not a hosted streamer's sub)
-        public static void chatOnSubscribe(object sender, TwitchLib.TwitchChatClient.NewSubscriberArgs e)
+        public static void chatOnSubscribe(object sender, TwitchLib.TwitchChatClient.OnSubscriberArgs e)
         {
             Common.other(string.Format("SUBSCRIBER {0}, months: ", e.Subscriber.Months));
             Subscriptions.handleSubscription(e);
@@ -83,21 +83,21 @@ namespace KrakenBot2
         }
 
         // Fires when a whisper is received from whisper client
-        public static void whisperOnWhisper(object sender, TwitchLib.TwitchWhisperClient.NewWhisperReceivedArgs e)
+        public static void whisperOnWhisper(object sender, TwitchLib.TwitchWhisperClient.OnWhisperReceivedArgs e)
         {
             if(e.WhisperMessage.Message[0] != '!')
                 Common.other(string.Format("WHISPER {0}: {1}", e.WhisperMessage.DisplayName, e.WhisperMessage.Message));
         }
 
         // Fires when a whisper is received that is prefixed with an !
-        public static void whisperOnCommand(object sender, TwitchLib.TwitchWhisperClient.CommandReceivedArgs e)
+        public static void whisperOnCommand(object sender, TwitchLib.TwitchWhisperClient.OnCommandReceivedArgs e)
         {
             Common.command(string.Format("[WHISPER]COMMAND {0}: {1}", e.Username, e.Command + e.ArgumentsAsString), true);
             Commands.handleWhisperCommand(e);
         }
 
         // Fires when a message is received from the raid instance chat client
-        public static void raidOnMessage(object sender, TwitchLib.TwitchChatClient.NewChatMessageArgs e)
+        public static void raidOnMessage(object sender, TwitchLib.TwitchChatClient.OnMessageReceivedArgs e)
         {
             Common.other(string.Format("[RAID]MESSAGE {0}: {1}", e.ChatMessage.DisplayName, e.ChatMessage.Message));
             if (Common.RaidInstance != null)
@@ -130,14 +130,14 @@ namespace KrakenBot2
         }
 
         // Internal function to process a received sub and redirect stack to ChatSubs object utilizing chat message as identity
-        private static void processPotentialSub(TwitchLib.TwitchChatClient.NewChatMessageArgs e)
+        private static void processPotentialSub(TwitchLib.TwitchChatClient.OnMessageReceivedArgs e)
         {
             if (e.ChatMessage.Subscriber && !Common.ChatSubs.Contains(e.ChatMessage.Username.ToLower()))
                 Common.ChatSubs.Add(e.ChatMessage.Username.ToLower());
         }
 
         // Internal function to process a received sub and redirect stack to ChatSubs object utilizing command as identity
-        private static void processPotentialSub(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static void processPotentialSub(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (e.ChatMessage.Subscriber && !Common.ChatSubs.Contains(e.ChatMessage.Username.ToLower()))
                 Common.ChatSubs.Add(e.ChatMessage.Username.ToLower());

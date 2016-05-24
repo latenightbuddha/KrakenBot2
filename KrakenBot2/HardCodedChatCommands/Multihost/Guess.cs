@@ -8,14 +8,14 @@ namespace KrakenBot2.HardCodedChatCommands.Multihost
 {
     public class Guess
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e))
             {
                 if(Common.Multihost != null)
                     Common.Multihost.guess();
                 else
-                    Common.ChatClient.sendMessage("Multihost is not currently initialized.", Common.DryRun);
+                    Common.ChatClient.SendMessage("Multihost is not currently initialized.", Common.DryRun);
                 Common.command(e.Command, true);
             }
             else
@@ -24,7 +24,7 @@ namespace KrakenBot2.HardCodedChatCommands.Multihost
             }
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 10))
                 return false;

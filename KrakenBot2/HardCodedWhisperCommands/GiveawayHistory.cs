@@ -8,10 +8,10 @@ namespace KrakenBot2.HardCodedWhisperCommands
 {
     class GiveawayHistory
     {
-        public static void handleCommand(TwitchLib.TwitchWhisperClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchWhisperClient.OnCommandReceivedArgs e)
         {
             if (Common.WhisperClient != null)
-                Common.WhisperClient.sendWhisper(e.Username, string.Format("Your giveaway history can be seen here: http://burkeblack.tv/giveaways/listing.php?name={0}", e.Username));
+                Common.WhisperClient.SendWhisper(e.Username, string.Format("Your giveaway history can be seen here: http://burkeblack.tv/giveaways/listing.php?name={0}", e.Username));
         }
     }
 }

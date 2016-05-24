@@ -253,7 +253,7 @@ namespace KrakenBot2
         // Downloads a streamer's most recent game asynchonously from TwitchLib API and returns it
         public async static Task<string> getStreamersMostRecentGame(string streamer)
         {
-            TwitchLib.TwitchChannel channelData = await TwitchLib.TwitchAPI.getTwitchChannel(streamer);
+            TwitchLib.TwitchChannel channelData = await TwitchLib.TwitchApi.GetTwitchChannel(streamer);
             return channelData.Game;
         }
 
@@ -262,7 +262,7 @@ namespace KrakenBot2
         {
             if (Common.StreamRefresher.isOnline())
             {
-                TimeSpan uptime = TwitchLib.TwitchAPI.getUptime("burkeblack");
+                TimeSpan uptime = TwitchLib.TwitchApi.GetUptime("burkeblack").Result;
                 string timeIn = "";
                 if (uptime.Days > 0)
                     timeIn = string.Format("{0} days, {1} hours, {2} minutes, {3} seconds", uptime.Days, uptime.Hours, uptime.Minutes, uptime.Seconds);
@@ -358,7 +358,7 @@ namespace KrakenBot2
             {
                 try
                 {
-                    if (await TwitchLib.TwitchAPI.broadcasterOnline(streamer.Streamer))
+                    if (await TwitchLib.TwitchApi.BroadcasterOnline(streamer.Streamer))
                         onlineStreamers.Add(streamer);
                 } catch (Exception) { }
             }
@@ -587,7 +587,7 @@ namespace KrakenBot2
             TwitchLib.TwitchChannel twitchChannel;
             try
             {
-                twitchChannel = await TwitchLib.TwitchAPI.getTwitchChannel(channel);
+                twitchChannel = await TwitchLib.TwitchApi.GetTwitchChannel(channel);
             } catch(Exception)
             {
                 return null;

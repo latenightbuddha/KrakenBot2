@@ -8,7 +8,7 @@ namespace KrakenBot2.HardCodedChatCommands
 {
     public static class Personal
     {
-        public static async void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static async void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e))
             {
@@ -16,12 +16,12 @@ namespace KrakenBot2.HardCodedChatCommands
                 {
                     if (e.ArgumentsAsList.Count == 0)
                     {
-                        Common.ChatClient.sendMessage(await WebCalls.getSetPersonalCommand(e.ChatMessage.Username, null));
+                        Common.ChatClient.SendMessage(await WebCalls.getSetPersonalCommand(e.ChatMessage.Username, null));
                     }
                     else
                     {
                         string resp = await WebCalls.getSetPersonalCommand(e.ChatMessage.Username, e.ArgumentsAsString);
-                        Common.ChatClient.sendMessage(resp, Common.DryRun);
+                        Common.ChatClient.SendMessage(resp, Common.DryRun);
                     }
                 }
                 Common.command(e.Command, true);
@@ -31,11 +31,11 @@ namespace KrakenBot2.HardCodedChatCommands
             }
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
-            TwitchLib.ChatMessage.uType userType = e.ChatMessage.UserType;
+            TwitchLib.ChatMessage.UType userType = e.ChatMessage.UserType;
             if (Common.Moderators.Contains(e.ChatMessage.Username.ToLower()))
-                userType = TwitchLib.ChatMessage.uType.Moderator;
+                userType = TwitchLib.ChatMessage.UType.Moderator;
             if (!Common.Cooldown.chatCommandAvailable(userType, e.Command, 10))
                 return false;
             if (!Common.isSub(e))

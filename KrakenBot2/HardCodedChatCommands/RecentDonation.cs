@@ -8,7 +8,7 @@ namespace KrakenBot2.HardCodedChatCommands
 {
     public static class RecentDonation
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e))
             {
@@ -24,21 +24,21 @@ namespace KrakenBot2.HardCodedChatCommands
                         elapsedTime = string.Format("{0} minute(s), {1} seconds", difference.Minutes, difference.Seconds);
                     else if (difference.Seconds > 0)
                         elapsedTime = string.Format("{0} seconds", difference.Seconds);
-                    Common.ChatClient.sendMessage(string.Format("Most recent donation was by {0} who donated ${1} {2} ago, with the message '{3}'", Common.RecentDonations[0].Username,
+                    Common.ChatClient.SendMessage(string.Format("Most recent donation was by {0} who donated ${1} {2} ago, with the message '{3}'", Common.RecentDonations[0].Username,
                         Common.RecentDonations[0].Amount, elapsedTime, Common.RecentDonations[0].Message));
                 } else
                 {
-                    Common.ChatClient.sendMessage("No recent donations recorded :(");
+                    Common.ChatClient.SendMessage("No recent donations recorded :(");
                 }
             }
 
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
-            TwitchLib.ChatMessage.uType userType = e.ChatMessage.UserType;
+            TwitchLib.ChatMessage.UType userType = e.ChatMessage.UserType;
             if (Common.Moderators.Contains(e.ChatMessage.Username.ToLower()))
-                userType = TwitchLib.ChatMessage.uType.Moderator;
+                userType = TwitchLib.ChatMessage.UType.Moderator;
             if (!Common.Cooldown.chatCommandAvailable(userType, e.Command, 10))
                 return false;
             if (Common.DryRun)

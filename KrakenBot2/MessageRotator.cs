@@ -61,7 +61,7 @@ namespace KrakenBot2
                     currentMessageIndex += 1;
                 nextMessageIn = messages[currentMessageIndex].Interval;
                 
-                Common.ChatClient.sendMessage(string.Format("{0}", messageReplacements(messages[currentMessageIndex].Contents)), Common.DryRun);
+                Common.ChatClient.SendMessage(string.Format("{0}", messageReplacements(messages[currentMessageIndex].Contents)), Common.DryRun);
             } else
             {
                 nextMessageIn--;
@@ -70,7 +70,7 @@ namespace KrakenBot2
             {
                 if(rotMsg.dedicatedValid())
                 {
-                    Common.ChatClient.sendMessage(string.Format("{0}", messageReplacements(rotMsg.Contents)));
+                    Common.ChatClient.SendMessage(string.Format("{0}", messageReplacements(rotMsg.Contents)));
                 }
             }
         }
@@ -91,12 +91,12 @@ namespace KrakenBot2
         {
             if(message.Contains("[recent_twitch]"))
             {
-                TwitchLib.TwitchAPIClasses.TwitchVideo recentVideo = TwitchLib.TwitchAPI.getChannelVideos("burkeblack", 1).Result[0];
+                TwitchLib.TwitchAPIClasses.TwitchVideo recentVideo = TwitchLib.TwitchApi.GetChannelVideos("burkeblack", 1).Result[0];
                 if (recentVideo == null)
                     return message.Replace("[recent_twitch]", "Not Available - query failed");
                 TimeSpan ts = new TimeSpan(0, 0, recentVideo.Length);
                 string duration = string.Format("{0}:{1}", ts.Minutes, ts.Seconds);
-                message = message.Replace("[recent_twitch]", string.Format("{0} [Views: {1}] [Duration: {2}] - {3}", recentVideo.Title, recentVideo.Views, duration, recentVideo.URL));
+                message = message.Replace("[recent_twitch]", string.Format("{0} [Views: {1}] [Duration: {2}] - {3}", recentVideo.Title, recentVideo.Views, duration, recentVideo.Url));
             }
             if(message.Contains("[recent_youtube]"))
             {

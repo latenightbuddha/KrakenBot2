@@ -8,18 +8,18 @@ namespace KrakenBot2.HardCodedChatCommands.Raffle
 {
     public static class KillGiveaway
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e) && !Common.DryRun)
             {
                 if (Common.Raffle != null && Common.Raffle.raffleIsActive())
                 {
                     Common.Raffle.killGiveaway();
-                    Common.ChatClient.sendMessage(string.Format("[KillGiveaway] Active giveaway for '{0}' has been killed!", Common.Raffle.RaffleName), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("[KillGiveaway] Active giveaway for '{0}' has been killed!", Common.Raffle.RaffleName), Common.DryRun);
                 } 
                 else
                 {
-                    Common.ChatClient.sendMessage("[KillGiveaway] No active giveaway to kill!", Common.DryRun);
+                    Common.ChatClient.SendMessage("[KillGiveaway] No active giveaway to kill!", Common.DryRun);
                 }
 
                 Common.command(e.Command, true);
@@ -30,7 +30,7 @@ namespace KrakenBot2.HardCodedChatCommands.Raffle
             }
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 0))
                 return false;

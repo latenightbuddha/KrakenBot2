@@ -8,7 +8,7 @@ namespace KrakenBot2.HardCodedChatCommands.Raffle
 {
     public static class Pass
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e) && !Common.DryRun)
             {
@@ -22,7 +22,7 @@ namespace KrakenBot2.HardCodedChatCommands.Raffle
 
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 0))
                 return false;

@@ -8,11 +8,11 @@ namespace KrakenBot2.HardCodedChatCommands
 {
     public class Restart
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e))
             {
-                Common.ChatClient.sendMessage("Restarting...", Common.DryRun);
+                Common.ChatClient.SendMessage("Restarting...", Common.DryRun);
                 System.Diagnostics.Process.Start(Environment.CurrentDirectory + "\\KrakenBot2.exe");
                 Environment.Exit(0);
                 Common.command(e.Command, true);
@@ -23,7 +23,7 @@ namespace KrakenBot2.HardCodedChatCommands
             }
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 0))
                 return false;

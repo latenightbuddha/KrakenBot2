@@ -33,7 +33,7 @@ namespace KrakenBot2
                 {
                     foreach (Objects.RecentDonation donation in recentDonations)
                     {
-                        Common.ChatClient.sendMessage(string.Format("NEW DONATION! {0} donated ${1} with the message '{2}'. Thanks for supporting the Black Crew!",
+                        Common.ChatClient.SendMessage(string.Format("NEW DONATION! {0} donated ${1} with the message '{2}'. Thanks for supporting the Black Crew!",
                             donation.Username, donation.Amount, donation.Message));
                     }
                     foreach (Objects.RecentDonation donation in Common.RecentDonations)

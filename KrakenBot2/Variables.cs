@@ -24,7 +24,7 @@ namespace KrakenBot2
         //{raffle_donator} = donator of raffle
         //{raffle_author} = mod that submitted giveaway
 
-        public static string USER(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static string USER(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (e.ArgumentsAsList.Count == 1)
                 return e.ArgumentsAsList[0];
@@ -32,7 +32,7 @@ namespace KrakenBot2
                 return null;
         }
 
-        public static string SENDER(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static string SENDER(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             return e.ChatMessage.DisplayName;
         }

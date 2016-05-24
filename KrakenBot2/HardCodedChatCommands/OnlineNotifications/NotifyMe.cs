@@ -8,7 +8,7 @@ namespace KrakenBot2.HardCodedChatCommands.OnlineNotifications
 {
     public static class NotifyMe
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             Common.OnlineNotifier.notifyMe(e.ChatMessage.Username);
             Common.command(e.Command, true);

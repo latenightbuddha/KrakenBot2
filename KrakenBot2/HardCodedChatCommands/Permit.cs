@@ -8,7 +8,7 @@ namespace KrakenBot2.HardCodedChatCommands
 {
     public static class Permit
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e))
             {
@@ -28,9 +28,9 @@ namespace KrakenBot2.HardCodedChatCommands
                 if (!found)
                     Common.Permits.Add(new Objects.Permit(receiver, DateTime.Now, usages));
                 if (usages == 1)
-                    Common.ChatClient.sendMessage(string.Format("You are permitted to post 1 link, {0}!", receiver), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("You are permitted to post 1 link, {0}!", receiver), Common.DryRun);
                 else
-                    Common.ChatClient.sendMessage(string.Format("You are permitted to post {0} links, {1}", usages, receiver), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("You are permitted to post {0} links, {1}", usages, receiver), Common.DryRun);
                 Common.command(e.Command, true);
             } else
             {
@@ -38,7 +38,7 @@ namespace KrakenBot2.HardCodedChatCommands
             }
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 0))
                 return false;

@@ -44,7 +44,7 @@ namespace KrakenBot2
                     startType = StartType.RANDOM;
                     break;
                 default:
-                    Common.ChatClient.sendMessage(string.Format("Host start type '{0}' is not valid. Defaulting to random.", multihostProperties.SelectToken("start_type").ToString()), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("Host start type '{0}' is not valid. Defaulting to random.", multihostProperties.SelectToken("start_type").ToString()), Common.DryRun);
                     return;
             }
             hosts = WebCalls.downloadMultihostStreamers().Result;
@@ -77,8 +77,8 @@ namespace KrakenBot2
         public void stop()
         {
             rotator.Stop();
-            Common.ChatClient.sendMessage("/unhost");
-            Common.ChatClient.sendMessage("Multihost disabled.", Common.DryRun);
+            Common.ChatClient.SendMessage("/unhost");
+            Common.ChatClient.SendMessage("Multihost disabled.", Common.DryRun);
         }
 
         // Public function to guess next hosted streamer, returns true if successful, false if failed
@@ -86,10 +86,10 @@ namespace KrakenBot2
         {
             if (currentHost == null)
             {
-                Common.ChatClient.sendMessage("Cannot guess the host of a manually assigned host, or a host that does not exist in the multihost list.");
+                Common.ChatClient.SendMessage("Cannot guess the host of a manually assigned host, or a host that does not exist in the multihost list.");
                 return false;
             }
-            if (TwitchLib.TwitchAPI.broadcasterOnline(currentHost.Streamer).Result)
+            if (TwitchLib.TwitchApi.BroadcasterOnline(currentHost.Streamer).Result)
             {
                 refreshHostsList();
                 List<Host> onlineHosts = WebCalls.getOnlineMultihostStreamers(hosts).Result;
@@ -101,25 +101,25 @@ namespace KrakenBot2
                         if (curIndex == onlineHosts.Count - 1)
                         {
                             if (onlineHosts[0].Information != "")
-                                Common.ChatClient.sendMessage(string.Format("The next host will be {0}. {1}", onlineHosts[0].Streamer, onlineHosts[1].Information), Common.DryRun);
+                                Common.ChatClient.SendMessage(string.Format("The next host will be {0}. {1}", onlineHosts[0].Streamer, onlineHosts[1].Information), Common.DryRun);
                             else
-                                Common.ChatClient.sendMessage(string.Format("The next host will be {0}.", onlineHosts[0].Streamer), Common.DryRun);
+                                Common.ChatClient.SendMessage(string.Format("The next host will be {0}.", onlineHosts[0].Streamer), Common.DryRun);
                         } else
                         {
                             if (onlineHosts[curIndex + 1].Information != "")
-                                Common.ChatClient.sendMessage(string.Format("The next host will be {0}. {1}", onlineHosts[curIndex + 1].Streamer, onlineHosts[curIndex + 1].Information), Common.DryRun);
+                                Common.ChatClient.SendMessage(string.Format("The next host will be {0}. {1}", onlineHosts[curIndex + 1].Streamer, onlineHosts[curIndex + 1].Information), Common.DryRun);
                             else
-                                Common.ChatClient.sendMessage(string.Format("The next host will be {0}.", onlineHosts[curIndex + 1].Streamer), Common.DryRun);
+                                Common.ChatClient.SendMessage(string.Format("The next host will be {0}.", onlineHosts[curIndex + 1].Streamer), Common.DryRun);
                         }
                         return true;
                     }
                     curIndex++;
                 }
-                Common.ChatClient.sendMessage("Current online host was not found in multihost list.  Next host will be random online multihost streamer.", Common.DryRun);
+                Common.ChatClient.SendMessage("Current online host was not found in multihost list.  Next host will be random online multihost streamer.", Common.DryRun);
                 return false;
             } else
             {
-                Common.ChatClient.sendMessage("The current host is not online.  The next host will be a random online multihost streamer.", Common.DryRun);
+                Common.ChatClient.SendMessage("The current host is not online.  The next host will be a random online multihost streamer.", Common.DryRun);
                 return false;
             }
         }
@@ -130,19 +130,19 @@ namespace KrakenBot2
             switch (startType)
             {
                 case StartType.RANDOM:
-                    Common.ChatClient.sendMessage("Multihost started. Discovering a random online multihost streamer...", Common.DryRun);
+                    Common.ChatClient.SendMessage("Multihost started. Discovering a random online multihost streamer...", Common.DryRun);
                     List<Host> onlineHosts = WebCalls.getOnlineMultihostStreamers(hosts).Result;
                     if (onlineHosts.Count != 0)
                     {
                         currentHost = onlineHosts[new Random().Next(0, onlineHosts.Count - 1)];
                         if (currentHost.Information != "")
-                            Common.ChatClient.sendMessage(string.Format("We'll kick things off with '{0}'. {1}", currentHost.Streamer, currentHost.Information), Common.DryRun);
+                            Common.ChatClient.SendMessage(string.Format("We'll kick things off with '{0}'. {1}", currentHost.Streamer, currentHost.Information), Common.DryRun);
                         else
-                            Common.ChatClient.sendMessage(string.Format("We'll kick things off with '{0}'.", currentHost.Streamer), Common.DryRun);
-                        Common.ChatClient.sendMessage(multihostInfo);
+                            Common.ChatClient.SendMessage(string.Format("We'll kick things off with '{0}'.", currentHost.Streamer), Common.DryRun);
+                        Common.ChatClient.SendMessage(multihostInfo);
                     } else
                     {
-                        Common.ChatClient.sendMessage("No online hosts detected.  Multihost random function failed.", Common.DryRun);
+                        Common.ChatClient.SendMessage("No online hosts detected.  Multihost random function failed.", Common.DryRun);
                         return false;
                     }
                     break;
@@ -153,9 +153,9 @@ namespace KrakenBot2
                         {
                             currentHost = streamer;
                             if (streamer.Information != "")
-                                Common.ChatClient.sendMessage(string.Format("Multihost started with '{0}'. {1}", streamer.Streamer, streamer.Information), Common.DryRun);
+                                Common.ChatClient.SendMessage(string.Format("Multihost started with '{0}'. {1}", streamer.Streamer, streamer.Information), Common.DryRun);
                             else
-                                Common.ChatClient.sendMessage(string.Format("Multihost started with '{0}'.", streamer.Streamer), Common.DryRun);
+                                Common.ChatClient.SendMessage(string.Format("Multihost started with '{0}'.", streamer.Streamer), Common.DryRun);
                             currentHost = streamer;
                             hostStreamer(streamer);
                             return true;
@@ -164,12 +164,12 @@ namespace KrakenBot2
                     Host newHost = new Host(setHostName, "");
                     hosts.Add(newHost);
                     currentHost = newHost;
-                    Common.ChatClient.sendMessage(string.Format("Multihost started with '{0}'.", newHost.Streamer), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("Multihost started with '{0}'.", newHost.Streamer), Common.DryRun);
                     hostStreamer(newHost);
-                    Common.ChatClient.sendMessage(multihostInfo);
+                    Common.ChatClient.SendMessage(multihostInfo);
                     break;
                 case StartType.MANUAL:
-                    Common.ChatClient.sendMessage(string.Format("Multihost started, remaining on the current host! Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host!", extendDuration), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("Multihost started, remaining on the current host! Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host!", extendDuration), Common.DryRun);
                     break;
             }
             return true;
@@ -178,9 +178,9 @@ namespace KrakenBot2
         //Rotates to next ONLINE host in multihost list
         private bool nextHost()
         {
-            if (TwitchLib.TwitchAPI.broadcasterOnline("burkeblack").Result)
+            if (TwitchLib.TwitchApi.BroadcasterOnline("burkeblack").Result)
             {
-                Common.ChatClient.sendMessage("[Multihost] Burke detected as being online.  Multihost stopped.");
+                Common.ChatClient.SendMessage("[Multihost] Burke detected as being online.  Multihost stopped.");
                 rotator.Stop();
                 return false;
             }
@@ -189,7 +189,7 @@ namespace KrakenBot2
             List<Host> onlineHosts = WebCalls.getOnlineMultihostStreamers(hosts).Result;
             if (onlineHosts.Count != 0)
             {
-                if (currentHost != null && TwitchLib.TwitchAPI.broadcasterOnline(currentHost.Streamer).Result)
+                if (currentHost != null && TwitchLib.TwitchApi.BroadcasterOnline(currentHost.Streamer).Result)
                 {
                     int multiIndex = 0;
                     int currentHostIndex = 0;
@@ -209,16 +209,16 @@ namespace KrakenBot2
                     nextHost = onlineHosts[new Random().Next(0, onlineHosts.Count - 1)];
                 }
                 if (nextHost.Information != "")
-                    Common.ChatClient.sendMessage(string.Format("Next host: {0}. {1}", nextHost.Streamer, nextHost.Information), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("Next host: {0}. {1}", nextHost.Streamer, nextHost.Information), Common.DryRun);
                 else
-                    Common.ChatClient.sendMessage(string.Format("Next host: {0}.", nextHost.Streamer), Common.DryRun);
-                Common.ChatClient.sendMessage(string.Format("Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host!", extendDuration), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("Next host: {0}.", nextHost.Streamer), Common.DryRun);
+                Common.ChatClient.SendMessage(string.Format("Use !extend to extend the host by {0} minutes. Use !remaining to see how many minutes remain in the host!", extendDuration), Common.DryRun);
                 curMinute = 0;
                 hostStreamer(nextHost);
                 return true;
             } else
             {
-                Common.ChatClient.sendMessage("There are no multihost channels online at the moment.  Will try again on next rotation.", Common.DryRun);
+                Common.ChatClient.SendMessage("There are no multihost channels online at the moment.  Will try again on next rotation.", Common.DryRun);
                 curMinute = 0;
                 return false;
             }
@@ -239,15 +239,15 @@ namespace KrakenBot2
                             curMinute -= extend.ExtendBy;
                             int extendsRemaining = extend.useExtend();
                             if (extendsRemaining > 0)
-                                Common.ChatClient.sendMessage(string.Format("{0} has extended {1}'s host by {2} minutes! They have {3} remaining host extension(s).",
+                                Common.ChatClient.SendMessage(string.Format("{0} has extended {1}'s host by {2} minutes! They have {3} remaining host extension(s).",
                                     extend.Username, currentHost.Streamer, extendDuration, extend.RemainingExtends), Common.DryRun);
                             else
-                                Common.ChatClient.sendMessage(string.Format("{0} has extended {1}'s host by {2} minutes! They have no remaining host extensions.",
+                                Common.ChatClient.SendMessage(string.Format("{0} has extended {1}'s host by {2} minutes! They have no remaining host extensions.",
                                     extend.Username, currentHost.Streamer, extend.ExtendBy), Common.DryRun);
                             return true;
                         } else
                         {
-                            Common.ChatClient.sendMessage(string.Format("You have used all of your allotted extends for this host, {0}.", extend.Username), Common.DryRun);
+                            Common.ChatClient.SendMessage(string.Format("You have used all of your allotted extends for this host, {0}.", extend.Username), Common.DryRun);
                             return false;
                         }
                     }
@@ -256,12 +256,12 @@ namespace KrakenBot2
                 curMinute -= extendDuration;
                 UserExtend newExtend = new UserExtend(username, extendsAllowed, extendDuration);
                 extends.Add(newExtend);
-                Common.ChatClient.sendMessage(string.Format("{0} has extended {1}'s host by {2} minutes! They have {3} remaining host extension(s).",
+                Common.ChatClient.SendMessage(string.Format("{0} has extended {1}'s host by {2} minutes! They have {3} remaining host extension(s).",
                                     newExtend.Username, currentHost.Streamer, extendDuration, newExtend.RemainingExtends), Common.DryRun);
                 return true;
             } else
             {
-                Common.ChatClient.sendMessage("The currently hosted streamer cannot be extended.", Common.DryRun);
+                Common.ChatClient.SendMessage("The currently hosted streamer cannot be extended.", Common.DryRun);
                 return false;
             }
         }
@@ -271,11 +271,11 @@ namespace KrakenBot2
         {
             if(currentHost != null)
             {
-                Common.ChatClient.sendMessage(string.Format("It looks like {0} just went offline! Rotating host!", currentHost.Streamer), Common.DryRun);
+                Common.ChatClient.SendMessage(string.Format("It looks like {0} just went offline! Rotating host!", currentHost.Streamer), Common.DryRun);
                 nextHost();
             } else
             {
-                Common.ChatClient.sendMessage(string.Format("The hosted streamer just went offline! Rotating host!"), Common.DryRun);
+                Common.ChatClient.SendMessage(string.Format("The hosted streamer just went offline! Rotating host!"), Common.DryRun);
                 nextHost();
             }
         }
@@ -284,18 +284,18 @@ namespace KrakenBot2
         public void remaining()
         {
             if (defaultMinuteLimit - curMinute == 1)
-                Common.ChatClient.sendMessage(string.Format("There is currently one minute remaining in {0}'s host. Use !next to get a guess of which streamer will be hosted next.", currentHost.Streamer), Common.DryRun);
+                Common.ChatClient.SendMessage(string.Format("There is currently one minute remaining in {0}'s host. Use !next to get a guess of which streamer will be hosted next.", currentHost.Streamer), Common.DryRun);
             else
                 if(currentHost == null)
-                    Common.ChatClient.sendMessage(string.Format("There are currently {0} minutes remaining in the current host. Use !next to get a guess of which streamer will be hosted next.", defaultMinuteLimit - curMinute), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("There are currently {0} minutes remaining in the current host. Use !next to get a guess of which streamer will be hosted next.", defaultMinuteLimit - curMinute), Common.DryRun);
                 else
-                    Common.ChatClient.sendMessage(string.Format("There are currently {0} minutes remaining {1}'s host. Use !next to get a guess of which streamer will be hosted next.", defaultMinuteLimit - curMinute, currentHost.Streamer), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("There are currently {0} minutes remaining {1}'s host. Use !next to get a guess of which streamer will be hosted next.", defaultMinuteLimit - curMinute, currentHost.Streamer), Common.DryRun);
         }
 
         // Method to initiate host of a streamer
         private void hostStreamer(Host streamer)
         {
-            Common.ChatClient.sendMessage(string.Format(".host {0}", streamer.Streamer));
+            Common.ChatClient.SendMessage(string.Format(".host {0}", streamer.Streamer));
             currentHost = streamer;
             if (defaultMinuteLimit - curMinute < (defaultMinuteLimit - 1))
                 curMinute -= defaultMinuteLimit - (defaultMinuteLimit - curMinute);

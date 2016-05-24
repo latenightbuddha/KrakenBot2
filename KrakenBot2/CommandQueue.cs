@@ -47,7 +47,7 @@ namespace KrakenBot2
             switch(command.CommandStr)
             {
                 case "update":
-                    Common.ChatClient.sendMessage(string.Format("[Auto] Resuming update query..."));
+                    Common.ChatClient.SendMessage(string.Format("[Auto] Resuming update query..."));
                     Common.initialize("Handle: Update");
                     Update.processUpdateRequest();
                     break;

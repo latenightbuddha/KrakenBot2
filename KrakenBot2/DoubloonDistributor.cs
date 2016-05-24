@@ -47,7 +47,7 @@ namespace KrakenBot2
                 offlineAllocator.Start();
             }
             if (!WebCalls.distibuteDoubloons(1).Result)
-                Common.ChatClient.sendMessage("Failed to distribute doubloons.");
+                Common.ChatClient.SendMessage("Failed to distribute doubloons.");
         }
 
         // Offline timer tick event
@@ -59,7 +59,7 @@ namespace KrakenBot2
                 onlineAllocator.Start();
             }
             if (!WebCalls.distibuteDoubloons(1).Result)
-                Common.ChatClient.sendMessage("Failed to distributre doubloons.");
+                Common.ChatClient.SendMessage("Failed to distributre doubloons.");
         }
     }
 }

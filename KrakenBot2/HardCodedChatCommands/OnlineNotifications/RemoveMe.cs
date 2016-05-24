@@ -8,7 +8,7 @@ namespace KrakenBot2.HardCodedChatCommands.OnlineNotifications
 {
     public static class RemoveMe
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             Common.OnlineNotifier.removeMe(e.ChatMessage.Username);
             Common.command(e.Command, true);

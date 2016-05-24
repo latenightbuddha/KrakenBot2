@@ -60,7 +60,7 @@ namespace KrakenBot2
                 while(!Events.connected) { }
                 Console.WriteLine("Connected to chat confirmed!");
                 if (Common.UpdateDatas.Details.Announce)
-                    Common.ChatClient.sendMessage(string.Format("Updated! Changes: {0}", Common.UpdateDatas.Details.Changes), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("Updated! Changes: {0}", Common.UpdateDatas.Details.Changes), Common.DryRun);
             }
         }
     }

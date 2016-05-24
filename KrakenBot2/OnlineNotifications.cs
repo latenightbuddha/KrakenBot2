@@ -55,7 +55,7 @@ namespace KrakenBot2
             WebCalls.removeNotifyUser(username);
             usersToNotify.Remove(username);
             if (Common.WhisperClient != null)
-                Common.WhisperClient.sendWhisper(username, "You will no longer be notified when Burke goes live. :( To be notified again, whisper !notifyme", Common.DryRun);
+                Common.WhisperClient.SendWhisper(username, "You will no longer be notified when Burke goes live. :( To be notified again, whisper !notifyme", Common.DryRun);
         }
 
         // Public method to add user to notifyMe list
@@ -64,7 +64,7 @@ namespace KrakenBot2
             WebCalls.addNotifyUser(username);
             usersToNotify.Add(username);
             if (Common.WhisperClient != null)
-                Common.WhisperClient.sendWhisper(username, "You will now be notified via a whisper when Burke goes live! burkeEpic To remove yourself from this list, whisper !removeme", Common.DryRun);
+                Common.WhisperClient.SendWhisper(username, "You will now be notified via a whisper when Burke goes live! burkeEpic To remove yourself from this list, whisper !removeme", Common.DryRun);
         }
 
         // Method to send message in discord and fire all whispers
@@ -76,7 +76,7 @@ namespace KrakenBot2
             foreach(string user in usersToNotify)
             {
                 if (Common.WhisperClient != null)
-                    Common.WhisperClient.sendWhisper(user, string.Format("Burke just went live playing: {0}, title: {1}. Channel: {2}. !removeme to stop receiving notifications.", channel.Game, channel.Status,  "http://twitch.tv/burkeblack"), Common.DryRun);
+                    Common.WhisperClient.SendWhisper(user, string.Format("Burke just went live playing: {0}, title: {1}. Channel: {2}. !removeme to stop receiving notifications.", channel.Game, channel.Status,  "http://twitch.tv/burkeblack"), Common.DryRun);
                 System.Threading.Thread.Sleep(2000);
             }
         }

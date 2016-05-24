@@ -182,11 +182,11 @@ namespace KrakenBot2
         }
 
         // Determine if sender of chat message is a sub
-        public static bool isSub(TwitchLib.TwitchChatClient.NewChatMessageArgs e)
+        public static bool isSub(TwitchLib.TwitchChatClient.OnMessageReceivedArgs e)
         {
-            TwitchLib.ChatMessage.uType uType = e.ChatMessage.UserType;
-            if (uType == TwitchLib.ChatMessage.uType.Admin || uType == TwitchLib.ChatMessage.uType.GlobalModerator || uType == TwitchLib.ChatMessage.uType.Moderator ||
-                uType == TwitchLib.ChatMessage.uType.Staff || e.ChatMessage.Subscriber || Moderators.Contains(e.ChatMessage.Username.ToLower()) || 
+            TwitchLib.ChatMessage.UType UType = e.ChatMessage.UserType;
+            if (UType == TwitchLib.ChatMessage.UType.Admin || UType == TwitchLib.ChatMessage.UType.GlobalModerator || UType == TwitchLib.ChatMessage.UType.Moderator ||
+                UType == TwitchLib.ChatMessage.UType.Staff || e.ChatMessage.Subscriber || Moderators.Contains(e.ChatMessage.Username.ToLower()) || 
                 e.ChatMessage.Username.ToLower() == "swiftyspiffy")
                 return true;
             else
@@ -194,11 +194,11 @@ namespace KrakenBot2
         }
 
         // Determine if sender of command is a sub
-        public static bool isSub(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static bool isSub(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
-            TwitchLib.ChatMessage.uType uType = e.ChatMessage.UserType;
-            if (uType == TwitchLib.ChatMessage.uType.Admin || uType == TwitchLib.ChatMessage.uType.GlobalModerator || uType == TwitchLib.ChatMessage.uType.Moderator ||
-                uType == TwitchLib.ChatMessage.uType.Staff || e.ChatMessage.Subscriber || Moderators.Contains(e.ChatMessage.Username.ToLower()) ||
+            TwitchLib.ChatMessage.UType UType = e.ChatMessage.UserType;
+            if (UType == TwitchLib.ChatMessage.UType.Admin || UType == TwitchLib.ChatMessage.UType.GlobalModerator || UType == TwitchLib.ChatMessage.UType.Moderator ||
+                UType == TwitchLib.ChatMessage.UType.Staff || e.ChatMessage.Subscriber || Moderators.Contains(e.ChatMessage.Username.ToLower()) ||
                  e.ChatMessage.Username.ToLower() == "swiftyspiffy")
                 return true;
             else
@@ -206,9 +206,9 @@ namespace KrakenBot2
         }
 
         // Determine if sender of message is moderator
-        public static bool isMod(TwitchLib.TwitchChatClient.NewChatMessageArgs e)
+        public static bool isMod(TwitchLib.TwitchChatClient.OnMessageReceivedArgs e)
         {
-            TwitchLib.ChatMessage.uType uType = e.ChatMessage.UserType;
+            TwitchLib.ChatMessage.UType UType = e.ChatMessage.UserType;
             if (Moderators.Contains(e.ChatMessage.Username.ToLower()))
                 return true;
             else
@@ -216,9 +216,9 @@ namespace KrakenBot2
         }
 
         // Determine if sender of command is moderator
-        public static bool isMod(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static bool isMod(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
-            TwitchLib.ChatMessage.uType uType = e.ChatMessage.UserType;
+            TwitchLib.ChatMessage.UType UType = e.ChatMessage.UserType;
             if (Moderators.Contains(e.ChatMessage.Username))
                 return true;
             else

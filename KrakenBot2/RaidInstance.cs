@@ -28,13 +28,13 @@ namespace KrakenBot2
         {
             this.channel = channel;
             raidTimer.Elapsed += raidTimerTick;
-            Common.RaidClient = new TwitchLib.TwitchChatClient(channel, new TwitchLib.ConnectionCredentials(TwitchLib.ConnectionCredentials.ClientType.CHAT, new TwitchLib.TwitchIpAndPort(channel, true), "the_kraken_bot", Properties.Settings.Default.krakenOAuth));
-            Common.RaidClient.NewChatMessage += Events.raidOnMessage;
-            Common.RaidClient.connect();
+            Common.RaidClient = new TwitchLib.TwitchChatClient(channel, new TwitchLib.ConnectionCredentials(TwitchLib.ConnectionCredentials.ClientType.Chat, new TwitchLib.TwitchIpAndPort(channel, true), "the_kraken_bot", Properties.Settings.Default.krakenOAuth));
+            Common.RaidClient.OnMessageReceived += Events.raidOnMessage;
+            Common.RaidClient.Connect();
         }
 
         // Handles raid chat event
-        public void handleMessage(TwitchLib.TwitchChatClient.NewChatMessageArgs message)
+        public void handleMessage(TwitchLib.TwitchChatClient.OnMessageReceivedArgs message)
         {
             if(raidTimer.Enabled)
             {
@@ -60,8 +60,8 @@ namespace KrakenBot2
                 if(message.ChatMessage.Username.ToLower() == "burkeblack")
                 {
                     raidTimer.Start();
-                    Common.RaidClient.sendMessage("burkeFlag burkeFlag The Black Crew, ATTACK!!!! burkeFlag burkeFlag", Common.DryRun);
-                    Common.ChatClient.sendMessage(string.Format("burkeFlag burkeFlag The attack has begun on {0}, get in there! http://twitch.tv/{0}", message.ChatMessage.Channel), Common.DryRun);
+                    Common.RaidClient.SendMessage("burkeFlag burkeFlag The Black Crew, ATTACK!!!! burkeFlag burkeFlag", Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("burkeFlag burkeFlag The attack has begun on {0}, get in there! http://twitch.tv/{0}", message.ChatMessage.Channel), Common.DryRun);
                 }
             }
         }
@@ -94,18 +94,18 @@ namespace KrakenBot2
                 postRaidFired = true;
             if (participants.Count != 0)
             {
-                Common.RaidClient.disconnect();
+                Common.RaidClient.Disconnect();
                 if(boarders.Count  == 0 || gunners.Count == 0)
-                    Common.ChatClient.sendMessage(string.Format("The raid has ended! There were {0} ( R) ) boarders and {1} ( burkeShip burkeFire burkeFire ) gunners!! In total, there were {2} participants in this raid, with boarder {3} and gunner {4} leading the charge! Your doubloon counts will be updated shortly!", boarders.Count, gunners.Count, participants.Count, boarders[0], gunners[0]), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("The raid has ended! There were {0} ( R) ) boarders and {1} ( burkeShip burkeFire burkeFire ) gunners!! In total, there were {2} participants in this raid, with boarder {3} and gunner {4} leading the charge! Your doubloon counts will be updated shortly!", boarders.Count, gunners.Count, participants.Count, boarders[0], gunners[0]), Common.DryRun);
                 else
-                    Common.ChatClient.sendMessage(string.Format("The raid has ended! There were {0} ( R) ) boarders and {1} ( burkeShip burkeFire burkeFire ) gunners!! In total, there were {2} participants in this raid! Your doubloon counts will be updated shortly!", boarders.Count, gunners.Count, participants.Count), Common.DryRun);
+                    Common.ChatClient.SendMessage(string.Format("The raid has ended! There were {0} ( R) ) boarders and {1} ( burkeShip burkeFire burkeFire ) gunners!! In total, there were {2} participants in this raid! Your doubloon counts will be updated shortly!", boarders.Count, gunners.Count, participants.Count), Common.DryRun);
 
                 if (WebCalls.distibuteDoubloons(participants.Count).Result)
-                    Common.ChatClient.sendMessage("[Auto] Doubloon counts updated successfully!");
+                    Common.ChatClient.SendMessage("[Auto] Doubloon counts updated successfully!");
                 else
-                    Common.ChatClient.sendMessage("[Auto] Doubloon counts FAILED TO UPDATE");
+                    Common.ChatClient.SendMessage("[Auto] Doubloon counts FAILED TO UPDATE");
             }  else {
-                Common.ChatClient.sendMessage("No one participated in the raid! :(", Common.DryRun);
+                Common.ChatClient.SendMessage("No one participated in the raid! :(", Common.DryRun);
             }
                 
         }

@@ -20,7 +20,7 @@ namespace KrakenBot2
         // StreamRefresh constructor
         public StreamRefresher()
         {
-            stream = TwitchLib.TwitchAPI.getTwitchStream("burkeblack");
+            stream = TwitchLib.TwitchApi.GetTwitchStream("burkeblack").Result;
             refresher.Elapsed += refresherTick;
             refresher.Start();
         }
@@ -34,7 +34,7 @@ namespace KrakenBot2
         // StreamRefresher timer tick event
         private void refresherTick(object sender, ElapsedEventArgs e)
         {
-            stream = TwitchLib.TwitchAPI.getTwitchStream("burkeblack");
+            stream = TwitchLib.TwitchApi.GetTwitchStream("burkeblack").Result;
         }
     }
 }

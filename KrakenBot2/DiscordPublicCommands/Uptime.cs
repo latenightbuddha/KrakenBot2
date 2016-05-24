@@ -14,7 +14,7 @@ namespace KrakenBot2.DiscordPublicCommands
             {
                 if(Common.StreamRefresher.isOnline())
                 {
-                    TimeSpan uptime = TwitchLib.TwitchAPI.getUptime("burkeblack");
+                    TimeSpan uptime = TwitchLib.TwitchApi.GetUptime("burkeblack").Result;
                     string msgStr = "";
                     if (uptime.Days > 0)
                         msgStr = uptime.Days + " days";

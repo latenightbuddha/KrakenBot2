@@ -8,11 +8,11 @@ namespace KrakenBot2.HardCodedChatCommands
 {
     public static class Kappa
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e))
             {
-                Common.ChatClient.sendMessage("Kappa", Common.DryRun);
+                Common.ChatClient.SendMessage("Kappa", Common.DryRun);
                 Common.command(e.Command, true);
             }
             else
@@ -21,7 +21,7 @@ namespace KrakenBot2.HardCodedChatCommands
             }
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (e.ChatMessage.Username.ToLower() != "swiftyspiffy")
                 return false;

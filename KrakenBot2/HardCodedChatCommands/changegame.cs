@@ -8,12 +8,12 @@ namespace KrakenBot2.HardCodedChatCommands
 {
     public static class changegame
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e))
             {
-                TwitchLib.TwitchAPI.updateStreamGame(e.ArgumentsAsString, "burkeblack", Properties.Settings.Default.BurkeOAuth);
-                Common.ChatClient.sendMessage("Game change API request sent!", Common.DryRun);
+                TwitchLib.TwitchApi.UpdateStreamGame(e.ArgumentsAsString, "burkeblack", Properties.Settings.Default.BurkeOAuth);
+                Common.ChatClient.SendMessage("Game change API request sent!", Common.DryRun);
                 Common.command(e.Command, true);
             } else
             {
@@ -21,7 +21,7 @@ namespace KrakenBot2.HardCodedChatCommands
             }
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (!Common.Cooldown.chatCommandAvailable(e.ChatMessage.UserType, e.Command, 0))
                 return false;

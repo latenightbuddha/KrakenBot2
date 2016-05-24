@@ -8,13 +8,13 @@ namespace KrakenBot2.HardCodedChatCommands
 {
     public static class _500
     {
-        public static void handleCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        public static void handleCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
             if (verifyCommand(e))
             {
-                int subCount = TwitchLib.TwitchAPI.getSubscriberCount("burkeblack", Properties.Settings.Default.BurkeOAuth);
+                int subCount = TwitchLib.TwitchApi.GetSubscriberCount("burkeblack", Properties.Settings.Default.BurkeOAuth).Result;
                 string message = "The Captain is on a hunt for 500 crew members (Subs) that will lead to full time twitch Piracy, which will also unlock more Booty for the crew (Emotes). He currently has a crew of " + subCount.ToString() + "! So if you love running into trees, poles, bridges, space rocks and wish to join our truly close and caring community, please join! :)";
-                Common.ChatClient.sendMessage(message);
+                Common.ChatClient.SendMessage(message);
                 Common.command(e.Command, true);
             }
             else
@@ -23,11 +23,11 @@ namespace KrakenBot2.HardCodedChatCommands
             }
         }
 
-        private static bool verifyCommand(TwitchLib.TwitchChatClient.CommandReceivedArgs e)
+        private static bool verifyCommand(TwitchLib.TwitchChatClient.OnCommandReceivedArgs e)
         {
-            TwitchLib.ChatMessage.uType userType = e.ChatMessage.UserType;
+            TwitchLib.ChatMessage.UType userType = e.ChatMessage.UserType;
             if (Common.Moderators.Contains(e.ChatMessage.Username.ToLower()))
-                userType = TwitchLib.ChatMessage.uType.Moderator;
+                userType = TwitchLib.ChatMessage.UType.Moderator;
             if (!Common.Cooldown.chatCommandAvailable(userType, e.Command, 10))
                 return false;
             if (Common.DryRun)
